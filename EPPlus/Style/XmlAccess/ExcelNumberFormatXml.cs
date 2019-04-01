@@ -207,13 +207,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             internal ExcelFormatTranslator(string format, int numFmtID)
             {
-                if (numFmtID == 14)
-                {
-                    NetFormat = NetFormatForWidth = "d";
-                    NetTextFormat = NetTextFormatForWidth = "";
-                    DataType = eFormatType.DateTime;
-                }
-                else if (format.Equals("general",StringComparison.OrdinalIgnoreCase))
+                if (format.Equals("general",StringComparison.OrdinalIgnoreCase))
                 {
                     NetFormat = NetFormatForWidth = "0.#####";
                     NetTextFormat = NetTextFormatForWidth = "";

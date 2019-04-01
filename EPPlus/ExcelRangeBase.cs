@@ -1019,7 +1019,11 @@ namespace OfficeOpenXml
 
         internal static string FormatValue(object v, ExcelNumberFormatXml.ExcelFormatTranslator nf, string format, string textFormat)
         {
-            if (v is decimal || TypeCompat.IsPrimitive(v))
+            if (v is bool)
+            {
+                return (bool)v ? "TRUE" : "FALSE";
+            }
+            else if (v is decimal || TypeCompat.IsPrimitive(v))
             {
                 double d;
                 try
