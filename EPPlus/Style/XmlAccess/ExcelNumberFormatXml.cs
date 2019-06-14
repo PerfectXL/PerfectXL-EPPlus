@@ -203,11 +203,19 @@ namespace OfficeOpenXml.Style.XmlAccess
                 None,
                 SystemLongDate,
                 SystemLongTime,
-                Conditional
+                Conditional,
+                SystemShortDate,
             }
             internal ExcelFormatTranslator(string format, int numFmtID)
             {
-                if (format.Equals("general",StringComparison.OrdinalIgnoreCase))
+                if (numFmtID == 14)
+                {
+                    NetFormat = NetFormatForWidth = "";
+                    NetTextFormat = NetTextFormatForWidth = "";
+                    SpecialDateFormat = eSystemDateFormat.SystemShortDate;
+                    DataType = eFormatType.DateTime;
+                }
+                else if (format.Equals("general",StringComparison.OrdinalIgnoreCase))
                 {
                     NetFormat = NetFormatForWidth = "0.#####";
                     NetTextFormat = NetTextFormatForWidth = "";
