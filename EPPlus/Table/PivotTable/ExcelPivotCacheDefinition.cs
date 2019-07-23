@@ -245,6 +245,60 @@ namespace OfficeOpenXml.Table.PivotTable
                 _sourceRange = value;
             }
         }
+
+        public class WorksheetSourceInfo
+        {
+            public string Workbook { get; set; }
+            public string Worksheet { get; set; }
+            public string Address { get; set; }
+            public string NamedRange { get; set; }
+        }
+
+        /// <summary>
+        /// This extracts data once the source range is in another sheet
+        /// </summary>
+        public WorksheetSourceInfo ExternalWorksheetInfo
+        {
+            get
+            {
+                if (CacheSource != eSourceType.Worksheet)
+                {
+                    return null;
+                }
+
+                string workbook = null;
+                foreach (var relation in Part.GetRelationshipsByType(
+                    ExcelPackage.schemaRelationships + "/externalLinkPath"))
+                {
+                    workbook = relation.TargetUri.IsAbsoluteUri ? relation.TargetUri.LocalPath.Split('\\').Last() : relation.TargetUri.ToString();
+                }
+
+                return new WorksheetSourceInfo
+                {
+                    Workbook = workbook,
+                    Worksheet = GetXmlNodeString(_sourceWorksheetPath),
+                    Address = GetXmlNodeString(_sourceAddressPath),
+                    NamedRange = GetXmlNodeString(_sourceNamePath)
+                };
+            }
+        }
+
+        /// <summary>
+        /// Returns connectionId if cache type is external
+        /// </summary>
+        public int? ConnectionId
+        {
+            get
+            {
+                if (Int32.TryParse(GetXmlNodeString("d:cacheSource/@connectionId"), out int id))
+                {
+                    return id;
+                }
+
+                return null;
+            }
+        }
+
         /// <summary>
         /// Type of source data
         /// </summary>
