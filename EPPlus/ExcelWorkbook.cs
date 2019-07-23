@@ -50,6 +50,7 @@ using OfficeOpenXml.Packaging.Ionic.Zip;
 using System.Drawing;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.Compatibility;
+using OfficeOpenXml.Connection;
 
 namespace OfficeOpenXml
 {
@@ -108,7 +109,8 @@ namespace OfficeOpenXml
 			_package = package;
 			WorkbookUri = new Uri("/xl/workbook.xml", UriKind.Relative);
 			SharedStringsUri = new Uri("/xl/sharedStrings.xml", UriKind.Relative);
-			StylesUri = new Uri("/xl/styles.xml", UriKind.Relative);
+            ConnectionsUri = new Uri("/xl/connections.xml", UriKind.Relative);
+            StylesUri = new Uri("/xl/styles.xml", UriKind.Relative);
 
 			_names = new ExcelNamedRangeCollection(this);
 			_namespaceManager = namespaceManager;
@@ -129,6 +131,23 @@ namespace OfficeOpenXml
         internal FormulaParser _formulaParser = null;
 	    internal FormulaParserManager _parserManager;
         internal CellStore<List<Token>> _formulaTokens;
+        internal ExcelConnections _connections;
+
+        /// <summary>
+        /// Provides access to connections
+        /// </summary>
+        public ExcelConnections Connections
+        {
+            get
+            {
+                if (_connections == null)
+                {
+                    _connections = new ExcelConnections(_package, NameSpaceManager);
+                }
+
+                return _connections;
+            }
+        }
 		/// <summary>
 		/// Read shared strings to list
 		/// </summary>
@@ -486,10 +505,14 @@ namespace OfficeOpenXml
         /// URI to the shared strings inside the package
 		/// </summary>
 		internal Uri SharedStringsUri { get; private set; }
-		/// <summary>
-		/// Returns a reference to the workbook's part within the package
-		/// </summary>
-		internal Packaging.ZipPackagePart Part { get { return (_package.Package.GetPart(WorkbookUri)); } }
+        /// <summary>
+        /// URI to the connections inside the package
+        /// </summary>
+        internal Uri ConnectionsUri { get; private set; }
+        /// <summary>
+        /// Returns a reference to the workbook's part within the package
+        /// </summary>
+        internal Packaging.ZipPackagePart Part { get { return (_package.Package.GetPart(WorkbookUri)); } }
 		
 		#region WorkbookXml
 		private XmlDocument _workbookXml;
