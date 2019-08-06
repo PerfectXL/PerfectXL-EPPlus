@@ -30,7 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Linq;
@@ -266,10 +265,11 @@ namespace OfficeOpenXml.Table.PivotTable
                     return null;
                 }
 
-                string workbook = null;
-                foreach (var relation in Part.GetRelationshipsByType(
-                    ExcelPackage.schemaRelationships + "/externalLinkPath"))
+                string workbook = "";
+                string rId = GetXmlNodeString("d:cacheSource/d:worksheetSource/@r:id");
+                if (rId != "")
                 {
+                    var relation = Part.GetRelationship(rId);
                     workbook = relation.TargetUri.IsAbsoluteUri ? relation.TargetUri.LocalPath.Split('\\').Last() : relation.TargetUri.ToString();
                 }
 
