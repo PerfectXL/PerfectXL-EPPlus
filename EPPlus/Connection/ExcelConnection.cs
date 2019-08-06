@@ -21,6 +21,7 @@ namespace OfficeOpenXml.Connection
         DSP = 8,
         DataModelSource = 100
     }
+
     public class ExcelConnection : XmlHelper, IDisposable
     {
         #region XmlAttributes

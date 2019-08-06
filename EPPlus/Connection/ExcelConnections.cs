@@ -52,7 +52,6 @@ namespace OfficeOpenXml.Connection
             }
 
             _connections = null;
-            _connections = null;
         }
     }
 }
