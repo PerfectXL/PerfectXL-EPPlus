@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net35;net40</TargetFrameworks>
-    <AssemblyVersion>4.5.3.5</AssemblyVersion>
-    <FileVersion>4.5.3.5</FileVersion>
-    <Version>4.5.3.5</Version>
+    <AssemblyVersion>4.5.3.7</AssemblyVersion>
+    <FileVersion>4.5.3.7</FileVersion>
+    <Version>4.5.3.7</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://licenses.nuget.org/LGPL-3.0-or-later</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/JanKallman/EPPlus</PackageProjectUrl>

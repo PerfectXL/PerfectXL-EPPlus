@@ -224,6 +224,9 @@
     </Compile>
     <Compile Include="ConditionalFormatting\Rules\ExcelConditionalFormattingUniqueValues.cs" />
     <Compile Include="ConditionalFormatting\Rules\ExcelConditionalFormattingYesterday.cs" />
+    <Compile Include="Connection\ExcelConnection.cs" />
+    <Compile Include="Connection\ExcelConnections.cs" />
+    <Compile Include="Connection\ExcelDatabaseProperties.cs" />
     <Compile Include="Drawing\Chart\ExcelChartDataTable.cs" />
     <Compile Include="FontSize.cs" />
     <Compile Include="DataValidation\Contracts\IExcelDataValidation.cs" />
