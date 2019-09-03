@@ -132,6 +132,9 @@ namespace OfficeOpenXml
 	    internal FormulaParserManager _parserManager;
         internal CellStore<List<Token>> _formulaTokens;
         internal ExcelConnections _connections;
+        internal ExcelDataMashup _dataMashup;
+
+        public ExcelDataMashup DataMashup => _dataMashup ?? (_dataMashup = new ExcelDataMashup(_package, _namespaceManager));
 
         /// <summary>
         /// Provides access to connections
