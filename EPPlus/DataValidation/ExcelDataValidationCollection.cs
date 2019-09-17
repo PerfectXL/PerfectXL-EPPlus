@@ -76,6 +76,8 @@ namespace OfficeOpenXml.DataValidation
         private const string DataValidationPath = "//d:dataValidations";
         private readonly string DataValidationItemsPath = string.Format("{0}/d:dataValidation", DataValidationPath);
 
+        private static readonly string X14DataValidationItemsPath = "//d:extLst/d:ext/x14:dataValidations/x14:dataValidation";
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -100,12 +102,28 @@ namespace OfficeOpenXml.DataValidation
                     var typeSchema = node.Attributes["type"] != null ? node.Attributes["type"].Value : "";
 
                     var type = ExcelDataValidationType.GetBySchemaName(typeSchema);
-                    _validations.Add(ExcelDataValidationFactory.Create(type, worksheet, addr, node));
+                    _validations.Add(ExcelDataValidationFactory.Create(type, worksheet, addr, eDataValidationStorageType.Normal, node));
                 }
             }
             if (_validations.Count > 0)
             {
                 OnValidationCountChanged();
+            }
+
+            var x14DataValidationNodes = worksheet.WorksheetXml.SelectNodes(X14DataValidationItemsPath, worksheet.NameSpaceManager);
+            if (x14DataValidationNodes != null)
+            {
+                foreach (XmlNode node in x14DataValidationNodes)
+                {
+                    var sqrefNode = node.SelectSingleNode("//xm:sqref", worksheet.NameSpaceManager);
+                    if (sqrefNode == null) continue;
+
+                    var addr = sqrefNode.InnerText;
+                    var typeSchema = node.Attributes["type"] != null ? node.Attributes["type"].Value : "";
+                    var type = ExcelDataValidationType.GetBySchemaName(typeSchema);
+
+                    _validations.Add(ExcelDataValidationFactory.Create(type, worksheet, addr, eDataValidationStorageType.X14, node));
+                }
             }
 
             InternalValidationEnabled = true;
