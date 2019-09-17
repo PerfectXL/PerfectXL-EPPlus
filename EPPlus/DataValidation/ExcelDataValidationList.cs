@@ -65,24 +65,31 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="address"></param>
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
-        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode)
-            : base(worksheet, address, validationType, itemElementNode)
+        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+            eDataValidationStorageType storageType, XmlNode itemElementNode)
+            : base(worksheet, address, validationType, storageType, itemElementNode)
         {
-            Formula = new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _formula1Path);
+            
+            Formula = storageType == eDataValidationStorageType.X14
+                ? new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _x14Formula1Path)
+                : new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _formula1Path);
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor which is only used for unit tests
         /// </summary>
         /// <param name="worksheet"></param>
         /// <param name="address"></param>
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
         /// <param name="namespaceManager">Namespace manager, for test purposes</param>
-        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode, XmlNamespaceManager namespaceManager)
-            : base(worksheet, address, validationType, itemElementNode, namespaceManager)
+        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+            XmlNode itemElementNode, XmlNamespaceManager namespaceManager, eDataValidationStorageType storageType = eDataValidationStorageType.Normal)
+            : base(worksheet, address, validationType, storageType, itemElementNode, namespaceManager)
         {
-            Formula = new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _formula1Path);
+            Formula = storageType == eDataValidationStorageType.X14
+                ? new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _x14Formula1Path)
+                : new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _formula1Path);
         }
     }
 }

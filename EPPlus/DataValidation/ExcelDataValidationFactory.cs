@@ -52,26 +52,27 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="address"></param>
         /// <param name="itemElementNode"></param>
         /// <returns></returns>
-        public static ExcelDataValidation Create(ExcelDataValidationType type, ExcelWorksheet worksheet, string address, XmlNode itemElementNode)
+        public static ExcelDataValidation Create(ExcelDataValidationType type, ExcelWorksheet worksheet, string address, 
+            eDataValidationStorageType storageType, XmlNode itemElementNode)
         {
             Require.Argument(type).IsNotNull("validationType");
             switch (type.Type)
             {
                 case eDataValidationType.Any:
-                    return new ExcelDataValidationAny(worksheet, address, type, itemElementNode);
+                    return new ExcelDataValidationAny(worksheet, address, type, storageType, itemElementNode);
                 case eDataValidationType.TextLength:
                 case eDataValidationType.Whole:
-                    return new ExcelDataValidationInt(worksheet, address, type, itemElementNode);
+                    return new ExcelDataValidationInt(worksheet, address, type, storageType, itemElementNode);
                 case eDataValidationType.Decimal:
-                    return new ExcelDataValidationDecimal(worksheet, address, type, itemElementNode);
+                    return new ExcelDataValidationDecimal(worksheet, address, type, storageType, itemElementNode);
                 case eDataValidationType.List:
-                    return new ExcelDataValidationList(worksheet, address, type, itemElementNode);
+                    return new ExcelDataValidationList(worksheet, address, type, storageType, itemElementNode);
                 case eDataValidationType.DateTime:
-                    return new ExcelDataValidationDateTime(worksheet, address, type, itemElementNode);
+                    return new ExcelDataValidationDateTime(worksheet, address, type, storageType, itemElementNode);
                 case eDataValidationType.Time:
-                    return new ExcelDataValidationTime(worksheet, address, type, itemElementNode);
+                    return new ExcelDataValidationTime(worksheet, address, type, storageType, itemElementNode);
                 case eDataValidationType.Custom:
-                    return new ExcelDataValidationCustom(worksheet, address, type, itemElementNode);
+                    return new ExcelDataValidationCustom(worksheet, address, type, storageType, itemElementNode);
                 default:
                     throw new InvalidOperationException("Non supported validationtype: " + type.Type.ToString());
             }
