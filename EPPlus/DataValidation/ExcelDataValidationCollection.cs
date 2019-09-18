@@ -115,7 +115,7 @@ namespace OfficeOpenXml.DataValidation
             {
                 foreach (XmlNode node in x14DataValidationNodes)
                 {
-                    var sqrefNode = node.SelectSingleNode("//xm:sqref", worksheet.NameSpaceManager);
+                    var sqrefNode = node.SelectSingleNode("./xm:sqref", worksheet.NameSpaceManager);
                     if (sqrefNode == null) continue;
 
                     var addr = sqrefNode.InnerText;
