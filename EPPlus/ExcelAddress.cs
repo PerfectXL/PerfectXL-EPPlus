@@ -407,7 +407,7 @@ namespace OfficeOpenXml
 
         public string GetWorksheetNameEscaped()
         {
-            return Regex.IsMatch(_ws, RegexConstants.SheetNameSingleQuotes) ? $"'{_ws.Replace("'", "''")}'" : _ws;
+            return Regex.IsMatch(_ws, RegexConstants.SheetNameSingleQuotes, RegexOptions.IgnorePatternWhitespace) ? $"'{_ws.Replace("'", "''")}'" : _ws;
         }
         #endregion
         protected ExcelCellAddress _start = null;
