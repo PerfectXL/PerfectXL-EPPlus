@@ -64,6 +64,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         ValueDataTypeError,
         Null,
         Unrecognized,
-        ExcelAddressR1C1
+        ExcelAddressR1C1,
+        NewLine
     }
 }
