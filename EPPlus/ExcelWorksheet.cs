@@ -140,7 +140,7 @@ namespace OfficeOpenXml
 
             internal string GetFormula(int row, int column, string worksheet)
             {
-                if ((StartRow == row && StartCol == column))
+                if (StartRow == row && StartCol == column || IsArray)
                 {
                     return Formula;
                 }
@@ -1356,15 +1356,22 @@ namespace OfficeOpenXml
                             xr.Read();  //Something is wrong in the sheet, read next
                         }
                     }
-                    else if (t == "array") //TODO: Array functions are not support yet. Read the formula for the start cell only.
+                    else if (t == "array")
                     {
                         string aAddress = xr.GetAttribute("ref");
                         string formula = xr.ReadElementContentAsString();
                         var afIndex = GetMaxShareFunctionIndex(true);
-                        _formulas.SetValue(address._fromRow, address._fromCol, afIndex);
                         SetValueInner(address._fromRow, address._fromCol, null);
                         _sharedFormulas.Add(afIndex, new Formulas(SourceCodeTokenizer.Default) { Index = afIndex, Formula = formula, Address = aAddress, StartRow = address._fromRow, StartCol = address._fromCol, IsArray = true });
-                        _flags.SetFlagValue(address._fromRow, address._fromCol, true, CellFlags.ArrayFormula);
+                        var arrayFormulaAddress = new ExcelAddressBase(aAddress);
+                        for (int aRow = arrayFormulaAddress._fromRow; aRow <= arrayFormulaAddress._toRow; aRow++)
+                        {
+                            for (int aCol = arrayFormulaAddress._fromCol; aCol <= arrayFormulaAddress._toCol; aCol++)
+                            {
+                                _formulas.SetValue(aRow, aCol, afIndex);
+                                _flags.SetFlagValue(aRow, aCol, true, CellFlags.ArrayFormula);
+                            }
+                        }
                     }
                     else // ??? some other type
                     {
