@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyVersion>4.5.3.12</AssemblyVersion>
-    <FileVersion>4.5.3.12</FileVersion>
-    <Version>4.5.3.12</Version>
+    <AssemblyVersion>4.5.3.13</AssemblyVersion>
+    <FileVersion>4.5.3.13</FileVersion>
+    <Version>4.5.3.13</Version>
     <TargetFrameworks>netcoreapp2.1;netstandard2.0;net35;net40</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://licenses.nuget.org/LGPL-3.0-or-later</PackageLicenseUrl>
