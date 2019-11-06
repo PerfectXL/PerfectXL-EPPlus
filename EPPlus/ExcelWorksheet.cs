@@ -168,6 +168,26 @@ namespace OfficeOpenXml
                 return f;
             }
 
+            public static string ConvertFileNumberToLocalPath(string formula, string worksheet, Dictionary<int, string> externalFilePaths)
+            {
+                var tokens = SourceCodeTokenizer.Default.Tokenize(formula, worksheet);
+                string f = "";
+
+                foreach (var token in tokens)
+                {
+                    if (token.TokenType == TokenType.ExcelAddress)
+                    {
+                        var a = new ExcelFormulaAddress(token.Value, externalFilePaths);
+                        f += a.Address;
+                    }
+                    else
+                    {
+                        f += token.Value;
+                    }
+                }
+                return f;
+            }
+
             public Formulas Clone()
             {
                 var formulas = new Formulas(this._tokenizer);
@@ -4388,7 +4408,7 @@ namespace OfficeOpenXml
             }
             else if (v != null)
             {
-                return v.ToString();
+                return Formulas.ConvertFileNumberToLocalPath(v.ToString(), Name, Workbook.ExcelExternalLink.ExternalFilePaths);
             }
             else
             {

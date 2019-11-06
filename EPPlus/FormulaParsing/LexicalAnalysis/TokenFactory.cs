@@ -104,6 +104,11 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                 
             }
 
+            if (Regex.IsMatch(token, RegexConstants.ExternalCellRange, RegexOptions.IgnorePatternWhitespace))
+            {
+                return new Token(token, TokenType.ExcelAddress);
+            }
+
             if (tokens.Any() && tokens.Last().TokenType == TokenType.String)
             {
                 return new Token(token, TokenType.StringContent);

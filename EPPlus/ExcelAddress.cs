@@ -32,6 +32,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using OfficeOpenXml.FormulaParsing.Utilities;
@@ -148,6 +149,11 @@ namespace OfficeOpenXml
         {
             SetAddress(address);
         }
+        public ExcelAddressBase(string address, Dictionary<int, string> externalFilePaths)
+        {
+            SetAddress(address, externalFilePaths);
+        }
+
         /// <summary>
         /// Creates an Address object
         /// </summary>
@@ -278,19 +284,12 @@ namespace OfficeOpenXml
             }
         }
 
-        protected internal void SetAddress(string address)
+        protected internal void SetAddress(string address, Dictionary<int, string> externalFilePaths = null)
         {
             address = address.Trim();
             if (Utils.ConvertUtil._invariantCompareInfo.IsPrefix(address, "'") || Utils.ConvertUtil._invariantCompareInfo.IsPrefix(address, "["))
             {
-                //int pos = address.IndexOf("'", 1);
-                //while (pos < address.Length && address[pos + 1] == '\'')
-                //{
-                //    pos = address.IndexOf("'", pos + 2);
-                //}
-                //var wbws = address.Substring(1, pos - 1).Replace("''", "'");
-                SetWbWs(address);
-                //_address = address.Substring(pos + 2);
+                SetWbWs(address, externalFilePaths);
             }
             else
             {
@@ -302,6 +301,7 @@ namespace OfficeOpenXml
             {
                 //Advanced address. Including Sheet or multi or table.
                 ExtractAddress(_address);
+                _address = address;
             }
             else
             {
@@ -309,20 +309,50 @@ namespace OfficeOpenXml
                 GetRowColFromAddress(_address, out _fromRow, out _fromCol, out _toRow, out  _toCol, out _fromRowFixed, out _fromColFixed,  out _toRowFixed, out _toColFixed);
                 _start = null;
                 _end = null;
+                _address = CreateAddress();
             }
-            _address = address;
             Validate();
         }
+
+        private string CreateAddress()
+        {
+            if (!string.IsNullOrEmpty(_wb))
+            {
+                return UseSingleQuotes() ? $"'[{_wb}]{_ws}'!{_address}" : $"[{_wb}]{_ws}!{_address}";
+            }
+            
+            if (!string.IsNullOrEmpty(_ws))
+            {
+                return UseSingleQuotes() ? $"'{_ws}'!{_address}" : $"{_ws}!{_address}";
+            }
+
+            return _address;
+        }
+
         internal protected virtual void ChangeAddress()
         {
         }
-        private void SetWbWs(string address)
+        private void SetWbWs(string address, Dictionary<int,string> externalFilePaths = null)
         {
             int pos;
-            if (address[0] == '[')
+            Match match = Regex.Match(address, RegexConstants.ExternalCellRange, RegexOptions.IgnorePatternWhitespace);
+            if (match.Success)
+            {
+                _wb = match.Groups["ExternalFileNumber"].Value;
+                _ws = match.Groups["Worksheet"].Value;
+                _address = match.Groups["Address"].Value;
+
+                if (externalFilePaths?.Any() == true && int.TryParse(_wb, out int fileNumber) && externalFilePaths.TryGetValue(fileNumber, out string localPath))
+                {
+                    _wb = localPath;
+                }
+
+                return;
+            }
+            else if (address[0] == '[')
             {
                 pos = address.IndexOf("]");
-                _wb = address.Substring(1, pos - 1);                
+                _wb = address.Substring(1, pos - 1);
                 _ws = address.Substring(pos + 1);
             }
             else
@@ -330,6 +360,7 @@ namespace OfficeOpenXml
                 _wb = "";
                 _ws = address;
             }
+
             if(_ws.StartsWith("'"))
             {
                 pos = _ws.IndexOf("'",1);
@@ -363,6 +394,13 @@ namespace OfficeOpenXml
                 _address = address;
             }
         }
+
+        private bool UseSingleQuotes()
+        {
+            return !string.IsNullOrEmpty(_wb) && Regex.IsMatch(_wb, RegexConstants.WorkbookNameSingleQuotes, RegexOptions.IgnorePatternWhitespace) ||
+                !string.IsNullOrEmpty(_ws) && Regex.IsMatch(_ws, RegexConstants.SheetNameSingleQuotes, RegexOptions.IgnorePatternWhitespace);
+        }
+
         public void ChangeWorksheet(string wsName, string newWs)
         {
             if (_ws == wsName) _ws = newWs;
@@ -1382,7 +1420,13 @@ namespace OfficeOpenXml
         {
             SetFixed();
         }
-        
+
+        public ExcelFormulaAddress(string address, Dictionary<int, string> externalFilePaths)
+            : base(address, externalFilePaths)
+        {
+            SetFixed();
+        }
+
         internal ExcelFormulaAddress(string ws, string address)
             : base(address)
         {

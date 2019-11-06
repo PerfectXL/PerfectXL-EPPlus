@@ -112,7 +112,7 @@ namespace OfficeOpenXml
             ConnectionsUri = new Uri("/xl/connections.xml", UriKind.Relative);
             StylesUri = new Uri("/xl/styles.xml", UriKind.Relative);
 
-			_names = new ExcelNamedRangeCollection(this);
+            _names = new ExcelNamedRangeCollection(this);
 			_namespaceManager = namespaceManager;
 			TopNode = WorkbookXml.DocumentElement;
 			SchemaNodeOrder = new string[] { "fileVersion", "fileSharing", "workbookPr", "workbookProtection", "bookViews", "sheets", "functionGroups", "functionPrototypes", "externalReferences", "definedNames", "calcPr", "oleSize", "customWorkbookViews", "pivotCaches", "smartTagPr", "smartTagTypes", "webPublishing", "fileRecoveryPr", "webPublishObjects", "extLst" };
@@ -133,6 +133,9 @@ namespace OfficeOpenXml
         internal CellStore<List<Token>> _formulaTokens;
         internal ExcelConnections _connections;
         internal ExcelDataMashup _dataMashup;
+        private ExcelExternalFilePaths _externalLinks;
+
+        public ExcelExternalFilePaths ExcelExternalLink => _externalLinks ?? (_externalLinks = new ExcelExternalFilePaths(_package, _namespaceManager));
 
         public ExcelDataMashup DataMashup => _dataMashup ?? (_dataMashup = new ExcelDataMashup(_package, _namespaceManager));
 
