@@ -132,6 +132,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                             context.Result[i + 3].TokenType != TokenType.ExcelAddressR1C1)
                     {
                         token.TokenType = TokenType.InvalidReference;
+                        context.Result[i + 3].Value = "#REF!";
                         nToRemove--;
                     }
                     else

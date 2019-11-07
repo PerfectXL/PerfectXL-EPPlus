@@ -4408,7 +4408,7 @@ namespace OfficeOpenXml
             }
             else if (v != null)
             {
-                return Formulas.ConvertFileNumberToLocalPath(v.ToString(), Name, Workbook.ExcelExternalLink.ExternalFilePaths);
+                return Formulas.ConvertFileNumberToLocalPath(v.ToString(), Name, Workbook.ExcelExternalFilePaths.ExternalFilePaths);
             }
             else
             {
