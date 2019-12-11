@@ -64,8 +64,13 @@ namespace OfficeOpenXml.DataValidation
         protected readonly string _formula1Path = "d:formula1";
         protected readonly string _formula2Path = "d:formula2";
 
+
+        protected static string _x14Formula1Path = "x14:formula1/xm:f";
+        protected static string _x14Formula2Path = "x14:formula2/xm:f";
+        protected static string _x14SqrefPath = "x14:sqref";
+
         internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType)
-            : this(worksheet, address, validationType, null)
+            : this(worksheet, address, validationType, eDataValidationStorageType.Normal, null)
         { }
 
         /// <summary>
@@ -75,8 +80,9 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="itemElementNode">Xml top node (dataValidations)</param>
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
-        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode)
-            : this(worksheet, address, validationType, itemElementNode, null)
+        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+            eDataValidationStorageType storageType, XmlNode itemElementNode)
+            : this(worksheet, address, validationType, storageType, itemElementNode, null)
         {
 
         }
@@ -89,12 +95,13 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
         /// <param name="namespaceManager">Xml Namespace manager</param>
-        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode, XmlNamespaceManager namespaceManager)
+        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+            eDataValidationStorageType storageType, XmlNode itemElementNode, XmlNamespaceManager namespaceManager)
             : base(namespaceManager != null ? namespaceManager : worksheet.NameSpaceManager)
         {
             Require.Argument(address).IsNotNullOrEmpty("address");
             address = CheckAndFixRangeAddress(address);
-            if (itemElementNode == null)
+            if (itemElementNode == null && storageType == eDataValidationStorageType.Normal)
             {
                 //var xmlDoc = worksheet.WorksheetXml;
                 TopNode = worksheet.WorksheetXml.SelectSingleNode("//d:dataValidations", worksheet.NameSpaceManager);
@@ -232,6 +239,11 @@ namespace OfficeOpenXml.DataValidation
                 SetXmlNodeString(_typeMessagePath, value.SchemaName, true);
             }
         }
+
+        /// <summary>
+        /// How this data validation is stored
+        /// </summary>
+        public eDataValidationStorageType StorageType { get; set; }
 
         /// <summary>
         /// Operator for comparison between the entered value and Formula/Formulas.

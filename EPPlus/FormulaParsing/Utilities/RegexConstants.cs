@@ -41,8 +41,12 @@ namespace OfficeOpenXml.FormulaParsing.Utilities
         //Changed JK 26/2-2013
         public const string ExcelAddress = @"^(('[^/\\?*\[\]]{1,31}'|[A-Za-z_]{1,31})!)?[\$]{0,1}([A-Z]|[A-Z]{1,3}[\$]{0,1}[1-9]{1}[0-9]{0,7})(\:({0,1}[A-Z]|[A-Z]{1,3}[\$]{0,1}[1-9]{1}[0-9]{0,7})){0,1}$";
         //public const string ExcelAddress = @"^([\$]{0,1}([A-Z]{1,3}[\$]{0,1}[0-9]{1,7})(\:([\$]{0,1}[A-Z]{1,3}[\$]{0,1}[0-9]{1,7}){0,1})|([\$]{0,1}[A-Z]{1,3}\:[\$]{0,1}[A-Z]{1,3})|([\$]{0,1}[0-9]{1,7}\:[\$]{0,1}[0-9]{1,7}))$";
+        public const string SheetNameSingleQuotes = @"^" + ColumnPattern + RowPattern + @"$|^R-?\d*C-?\d*$|[\s()'$,;\-{}!]|^\d";
         public const string Boolean = @"^(true|false)$";
         public const string Decimal = @"^[0-9]+\.[0-9]+$";
         public const string Integer = @"^[0-9]+$";
+        public const string ColumnPattern = @"([A-Z]{1,2} | [A-W][A-Z]{1,2} | X[A-E][A-Z] | XF[A-D])";
+        public const string RowPattern = @"([1-9]\d{0,5} | 10[0-3]\d{4} | 104[0-7]\d{3} | 1048[0-4]\d{2} | 10485[0-6]\d | 104857[0-6])";
+        public const string DefinedNamePattern = @"^((?<Workheet> .+)!)? (?<Name> [^!\s]+)$";
     }
 }

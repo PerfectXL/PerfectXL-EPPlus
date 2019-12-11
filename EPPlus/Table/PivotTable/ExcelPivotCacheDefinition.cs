@@ -30,7 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using System.Linq;
@@ -245,6 +244,61 @@ namespace OfficeOpenXml.Table.PivotTable
                 _sourceRange = value;
             }
         }
+
+        public class WorksheetSourceInfo
+        {
+            public string Workbook { get; set; }
+            public string Worksheet { get; set; }
+            public string Address { get; set; }
+            public string NamedRange { get; set; }
+        }
+
+        /// <summary>
+        /// This extracts data once the source range is in another sheet
+        /// </summary>
+        public WorksheetSourceInfo ExternalWorksheetInfo
+        {
+            get
+            {
+                if (CacheSource != eSourceType.Worksheet)
+                {
+                    return null;
+                }
+
+                string workbook = "";
+                string rId = GetXmlNodeString("d:cacheSource/d:worksheetSource/@r:id");
+                if (rId != "")
+                {
+                    var relation = Part.GetRelationship(rId);
+                    workbook = relation.TargetUri.IsAbsoluteUri ? relation.TargetUri.LocalPath.Split('\\').Last() : relation.TargetUri.ToString();
+                }
+
+                return new WorksheetSourceInfo
+                {
+                    Workbook = workbook,
+                    Worksheet = GetXmlNodeString(_sourceWorksheetPath),
+                    Address = GetXmlNodeString(_sourceAddressPath),
+                    NamedRange = GetXmlNodeString(_sourceNamePath)
+                };
+            }
+        }
+
+        /// <summary>
+        /// Returns connectionId if cache type is external
+        /// </summary>
+        public int? ConnectionId
+        {
+            get
+            {
+                if (Int32.TryParse(GetXmlNodeString("d:cacheSource/@connectionId"), out int id))
+                {
+                    return id;
+                }
+
+                return null;
+            }
+        }
+
         /// <summary>
         /// Type of source data
         /// </summary>

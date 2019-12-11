@@ -66,26 +66,44 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="address"></param>
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
-        internal ExcelDataValidationDecimal(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode)
-            : base(worksheet, address, validationType, itemElementNode)
+        internal ExcelDataValidationDecimal(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
+            eDataValidationStorageType storageType, XmlNode itemElementNode)
+            : base(worksheet, address, validationType, storageType, itemElementNode)
         {
-            Formula = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula1Path);
-            Formula2 = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula2Path);
+            if (storageType == eDataValidationStorageType.X14)
+            {
+                Formula = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _x14Formula1Path);
+                Formula2 = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _x14Formula2Path);
+            }
+            else
+            {
+                Formula = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula1Path);
+                Formula2 = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula2Path);
+            }
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor which is only used for unit tests
         /// </summary>
         /// <param name="worksheet"></param>
         /// <param name="address"></param>
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
         /// <param name="namespaceManager">For test purposes</param>
-        internal ExcelDataValidationDecimal(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode, XmlNamespaceManager namespaceManager)
-            : base(worksheet, address, validationType, itemElementNode, namespaceManager)
+        internal ExcelDataValidationDecimal(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+            XmlNode itemElementNode, XmlNamespaceManager namespaceManager, eDataValidationStorageType storageType = eDataValidationStorageType.Normal)
+            : base(worksheet, address, validationType, storageType, itemElementNode, namespaceManager)
         {
-            Formula = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula1Path);
-            Formula2 = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula2Path);
+            if (storageType == eDataValidationStorageType.X14)
+            {
+                Formula = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _x14Formula1Path);
+                Formula2 = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _x14Formula2Path);
+            }
+            else
+            {
+                Formula = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula1Path);
+                Formula2 = new ExcelDataValidationFormulaDecimal(NameSpaceManager, TopNode, _formula2Path);
+            }
         }
     }
 }

@@ -203,11 +203,19 @@ namespace OfficeOpenXml.Style.XmlAccess
                 None,
                 SystemLongDate,
                 SystemLongTime,
-                Conditional
+                Conditional,
+                SystemShortDate,
             }
             internal ExcelFormatTranslator(string format, int numFmtID)
             {
-                if (format.Equals("general",StringComparison.OrdinalIgnoreCase))
+                if (numFmtID == 14)
+                {
+                    NetFormat = NetFormatForWidth = "";
+                    NetTextFormat = NetTextFormatForWidth = "";
+                    SpecialDateFormat = eSystemDateFormat.SystemShortDate;
+                    DataType = eFormatType.DateTime;
+                }
+                else if (format.Equals("general",StringComparison.OrdinalIgnoreCase))
                 {
                     NetFormat = NetFormatForWidth = "0.#####";
                     NetTextFormat = NetTextFormatForWidth = "";
@@ -317,7 +325,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                                             }
                                             catch
                                             {
-                                                Culture = null;
+                                                Culture = CultureInfo.CurrentCulture;
                                             }
                                         }
                                     }
@@ -502,17 +510,16 @@ namespace OfficeOpenXml.Style.XmlAccess
                 //Add qoutes
                 if (DataType == eFormatType.DateTime) SetDecimal(lstDec, sb); //Remove?
 
+                if (format == "")
+                    format = sb.ToString();
+                else
+                    text = sb.ToString();
+
                 // AM/PM format
                 if (containsAmPm)
                 {
                     format += "tt";
                 }
-
-
-                if (format == "")
-                    format = sb.ToString();
-                else
-                    text = sb.ToString();
 
                 if (forColWidth)
                 {

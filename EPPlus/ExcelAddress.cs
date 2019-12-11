@@ -34,6 +34,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using OfficeOpenXml.FormulaParsing.Utilities;
 
 namespace OfficeOpenXml
 {
@@ -362,7 +363,7 @@ namespace OfficeOpenXml
                 _address = address;
             }
         }
-        internal void ChangeWorksheet(string wsName, string newWs)
+        public void ChangeWorksheet(string wsName, string newWs)
         {
             if (_ws == wsName) _ws = newWs;
             var fullAddress = GetAddress();
@@ -395,13 +396,18 @@ namespace OfficeOpenXml
 
             if (!string.IsNullOrEmpty(_ws))
             {
-                adr += string.Format("'{0}'!", _ws);
+                adr += GetWorksheetNameEscaped() + "!";
             }
             if (IsName)
               adr += GetAddress(_fromRow, _fromCol, _toRow, _toCol);
             else
               adr += GetAddress(_fromRow, _fromCol, _toRow, _toCol, _fromRowFixed, _fromColFixed, _toRowFixed, _toColFixed);
             return adr;
+        }
+
+        public string GetWorksheetNameEscaped()
+        {
+            return Regex.IsMatch(_ws, RegexConstants.SheetNameSingleQuotes, RegexOptions.IgnorePatternWhitespace) ? $"'{_ws.Replace("'", "''")}'" : _ws;
         }
         #endregion
         protected ExcelCellAddress _start = null;
@@ -528,7 +534,14 @@ namespace OfficeOpenXml
                 throw new ArgumentOutOfRangeException("Start cell Address must be less or equal to End cell address");
             }
         }
-        internal string WorkSheet
+        public string WorkBook
+        {
+            get
+            {
+                return _wb;
+            }
+        }
+        public string WorkSheet
         {
             get
             {
@@ -722,9 +735,9 @@ namespace OfficeOpenXml
             else
                 return eAddressCollition.Partly;
         }
-        internal ExcelAddressBase AddRow(int row, int rows, bool setFixed=false)
+        public ExcelAddressBase AddRow(int row, int rows, bool setFixed=false)
         {
-            if (row > _toRow)
+            if (row > _toRow || _toRow == ExcelPackage.MaxRows)
             {
                 return this;
             }
@@ -737,9 +750,9 @@ namespace OfficeOpenXml
                 return new ExcelAddressBase(_fromRow, _fromCol, (setFixed && _toRowFixed ? _toRow : _toRow + rows), _toCol, _fromRowFixed, _fromColFixed, _toRowFixed, _toColFixed);
             }
         }
-        internal ExcelAddressBase DeleteRow(int row, int rows, bool setFixed = false)
+        public ExcelAddressBase DeleteRow(int row, int rows, bool setFixed = false)
         {
-            if (row > _toRow) //After
+            if (row > _toRow || _toRow == ExcelPackage.MaxRows) //After
             {
                 return this;
             }            
@@ -763,9 +776,9 @@ namespace OfficeOpenXml
                 }
             }
         }
-        internal ExcelAddressBase AddColumn(int col, int cols, bool setFixed = false)
+        public ExcelAddressBase AddColumn(int col, int cols, bool setFixed = false)
         {
-            if (col > _toCol)
+            if (col > _toCol || _toCol == ExcelPackage.MaxColumns)
             {
                 return this;
             }
@@ -778,9 +791,9 @@ namespace OfficeOpenXml
                 return new ExcelAddressBase(_fromRow, _fromCol, _toRow, (setFixed && _toColFixed ? _toCol : _toCol + cols), _fromRowFixed, _fromColFixed, _toRowFixed, _toColFixed);
             }
         }
-        internal ExcelAddressBase DeleteColumn(int col, int cols, bool setFixed = false)
+        public ExcelAddressBase DeleteColumn(int col, int cols, bool setFixed = false)
         {
-            if (col > _toCol) //After
+            if (col > _toCol || _toCol == ExcelPackage.MaxColumns) //After
             {
                 return this;
             }
@@ -889,8 +902,9 @@ namespace OfficeOpenXml
             R1C1
         }
 
-        internal static AddressType IsValid(string Address, bool r1c1=false)
+        internal static AddressType IsValid(string Address, out string normalizedAddress, bool r1c1 = false)
         {
+            normalizedAddress = Address;
             double d;
             if (Address == "#REF!")
             {
@@ -918,15 +932,25 @@ namespace OfficeOpenXml
                     {
                         if (intAddress.Contains("[")) //Table reference
                         {
-                            return string.IsNullOrEmpty(wb) ? AddressType.InternalAddress : AddressType.ExternalAddress;
+                            if (!string.IsNullOrEmpty(wb))
+                            {
+                                return AddressType.ExternalAddress;
+                            }
+
+                            normalizedAddress = NormalizeAddress(Address, ws, intAddress);
+                            return AddressType.InternalAddress;
                         }
-                        else if (intAddress.Contains(","))
+
+                        string addressToTest = intAddress.Contains(",") ? intAddress.Substring(0, intAddress.IndexOf(',')) : intAddress;
+                        if (IsAddress(addressToTest))
                         {
-                            intAddress = intAddress.Substring(0, intAddress.IndexOf(','));
-                        }
-                        if (IsAddress(intAddress))
-                        {
-                            return string.IsNullOrEmpty(wb) ? AddressType.InternalAddress : AddressType.ExternalAddress;
+                            if (!string.IsNullOrEmpty(wb))
+                            {
+                                return AddressType.ExternalAddress;
+                            }
+
+                            normalizedAddress = NormalizeAddress(Address, ws, intAddress);
+                            return AddressType.InternalAddress;
                         }
                         else
                         {
@@ -939,6 +963,11 @@ namespace OfficeOpenXml
                     }
                 }
             }
+        }
+
+        private static string NormalizeAddress(string fullAddress, string ws, string intAddress)
+        {
+            return fullAddress.StartsWith("!") ? fullAddress : string.IsNullOrEmpty(ws) ? intAddress : $"{ws}!{intAddress.ToUpperInvariant()}";
         }
 
         private static bool IsR1C1(string address)
@@ -1268,7 +1297,7 @@ namespace OfficeOpenXml
             return address.Substring(ix, endIx - ix).Replace("''","'");
         }
 
-        internal bool IsValidRowCol()
+        public bool IsValidRowCol()
         {
             return !(_fromRow > _toRow  ||
                    _fromCol > _toCol ||
