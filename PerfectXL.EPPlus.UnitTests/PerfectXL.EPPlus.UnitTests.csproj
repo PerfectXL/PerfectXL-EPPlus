@@ -8,6 +8,7 @@
     <Version>5.0.0</Version>    
     <Description>Package Description</Description>    
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -37,6 +38,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.1.11" />
     <PackageReference Include="MSTest.TestFramework" Version="1.1.11" />
+    <PackageReference Include="System.Resources.Extensions" Version="4.6.0" />
     <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
   </ItemGroup>
 
