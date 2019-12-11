@@ -41,28 +41,4 @@ using System.Security;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("9dd43b8d-c4fe-4a8b-ad6e-47ef83bbbb01")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-#if (!Core)
-    //[assembly: AssemblyTitle("EPPlus")]
-    //[assembly: AssemblyDescription("Allows Excel files(xlsx;xlsm) to be created on the server. See epplus.codeplex.com")]
-    //[assembly: AssemblyConfiguration("")]
-    //[assembly: AssemblyCompany("EPPlus")]
-    //[assembly: AssemblyProduct("EPPlus")]
-    //[assembly: AssemblyCopyright("Copyright 2009- ©Jan Källman. Parts of the Interface comes from the ExcelPackage-project")]
-    //[assembly: AssemblyTrademark("The GNU Lesser General Public License (LGPL)")]
-    //[assembly: AssemblyCulture("")]
-    //[assembly: ComVisible(false)]
-
-    //[assembly: AssemblyVersion("4.5.1")]
-    //[assembly: AssemblyFileVersion("4.5.0.0")]
-#endif
 [assembly: AllowPartiallyTrustedCallers]

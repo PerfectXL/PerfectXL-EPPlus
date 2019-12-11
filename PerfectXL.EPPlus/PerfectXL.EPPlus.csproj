@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>4.5.4</Version>
+    <Version>5.0.0</Version>
     <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseUrl>https://licenses.nuget.org/LGPL-3.0-or-later</PackageLicenseUrl>
@@ -13,11 +13,10 @@
     <AssemblyName>PerfectXL.EPPlus</AssemblyName>
     <RootNamespace>EPPlus</RootNamespace>
     <RepositoryUrl></RepositoryUrl>
-    <PackageTags>Excel ooxml</PackageTags>
+    <PackageTags>PerfectXL Excel ooxml</PackageTags>
     <Copyright>Jan Källman 2018</Copyright>
     <PackageReleaseNotes></PackageReleaseNotes>
     <SignAssembly>false</SignAssembly>
-    <AssemblyOriginatorKeyFile>OpenOfficeXml.snk</AssemblyOriginatorKeyFile>
     <NeutralLanguage />
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
