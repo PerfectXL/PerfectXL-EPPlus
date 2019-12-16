@@ -181,5 +181,7 @@ namespace OfficeOpenXml.Style
         {
             Index = index;
         }
+
+        public int GetIndex => Index;
     }
 }
