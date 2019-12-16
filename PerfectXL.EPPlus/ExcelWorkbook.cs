@@ -118,7 +118,6 @@ namespace OfficeOpenXml
 			SchemaNodeOrder = new string[] { "fileVersion", "fileSharing", "workbookPr", "workbookProtection", "bookViews", "sheets", "functionGroups", "functionPrototypes", "externalReferences", "definedNames", "calcPr", "oleSize", "customWorkbookViews", "pivotCaches", "smartTagPr", "smartTagTypes", "webPublishing", "fileRecoveryPr", "webPublishObjects", "extLst" };
 		    FullCalcOnLoad = true;  //Full calculation on load by default, for both new workbooks and templates.
 			GetSharedStrings();
-            GetExternalFilePaths();
 		}
 		#endregion
 
@@ -137,14 +136,8 @@ namespace OfficeOpenXml
         private ExcelExternalFiles _excelExternalFiles;
 
         public ExcelExternalFiles ExcelExternalFiles => _excelExternalFiles ?? (_excelExternalFiles = new ExcelExternalFiles(_package, _namespaceManager));
-        
 
-        public void GetExternalFilePaths()
-        {
-            _excelExternalFiles = new ExcelExternalFiles(_package, _namespaceManager);
-        }
-
-        public ExcelDataMashup DataMashup => _dataMashup ?? (_dataMashup = new ExcelDataMashup(_package, _namespaceManager));
+		public ExcelDataMashup DataMashup => _dataMashup ?? (_dataMashup = new ExcelDataMashup(_package, _namespaceManager));
 
         /// <summary>
         /// Provides access to connections

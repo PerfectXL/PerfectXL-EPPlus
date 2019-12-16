@@ -12,7 +12,7 @@ namespace OfficeOpenXml
         private string BaseDirectory { get; }
         public ExcelExternalFiles(ExcelPackage package, XmlNamespaceManager namespaceManager) : base(namespaceManager)
         {
-            BaseDirectory = package.File.DirectoryName;
+            BaseDirectory = package.File?.DirectoryName;
             ExternalFileUri = new Dictionary<int, Uri>();
             Uri externalLinkUri = new Uri($"xl/externalLinks/externalLink1.xml", UriKind.Relative);
             var i = 1;
@@ -40,9 +40,16 @@ namespace OfficeOpenXml
         {
             foreach (KeyValuePair<int, Uri> pair in ExternalFileUri)
             {
-                string absolutePath = pair.Value.IsAbsoluteUri
-                    ? pair.Value.LocalPath
-                    : $"{BaseDirectory}\\{Uri.UnescapeDataString(pair.Value.OriginalString)}";
+                string absolutePath;
+                if (pair.Value.IsAbsoluteUri)
+                {
+                    absolutePath = pair.Value.LocalPath;
+                }
+                else
+                {
+                    absolutePath = string.IsNullOrEmpty(BaseDirectory) ? Uri.UnescapeDataString(pair.Value.OriginalString) : $"{BaseDirectory}\\{Uri.UnescapeDataString(pair.Value.OriginalString)}";
+                }
+
                 yield return (pair.Key, absolutePath);
             }
         }
