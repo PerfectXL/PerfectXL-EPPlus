@@ -356,6 +356,7 @@ namespace OfficeOpenXml
         internal CellStore<List<Token>> _formulaTokens;
 
         internal CellStore<Uri> _hyperLinks;
+        public int HyperLinkCount => _hyperLinks?.Count ?? 0;
         internal CellStore<int> _commentsStore;
 
         internal Dictionary<int, Formulas> _sharedFormulas = new Dictionary<int, Formulas>();
