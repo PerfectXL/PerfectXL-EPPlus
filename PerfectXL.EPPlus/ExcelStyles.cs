@@ -629,8 +629,7 @@ namespace OfficeOpenXml
             
             style.Name = name;
             int ix =_wb.Styles.NamedStyles.Add(style.Name, style);
-            style.Style.SetIndex(ix);
-            //style.Style.XfId = ix;
+            style.Style.Index = ix;
             return style;
         }
         public void UpdateXml()

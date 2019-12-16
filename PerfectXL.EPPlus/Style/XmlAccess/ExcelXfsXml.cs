@@ -471,25 +471,25 @@ namespace OfficeOpenXml.Style.XmlAccess
             {
                 case eStyleClass.Numberformat:
                     newXfs.NumberFormatId = GetIdNumberFormat(styleProperty, value);
-                    styleObject.SetIndex(newXfs.NumberFormatId);
+                    styleObject.Index = newXfs.NumberFormatId;
                     break;
                 case eStyleClass.Font:
                 {
                     newXfs.FontId = GetIdFont(styleProperty, value);
-                    styleObject.SetIndex(newXfs.FontId);
+                    styleObject.Index = newXfs.FontId;
                     break;
                 }
                 case eStyleClass.Fill:
                 case eStyleClass.FillBackgroundColor:
                 case eStyleClass.FillPatternColor:
                     newXfs.FillId = GetIdFill(styleClass, styleProperty, value);
-                    styleObject.SetIndex(newXfs.FillId);
+                    styleObject.Index = newXfs.FillId;
                     break;
                 case eStyleClass.GradientFill:
                 case eStyleClass.FillGradientColor1:
                 case eStyleClass.FillGradientColor2:
                     newXfs.FillId = GetIdGradientFill(styleClass, styleProperty, value);
-                    styleObject.SetIndex(newXfs.FillId);
+                    styleObject.Index = newXfs.FillId;
                     break;
                 case eStyleClass.Border:
                 case eStyleClass.BorderBottom:
@@ -498,7 +498,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                 case eStyleClass.BorderRight:
                 case eStyleClass.BorderTop:
                     newXfs.BorderId = GetIdBorder(styleClass, styleProperty, value);
-                    styleObject.SetIndex(newXfs.BorderId);
+                    styleObject.Index = newXfs.BorderId;
                     break;
                 case eStyleClass.Style:
                     switch(styleProperty)

@@ -174,12 +174,7 @@ namespace OfficeOpenXml.Style
             _address = Address;
             _positionID = PositionID;
         }
-        internal int Index { get; set;}
+        public int Index { get; internal set;}
         internal abstract string Id {get;}
-
-        internal virtual void SetIndex(int index)
-        {
-            Index = index;
-        }
     }
 }
