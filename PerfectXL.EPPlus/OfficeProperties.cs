@@ -280,7 +280,18 @@ namespace OfficeOpenXml
         /// </summary>
         public Uri HyperlinkBase
         {
-            get { return new Uri(_extendedHelper.GetXmlNodeString(HyperlinkBasePath), UriKind.Absolute); }
+            get
+            {
+                try
+                {
+                    var xmlNodeString = _extendedHelper.GetXmlNodeString(HyperlinkBasePath);
+                    return string.IsNullOrEmpty(xmlNodeString) ? null : new Uri(xmlNodeString, UriKind.Absolute);
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+            }
             set { _extendedHelper.SetXmlNodeString(HyperlinkBasePath, value.AbsoluteUri); }
         }
 
