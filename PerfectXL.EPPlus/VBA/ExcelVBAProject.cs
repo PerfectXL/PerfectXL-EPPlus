@@ -259,6 +259,10 @@ namespace OfficeOpenXml.VBA
                             _protection.VbeProtected = (cmg[0] & 4) != 0;
                             break;
                         case "DPB":
+                            if (!Regex.IsMatch(split[1], "^[\\dA-F]+$", RegexOptions.IgnoreCase))
+                            {
+                                break;
+                            }
                             byte[] dpb = Decrypt(split[1]);
                             if (dpb.Length >= 28)
                             {
