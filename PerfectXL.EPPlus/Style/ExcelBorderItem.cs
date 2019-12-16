@@ -83,10 +83,7 @@ namespace OfficeOpenXml.Style
         {
             get { return Style + Color.Id; }
         }
-        internal override void SetIndex(int index)
-        {
-            _parent.Index = index;
-        }
+
         private ExcelBorderItemXml GetSource()
         {
             int ix = _parent.Index < 0 ? 0 : _parent.Index;

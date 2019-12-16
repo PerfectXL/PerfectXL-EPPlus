@@ -162,10 +162,7 @@ namespace OfficeOpenXml.Style
                     throw(new Exception("Invalid style-class for Color"));
             }
         }
-        internal override void SetIndex(int index)
-        {
-            _parent.Index = index;
-        }
+
         /// <summary>
         /// Return the RGB value for the Indexed or Tint property
         /// </summary>
