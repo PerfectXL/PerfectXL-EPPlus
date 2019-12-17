@@ -48,7 +48,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             _styles = styles;
             isBuildIn = false;
         }
-        internal ExcelXfs(XmlNamespaceManager nsm, XmlNode topNode, ExcelStyles styles) :
+        internal ExcelXfs(XmlNamespaceManager nsm, XmlNode topNode, ExcelStyles styles, int index) :
             base(nsm, topNode)
         {
             _styles = styles;
@@ -68,6 +68,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             _hidden = GetXmlNodeBool(hiddenPath);
             _locked = GetXmlNodeBool(lockedPath,true);
             _quotePrefix = GetXmlNodeBool(quotePrefixPath);
+            Index = index;
         }
 
         private ExcelReadingOrder GetReadingOrder(string value)
@@ -122,6 +123,9 @@ namespace OfficeOpenXml.Style.XmlAccess
             //    }
             //}
         }
+
+        public int Index { get; }
+
         int _xfID;
         /// <summary>
         /// Style index
@@ -137,93 +141,92 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _xfID = value;
             }
         }
-        #region Internal Properties
+        #region Public Properties
         int _numFmtId;
-        internal int NumberFormatId
+        public int NumberFormatId
         {
             get
             {
                 return _numFmtId;
             }
-            set
+            internal set
             {
                 _numFmtId = value;
                 ApplyNumberFormat = (value>0);
             }
         }
         int _fontId;
-        internal int FontId
+        public int FontId
         {
             get
             {
                 return _fontId;
             }
-            set
+            internal set
             {
                 _fontId = value;
             }
         }
         int _fillId;
-        internal int FillId
+        public int FillId
         {
             get
             {
                 return _fillId;
             }
-            set
+            internal set
             {
                 _fillId = value;
             }
         }
         int _borderId;
-        internal int BorderId
+        public int BorderId
         {
             get
             {
                 return _borderId;
             }
-            set
+            internal set
             {
                 _borderId = value;
             }
         }
-        private bool isBuildIn
+        public bool isBuildIn
         {
             get;
-            set;
+            internal set;
         }
-        internal bool ApplyNumberFormat
+        public bool ApplyNumberFormat
         {
             get;
-            set;
+            internal set;
         }
-        internal bool ApplyFont
+        public bool ApplyFont
         {
             get;
-            set;
+            internal set;
         }
-        internal bool ApplyFill
+        public bool ApplyFill
         {
             get;
-            set;
+            internal set;
         }
-        internal bool ApplyBorder
+        public bool ApplyBorder
         {
             get;
-            set;
+            internal set;
         }
-        internal bool ApplyAlignment
+        public bool ApplyAlignment
         {
             get;
-            set;
+            internal set;
         }
-        internal bool ApplyProtection
+        public bool ApplyProtection
         {
             get;
-            set;
+            internal set;
         }
-        #endregion
-        #region Public Properties
+
         public ExcelStyles Styles { get; private set; }
         /// <summary>
         /// Numberformat properties
