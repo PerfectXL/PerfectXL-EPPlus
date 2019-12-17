@@ -120,22 +120,26 @@ namespace OfficeOpenXml
             }
 
             //cellStyleXfs
-            XmlNode styleXfsNode = _styleXml.SelectSingleNode(CellStyleXfsPath, _nameSpaceManager);
-            if (styleXfsNode != null)
+            XmlNodeList styleXfsNodes = _styleXml.SelectNodes($"{CellStyleXfsPath}/d:xf", _nameSpaceManager);
+            if (styleXfsNodes != null && styleXfsNodes.Count > 0)
             {
-                foreach (XmlNode n in styleXfsNode)
+                for (int i = 0; i < styleXfsNodes.Count; i++)
                 {
-                    ExcelXfs item = new ExcelXfs(_nameSpaceManager, n, this);
+                    XmlNode n = styleXfsNodes[i];
+                    ExcelXfs item = new ExcelXfs(_nameSpaceManager, n, this, i);
                     CellStyleXfs.Add(item.Id, item);
                 }
             }
 
-            XmlNode styleNode = _styleXml.SelectSingleNode(CellXfsPath, _nameSpaceManager);
-            for (int i = 0; i < styleNode.ChildNodes.Count; i++)
+            XmlNodeList styleNodes = _styleXml.SelectNodes($"{CellXfsPath}/d:xf", _nameSpaceManager);
+            if (styleNodes != null && styleNodes.Count > 0)
             {
-                XmlNode n = styleNode.ChildNodes[i];
-                ExcelXfs item = new ExcelXfs(_nameSpaceManager, n, this);
-                CellXfs.Add(item.Id, item);
+                for (int i = 0; i < styleNodes.Count; i++)
+                {
+                    XmlNode n = styleNodes[i];
+                    ExcelXfs item = new ExcelXfs(_nameSpaceManager, n, this, i);
+                    CellXfs.Add(item.Id, item);
+                }
             }
 
             //cellStyle

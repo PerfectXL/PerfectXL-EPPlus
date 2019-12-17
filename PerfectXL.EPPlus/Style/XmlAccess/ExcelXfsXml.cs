@@ -48,7 +48,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             _styles = styles;
             isBuildIn = false;
         }
-        internal ExcelXfs(XmlNamespaceManager nsm, XmlNode topNode, ExcelStyles styles) :
+        internal ExcelXfs(XmlNamespaceManager nsm, XmlNode topNode, ExcelStyles styles, int index) :
             base(nsm, topNode)
         {
             _styles = styles;
@@ -68,6 +68,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             _hidden = GetXmlNodeBool(hiddenPath);
             _locked = GetXmlNodeBool(lockedPath,true);
             _quotePrefix = GetXmlNodeBool(quotePrefixPath);
+            Index = index;
         }
 
         private ExcelReadingOrder GetReadingOrder(string value)
@@ -122,6 +123,9 @@ namespace OfficeOpenXml.Style.XmlAccess
             //    }
             //}
         }
+
+        public int Index { get; }
+
         int _xfID;
         /// <summary>
         /// Style index
