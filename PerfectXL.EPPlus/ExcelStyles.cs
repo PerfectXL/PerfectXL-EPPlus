@@ -606,21 +606,9 @@ namespace OfficeOpenXml
             }
             else
             {
-                if (Template.PositionID < 0 && Template.Styles==this)
-                {
-                    xfIdCopy = Template.Index;
-                    
-                    positionID=Template.PositionID;
-                    styles = this;
-                    //style.Style = new ExcelStyle(this, NamedStylePropertyChange, Template.PositionID, name, Template.Index);
-                    //style.StyleXfId = Template.Index;
-                }
-                else
-                {
-                    xfIdCopy = Template.XfId;
-                    positionID = -1;
-                    styles = Template.Styles;
-                }
+                xfIdCopy = Template.PositionID < 0 ? Template.Index : Template.XfId;
+                positionID = -1;
+                styles = Template.Styles;
             }
             //Clone namedstyle
             int styleXfId = CloneStyle(styles, xfIdCopy, true);
