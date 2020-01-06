@@ -41,25 +41,26 @@ namespace OfficeOpenXml.Style
     /// </summary>
     public sealed class ExcelStyle : StyleBase
     {
+        private readonly ExcelXfs _xfs;
+
         internal ExcelStyle(ExcelStyles styles, OfficeOpenXml.XmlHelper.ChangedEventHandler ChangedEvent, int positionID, string Address, int xfsId) :
             base(styles, ChangedEvent, positionID, Address)
         {
             Index = xfsId;
-            ExcelXfs xfs;
             if (positionID > -1)
             {
-                xfs = _styles.CellXfs[xfsId];
+                _xfs = _styles.CellXfs[xfsId];
             }
             else
             {
-                xfs = _styles.CellStyleXfs[xfsId];
+                _xfs = _styles.CellStyleXfs[xfsId];
             }
             Styles = styles;
             PositionID = positionID;
-            Numberformat = new ExcelNumberFormat(styles, ChangedEvent, PositionID, Address, xfs.NumberFormatId);
-            Font = new ExcelFont(styles, ChangedEvent, PositionID, Address, xfs.FontId);
-            Fill = new ExcelFill(styles, ChangedEvent, PositionID, Address, xfs.FillId);
-            Border = new Border(styles, ChangedEvent, PositionID, Address, xfs.BorderId); 
+            Numberformat = new ExcelNumberFormat(styles, ChangedEvent, PositionID, Address, _xfs.NumberFormatId);
+            Font = new ExcelFont(styles, ChangedEvent, PositionID, Address, _xfs.FontId);
+            Fill = new ExcelFill(styles, ChangedEvent, PositionID, Address, _xfs.FillId);
+            Border = new Border(styles, ChangedEvent, PositionID, Address, _xfs.BorderId); 
         }
         /// <summary>
         /// Numberformat
@@ -84,7 +85,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].HorizontalAlignment;
+                return _xfs.HorizontalAlignment;
             }
             set
             {
@@ -98,7 +99,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].VerticalAlignment;
+                return _xfs.VerticalAlignment;
             }
             set
             {
@@ -112,7 +113,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].WrapText;
+                return _xfs.WrapText;
             }
             set
             {
@@ -126,7 +127,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].ReadingOrder;
+                return _xfs.ReadingOrder;
             }
             set
             {
@@ -140,7 +141,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].ShrinkToFit;
+                return _xfs.ShrinkToFit;
             }
             set
             {
@@ -154,7 +155,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].Indent;
+                return _xfs.Indent;
             }
             set
             {
@@ -172,7 +173,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].TextRotation;
+                return _xfs.TextRotation;
             }
             set
             {
@@ -191,7 +192,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].Locked;
+                return _xfs.Locked;
             }
             set
             {
@@ -206,7 +207,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].Hidden;
+                return _xfs.Hidden;
             }
             set
             {
@@ -221,7 +222,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].QuotePrefix;
+                return _xfs.QuotePrefix;
             }
             set
             {
@@ -237,7 +238,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return _styles.CellXfs[Index].XfId;
+                return _xfs.XfId;
             }
             set
             {
