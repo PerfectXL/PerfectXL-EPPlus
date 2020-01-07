@@ -34,6 +34,9 @@ using System.Collections.Generic;
 using System.Text;
 using OfficeOpenXml.Style.XmlAccess;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Xml;
 
 namespace OfficeOpenXml.Style
 {
@@ -164,112 +167,245 @@ namespace OfficeOpenXml.Style
         }
 
         /// <summary>
-        /// Return the RGB value for the Indexed or Tint property
+        ///     Return the RGB value for the Indexed or Tint property
         /// </summary>
         /// <returns>The RGB color starting with a #</returns>
         public string LookupColor()
         {
             return LookupColor(this);
         }
+
+        #region RgbLookup
+        // reference extracted from ECMA-376, Part 4, Section 3.8.26 or 18.8.27 SE Part 1
+        private static readonly string[] RgbLookup =
+        {
+            "#FF000000", // 0
+            "#FFFFFFFF",
+            "#FFFF0000",
+            "#FF00FF00",
+            "#FF0000FF",
+            "#FFFFFF00",
+            "#FFFF00FF",
+            "#FF00FFFF",
+            "#FF000000", // 8
+            "#FFFFFFFF",
+            "#FFFF0000",
+            "#FF00FF00",
+            "#FF0000FF",
+            "#FFFFFF00",
+            "#FFFF00FF",
+            "#FF00FFFF",
+            "#FF800000",
+            "#FF008000",
+            "#FF000080",
+            "#FF808000",
+            "#FF800080",
+            "#FF008080",
+            "#FFC0C0C0",
+            "#FF808080",
+            "#FF9999FF",
+            "#FF993366",
+            "#FFFFFFCC",
+            "#FFCCFFFF",
+            "#FF660066",
+            "#FFFF8080",
+            "#FF0066CC",
+            "#FFCCCCFF",
+            "#FF000080",
+            "#FFFF00FF",
+            "#FFFFFF00",
+            "#FF00FFFF",
+            "#FF800080",
+            "#FF800000",
+            "#FF008080",
+            "#FF0000FF",
+            "#FF00CCFF",
+            "#FFCCFFFF",
+            "#FFCCFFCC",
+            "#FFFFFF99",
+            "#FF99CCFF",
+            "#FFFF99CC",
+            "#FFCC99FF",
+            "#FFFFCC99",
+            "#FF3366FF",
+            "#FF33CCCC",
+            "#FF99CC00",
+            "#FFFFCC00",
+            "#FFFF9900",
+            "#FFFF6600",
+            "#FF666699",
+            "#FF969696",
+            "#FF003366",
+            "#FF339966",
+            "#FF003300",
+            "#FF333300",
+            "#FF993300",
+            "#FF993366",
+            "#FF333399",
+            "#FF333333" // 63
+        };
+        #endregion
+
         /// <summary>
-        /// Return the RGB value for the color object that uses the Indexed or Tint property
+        ///     Return the RGB value for the color object that uses the Indexed or Tint property
         /// </summary>
         /// <param name="theColor">The color object</param>
         /// <returns>The RGB color starting with a #</returns>
-        public string LookupColor(ExcelColor theColor)
+        public static string LookupColor(ExcelColor theColor)
         {
-            //Thanks to neaves for contributing this method.
-            int iTint = 0;
-            string translatedRGB = "";
-
-            // reference extracted from ECMA-376, Part 4, Section 3.8.26 or 18.8.27 SE Part 1
-            string[] rgbLookup =
+            string rawColorString;
+            if (!string.IsNullOrEmpty(theColor.Rgb))
             {
-                "#FF000000", // 0
-                "#FFFFFFFF",
-                "#FFFF0000",
-                "#FF00FF00",
-                "#FF0000FF",
-                "#FFFFFF00",
-                "#FFFF00FF",
-                "#FF00FFFF",
-                "#FF000000", // 8
-                "#FFFFFFFF",
-                "#FFFF0000",
-                "#FF00FF00",
-                "#FF0000FF",
-                "#FFFFFF00",
-                "#FFFF00FF",
-                "#FF00FFFF",
-                "#FF800000",
-                "#FF008000",
-                "#FF000080",
-                "#FF808000",
-                "#FF800080",
-                "#FF008080",
-                "#FFC0C0C0",
-                "#FF808080",
-                "#FF9999FF",
-                "#FF993366",
-                "#FFFFFFCC",
-                "#FFCCFFFF",
-                "#FF660066",
-                "#FFFF8080",
-                "#FF0066CC",
-                "#FFCCCCFF",
-                "#FF000080",
-                "#FFFF00FF",
-                "#FFFFFF00",
-                "#FF00FFFF",
-                "#FF800080",
-                "#FF800000",
-                "#FF008080",
-                "#FF0000FF",
-                "#FF00CCFF",
-                "#FFCCFFFF",
-                "#FFCCFFCC",
-                "#FFFFFF99",
-                "#FF99CCFF",
-                "#FFFF99CC",
-                "#FFCC99FF",
-                "#FFFFCC99",
-                "#FF3366FF",
-                "#FF33CCCC",
-                "#FF99CC00",
-                "#FFFFCC00",
-                "#FFFF9900",
-                "#FFFF6600",
-                "#FF666699",
-                "#FF969696",
-                "#FF003366",
-                "#FF339966",
-                "#FF003300",
-                "#FF333300",
-                "#FF993300",
-                "#FF993366",
-                "#FF333399",
-                "#FF333333", // 63
-            };
-
-            if ((0 <= theColor.Indexed) && (rgbLookup.Length > theColor.Indexed))
-            {
-                // coloring by pre-set color codes
-                translatedRGB = rgbLookup[theColor.Indexed];
+                rawColorString = $"#{theColor.Rgb}";
             }
-            else if (null != theColor.Rgb && 0 < theColor.Rgb.Length)
+            else if (!string.IsNullOrEmpty(theColor.Theme))
             {
-                // coloring by RGB value ("FFRRGGBB")
-                translatedRGB = "#" + theColor.Rgb;
+                rawColorString = "#FF0000000" + theColor.Theme[0]; // TODO
             }
             else
             {
-                // coloring by shades of grey (-1 -> 0)
-                iTint = ((int)(theColor.Tint * 160) + 0x80);
-                translatedRGB = ((int)(Math.Round(theColor.Tint * -512))).ToString("X");
-                translatedRGB = "#FF" + translatedRGB + translatedRGB + translatedRGB;
+                switch (theColor.Indexed)
+                {
+                    case 64:
+                        // System Foreground, assume black
+                        rawColorString = "#FF000000";
+                        break;
+                    case 65:
+                        // System Background, assume white
+                        rawColorString = "#FFFFFFFF";
+                        break;
+                    default:
+                        rawColorString = theColor.Indexed >= 0 && theColor.Indexed < RgbLookup.Length ? RgbLookup[theColor.Indexed] : "#FF666666";
+                        break;
+                }
             }
 
-            return translatedRGB;
+            return ApplyTint(rawColorString, theColor.Tint);
+        }
+
+        private static string ApplyTint(string argbColor, decimal tint)
+        {
+            if (tint == 0)
+            {
+                return argbColor;
+            }
+
+            Color color = HexValueToColor(argbColor);
+            var (hue, li, sat) = ColorConversion.RgbToHls(color.R, color.G, color.B);
+            li += tint < 0 ? li * (double) tint : (1.0 - li) * (double) tint;
+            var (r, g, b) = ColorConversion.HlsToRgb(hue, li, sat);
+            return $"#FF{r:X2}{g:X2}{b:X2}";
+        }
+
+        private static Color HexValueToColor(string hexColor)
+        {
+            return Color.FromArgb(int.Parse(hexColor.TrimStart('#'), NumberStyles.AllowHexSpecifier));
+        }
+
+        private static class ColorConversion
+        {
+            public static (double hue, double li, double sat) RgbToHls(byte r, byte g, byte b)
+            {
+                var doubleR = r / 255.0;
+                var doubleG = g / 255.0;
+                var doubleB = b / 255.0;
+
+                var max = new[] {doubleR, doubleB, doubleG}.Max();
+                var min = new[] {doubleR, doubleB, doubleG}.Min();
+
+                var diff = max - min;
+                var li = (max + min) / 2;
+                if (Math.Abs(diff) < 0.00001)
+                {
+                    return (0, li, 0);
+                }
+
+                double hue;
+                double sat;
+                if (li <= 0.5)
+                {
+                    sat = diff / (max + min);
+                }
+                else
+                {
+                    sat = diff / (2 - max - min);
+                }
+
+                var rDist = (max - doubleR) / diff;
+                var gDist = (max - doubleG) / diff;
+                var bDist = (max - doubleB) / diff;
+
+                if (Math.Abs(doubleR - max) < 0.00001)
+                {
+                    hue = bDist - gDist;
+                }
+                else if (Math.Abs(doubleG - max) < 0.00001)
+                {
+                    hue = 2 + rDist - bDist;
+                }
+                else
+                {
+                    hue = 4 + gDist - rDist;
+                }
+
+                hue *= 60;
+                if (hue < 0)
+                {
+                    hue += 360;
+                }
+
+                return (hue, li, sat);
+            }
+
+            public static (byte r, byte g, byte b) HlsToRgb(double hue, double li, double sat)
+            {
+                var p2 = li <= 0.5 ? li * (1 + sat) : li + sat - li * sat;
+                var p1 = 2 * li - p2;
+
+                if (Math.Abs(sat) < 0.00001)
+                {
+                    var rgb = (byte) (li * 255.0);
+                    return (rgb, rgb, rgb);
+                }
+
+                var doubleR = QqhToRgb(p1, p2, hue + 120);
+                var doubleG = QqhToRgb(p1, p2, hue);
+                var doubleB = QqhToRgb(p1, p2, hue - 120);
+                var r = (byte) (doubleR * 255.0);
+                var g = (byte) (doubleG * 255.0);
+                var b = (byte) (doubleB * 255.0);
+                return (r, g, b);
+            }
+
+            private static double QqhToRgb(double q1, double q2, double hue)
+            {
+                if (hue > 360)
+                {
+                    hue -= 360;
+                }
+
+                if (hue < 0)
+                {
+                    hue += 360;
+                }
+
+                if (hue < 60)
+                {
+                    return q1 + (q2 - q1) * hue / 60;
+                }
+
+                if (hue < 180)
+                {
+                    return q2;
+                }
+
+                if (hue < 240)
+                {
+                    return q1 + (q2 - q1) * (240 - hue) / 60;
+                }
+
+                return q1;
+            }
         }
     }
 }
