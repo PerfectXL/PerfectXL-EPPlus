@@ -36,7 +36,9 @@ using OfficeOpenXml.Style.XmlAccess;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
+using OfficeOpenXml.Theme;
 
 namespace OfficeOpenXml.Style
 {
@@ -167,12 +169,13 @@ namespace OfficeOpenXml.Style
         }
 
         /// <summary>
-        ///     Return the RGB value for the Indexed or Tint property
+        /// Return the RGB value for the Indexed or Tint property
         /// </summary>
+        /// <param name="schemeColors">The list of colors for the current color scheme</param>
         /// <returns>The RGB color starting with a #</returns>
-        public string LookupColor()
+        public string LookupColor(IList<SchemeColor> schemeColors = null)
         {
-            return LookupColor(this);
+            return LookupColor(this, schemeColors);
         }
 
         #region RgbLookup
@@ -247,20 +250,23 @@ namespace OfficeOpenXml.Style
         #endregion
 
         /// <summary>
-        ///     Return the RGB value for the color object that uses the Indexed or Tint property
+        /// Return the RGB value for the color object that uses the Indexed or Tint property
         /// </summary>
         /// <param name="theColor">The color object</param>
+        /// <param name="schemeColors">The list of colors for the current color scheme</param>
         /// <returns>The RGB color starting with a #</returns>
-        public static string LookupColor(ExcelColor theColor)
+        public static string LookupColor(ExcelColor theColor, IList<SchemeColor> schemeColors = null)
         {
             string rawColorString;
             if (!string.IsNullOrEmpty(theColor.Rgb))
             {
                 rawColorString = $"#{theColor.Rgb}";
             }
-            else if (!string.IsNullOrEmpty(theColor.Theme))
+            else if (!string.IsNullOrEmpty(theColor.Theme) && Regex.IsMatch(theColor.Theme, @"^\d+$"))
             {
-                rawColorString = "#FF0000000" + theColor.Theme[0]; // TODO
+                var index = int.Parse(theColor.Theme);
+                var hexValue = schemeColors?.ElementAtOrDefault(index)?.Value ?? "818181"; // arbitrary sensible value
+                rawColorString = $"#FF{hexValue}";
             }
             else
             {
@@ -275,7 +281,7 @@ namespace OfficeOpenXml.Style
                         rawColorString = "#FFFFFFFF";
                         break;
                     default:
-                        rawColorString = theColor.Indexed >= 0 && theColor.Indexed < RgbLookup.Length ? RgbLookup[theColor.Indexed] : "#FF666666";
+                        rawColorString = RgbLookup.ElementAtOrDefault(theColor.Indexed) ?? "#FF7F7F7F"; // arbitrary sensible value
                         break;
                 }
             }
@@ -302,6 +308,7 @@ namespace OfficeOpenXml.Style
             return Color.FromArgb(int.Parse(hexColor.TrimStart('#'), NumberStyles.AllowHexSpecifier));
         }
 
+        #region ColorConversion
         private static class ColorConversion
         {
             public static (double hue, double li, double sat) RgbToHls(byte r, byte g, byte b)
@@ -407,5 +414,6 @@ namespace OfficeOpenXml.Style
                 return q1;
             }
         }
+        #endregion
     }
 }
