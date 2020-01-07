@@ -51,6 +51,7 @@ using System.Drawing;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.Compatibility;
 using OfficeOpenXml.Connection;
+using OfficeOpenXml.Theme;
 
 namespace OfficeOpenXml
 {
@@ -134,10 +135,13 @@ namespace OfficeOpenXml
         internal ExcelConnections _connections;
         internal ExcelDataMashup _dataMashup;
         private ExcelExternalFiles _excelExternalFiles;
+        private ExcelThemeElements _excelThemeElements;
 
         public ExcelExternalFiles ExcelExternalFiles => _excelExternalFiles ?? (_excelExternalFiles = new ExcelExternalFiles(_package, _namespaceManager));
 
 		public ExcelDataMashup DataMashup => _dataMashup ?? (_dataMashup = new ExcelDataMashup(_package, _namespaceManager));
+
+        public ExcelThemeElements ExcelThemeElements => _excelThemeElements ?? (_excelThemeElements = ExcelThemeElements.Create(_package));
 
         /// <summary>
         /// Provides access to connections
