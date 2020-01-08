@@ -39,7 +39,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for color
     /// </summary>
-    public sealed class ExcelColorXml : StyleXmlHelper
+    internal sealed class ExcelColorXml : StyleXmlHelper
     {
         internal ExcelColorXml(XmlNamespaceManager nameSpaceManager)
             : base(nameSpaceManager)

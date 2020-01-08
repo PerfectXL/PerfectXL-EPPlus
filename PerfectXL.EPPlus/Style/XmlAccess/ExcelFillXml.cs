@@ -39,7 +39,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for fills
     /// </summary>
-    public class ExcelFillXml : StyleXmlHelper 
+    internal class ExcelFillXml : StyleXmlHelper 
     {
         internal ExcelFillXml(XmlNamespaceManager nameSpaceManager)
             : base(nameSpaceManager)

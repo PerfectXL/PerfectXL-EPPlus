@@ -38,7 +38,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for border top level
     /// </summary>
-    public sealed class ExcelBorderXml : StyleXmlHelper
+    internal sealed class ExcelBorderXml : StyleXmlHelper
     {
         internal ExcelBorderXml(XmlNamespaceManager nameSpaceManager)
             : base(nameSpaceManager)

@@ -40,7 +40,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for border items
     /// </summary>
-    public sealed class ExcelBorderItemXml : StyleXmlHelper
+    internal sealed class ExcelBorderItemXml : StyleXmlHelper
     {
         internal ExcelBorderItemXml(XmlNamespaceManager nameSpaceManager) : base(nameSpaceManager)
         {

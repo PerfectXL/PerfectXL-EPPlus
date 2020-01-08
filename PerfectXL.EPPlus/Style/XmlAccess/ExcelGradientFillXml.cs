@@ -39,7 +39,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for gradient fillsde
     /// </summary>
-    public sealed class ExcelGradientFillXml : ExcelFillXml
+    internal sealed class ExcelGradientFillXml : ExcelFillXml
     {
         internal ExcelGradientFillXml(XmlNamespaceManager nameSpaceManager)
             : base(nameSpaceManager)
