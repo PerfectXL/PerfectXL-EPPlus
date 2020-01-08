@@ -40,7 +40,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for fonts
     /// </summary>
-    public sealed class ExcelFontXml : StyleXmlHelper
+    internal sealed class ExcelFontXml : StyleXmlHelper
     {
         internal ExcelFontXml(XmlNamespaceManager nameSpaceManager)
             : base(nameSpaceManager)

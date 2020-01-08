@@ -1173,7 +1173,7 @@ namespace EPPlusTest
                 var ws = p.Workbook.Worksheets.Add("Test");
                 var c = ws.Cells["A1"].Style.Font.Color;
                 c.Indexed = 3;
-                Assert.AreEqual(c.LookupColor(c), "#FF00FF00");
+                Assert.AreEqual(c.LookupColor(), "#FF00FF00");
             }
         }
         [TestMethod, Ignore]

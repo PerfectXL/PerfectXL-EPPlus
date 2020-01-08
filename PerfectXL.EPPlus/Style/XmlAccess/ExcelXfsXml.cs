@@ -40,7 +40,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class xfs records. This is the top level style object.
     /// </summary>
-    public sealed class ExcelXfs : StyleXmlHelper
+    internal sealed class ExcelXfs : StyleXmlHelper
     {
         ExcelStyles _styles;
         internal ExcelXfs(XmlNamespaceManager nameSpaceManager, ExcelStyles styles) : base(nameSpaceManager)

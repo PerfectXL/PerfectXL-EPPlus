@@ -40,7 +40,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for number formats
     /// </summary>
-    public sealed class ExcelNumberFormatXml : StyleXmlHelper
+    internal sealed class ExcelNumberFormatXml : StyleXmlHelper
     {
         internal ExcelNumberFormatXml(XmlNamespaceManager nameSpaceManager) : base(nameSpaceManager)
         {

@@ -38,7 +38,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml helper class for cell style classes
     /// </summary>
-    public abstract class  StyleXmlHelper : XmlHelper
+    internal abstract class  StyleXmlHelper : XmlHelper
     {
         internal StyleXmlHelper(XmlNamespaceManager nameSpaceManager) : base(nameSpaceManager)
         { 

@@ -38,7 +38,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// <summary>
     /// Xml access class for named styles
     /// </summary>
-    public sealed class ExcelNamedStyleXml : StyleXmlHelper
+    internal sealed class ExcelNamedStyleXml : StyleXmlHelper
     {
         ExcelStyles _styles;
         internal ExcelNamedStyleXml(XmlNamespaceManager nameSpaceManager, ExcelStyles styles)
