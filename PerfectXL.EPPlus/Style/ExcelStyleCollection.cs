@@ -29,113 +29,116 @@
  * Jan Källman		    Initial Release		        2009-10-01
  * Jan Källman		    License changed GPL-->LGPL 2011-12-27
  *******************************************************************************/
+
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
-using System.Linq;
-namespace OfficeOpenXml
+
+namespace OfficeOpenXml.Style
 {
     /// <summary>
-    /// Base collection class for styles.
+    ///     Base collection class for styles.
     /// </summary>
     /// <typeparam name="T">The style type</typeparam>
     public class ExcelStyleCollection<T> : IEnumerable<T>
     {
+        private readonly Dictionary<string, int> _dic = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private readonly List<T> _list = new List<T>();
+        private readonly bool _setNextIdManual;
+        internal int NextId;
+
         public ExcelStyleCollection()
         {
             _setNextIdManual = false;
         }
-        bool _setNextIdManual;
-        public ExcelStyleCollection(bool SetNextIdManual)
-        {
-            _setNextIdManual = SetNextIdManual;
-        }
-        public XmlNode TopNode { get; set; }
-        internal List<T> _list = new List<T>();
-        Dictionary<string, int> _dic = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        internal int NextId=0;
-        #region IEnumerable<T> Members
 
+        public ExcelStyleCollection(bool setNextIdManual)
+        {
+            _setNextIdManual = setNextIdManual;
+        }
+
+        public int Count => _list.Count;
+
+        public T this[int positionId] => _list[positionId];
+
+        public XmlNode TopNode { get; set; }
+
+        #region IEnumerable Members
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+        #endregion
+
+        #region IEnumerable<T> Members
         public IEnumerator<T> GetEnumerator()
         {
             return _list.GetEnumerator();
         }
-
         #endregion
-        #region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return _list.GetEnumerator();
-        }
-        #endregion
-        public T this[int PositionID]
-        {
-            get
-            {
-                return _list[PositionID];
-            }
-        }
-        public int Count
-        {
-            get
-            {
-                return _list.Count;
-            }
-        }
         //internal int Add(T item)
         //{
         //    _list.Add(item);
         //    if (_setNextIdManual) NextId++;
         //    return _list.Count-1;
         //}
+
         internal int Add(string key, T item)
         {
             _list.Add(item);
-            if (!_dic.ContainsKey(key.ToLower(CultureInfo.InvariantCulture))) _dic.Add(key.ToLower(CultureInfo.InvariantCulture), _list.Count - 1);
-            if (_setNextIdManual) NextId++;
-            return _list.Count-1;
+            if (!_dic.ContainsKey(key.ToLower(CultureInfo.InvariantCulture)))
+            {
+                _dic.Add(key.ToLower(CultureInfo.InvariantCulture), _list.Count - 1);
+            }
+
+            if (_setNextIdManual)
+            {
+                NextId++;
+            }
+
+            return _list.Count - 1;
         }
+
+        internal bool ExistsKey(string key)
+        {
+            return _dic.ContainsKey(key);
+        }
+
         /// <summary>
-        /// Finds the key 
+        /// Finds the key
         /// </summary>
         /// <param name="key">the key to be found</param>
         /// <param name="obj">The found object.</param>
         /// <returns>True if found</returns>
-        internal bool FindByID(string key, ref T obj)
+        internal bool FindById(string key, ref T obj)
         {
             if (_dic.ContainsKey(key))
             {
                 obj = _list[_dic[key.ToLower(CultureInfo.InvariantCulture)]];
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
+
         /// <summary>
         /// Find Index
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        internal int FindIndexByID(string key)
+        internal int FindIndexById(string key)
         {
             if (_dic.ContainsKey(key))
             {
                 return _dic[key];
             }
-            else
-            {
-                return int.MinValue;
-            }
+
+            return int.MinValue;
         }
-        internal bool ExistsKey(string key)
-        {
-            return _dic.ContainsKey(key);
-        }
+
         internal void Sort(Comparison<T> c)
         {
             _list.Sort(c);

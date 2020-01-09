@@ -46,7 +46,7 @@ namespace OfficeOpenXml.ConditionalFormatting
   /// </summary>
   public abstract class ExcelConditionalFormattingRule
     : XmlHelper,
-    IExcelConditionalFormattingRule
+    IExcelConditionalFormattingRuleStyle
   {
     /****************************************************************************************/
 
@@ -55,8 +55,7 @@ namespace OfficeOpenXml.ConditionalFormatting
     private ExcelWorksheet _worksheet;
 
     /// <summary>
-    /// Sinalize that we are in a Cnaging Priorities opeartion so that we won't enter
-    /// a recursive loop.
+    /// Indicate that we are in a Change Priority operation so that we don't enter a recursive loop.
     /// </summary>
     private static bool _changingPriority = false;
     #endregion Private Properties
@@ -357,8 +356,10 @@ namespace OfficeOpenXml.ConditionalFormatting
           true);
       }
     }
-    internal ExcelDxfStyleConditionalFormatting _style = null;
-    public ExcelDxfStyleConditionalFormatting Style
+
+    private ExcelDxfStyleConditionalFormatting _style = null;
+
+    ExcelDxfStyleConditionalFormatting IExcelConditionalFormattingRuleStyle.Style
     {
         get
         {

@@ -547,7 +547,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                 default:
                     break;
             }
-            int id = xfsCol.FindIndexByID(newXfs.Id);
+            int id = xfsCol.FindIndexById(newXfs.Id);
             if (id < 0)
             {
                 return xfsCol.Add(newXfs.Id, newXfs);
@@ -595,7 +595,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             int subId;
             string id = border.Id;
-            subId = _styles.Borders.FindIndexByID(id);
+            subId = _styles.Borders.FindIndexById(id);
             if (subId == int.MinValue)
             {
                 return _styles.Borders.Add(id, border);
@@ -677,7 +677,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             int subId;
             string id = fill.Id;
-            subId = _styles.Fills.FindIndexByID(id);
+            subId = _styles.Fills.FindIndexById(id);
             if (subId == int.MinValue)
             {
                 return _styles.Fills.Add(id, fill);
@@ -761,7 +761,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             int subId;
             string id = fill.Id;
-            subId = _styles.Fills.FindIndexByID(id);
+            subId = _styles.Fills.FindIndexById(id);
             if (subId == int.MinValue)
             {
                 return _styles.Fills.Add(id, fill);
@@ -774,7 +774,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             if (styleProperty == eStyleProperty.Format)
             {
                 ExcelNumberFormatXml item=null;
-                if (!_styles.NumberFormats.FindByID(value.ToString(), ref item))
+                if (!_styles.NumberFormats.FindById(value.ToString(), ref item))
                 {
                     item = new ExcelNumberFormatXml(NameSpaceManager) { Format = value.ToString(), NumFmtId = _styles.NumberFormats.NextId++ };
                     _styles.NumberFormats.Add(value.ToString(), item);
@@ -833,7 +833,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             int subId;
             string id = fnt.Id;
-            subId = _styles.Fonts.FindIndexByID(id);
+            subId = _styles.Fonts.FindIndexById(id);
             if (subId == int.MinValue)
             {
                 return _styles.Fonts.Add(id,fnt);

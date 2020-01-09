@@ -127,12 +127,12 @@ namespace EPPlusTest
         condition1.StopIfTrue = true;
         condition1.Priority = 1;
         condition1.Formula = "TRUE";
-        condition1.Style.Fill.BackgroundColor.Color = Color.Green;
+        ((IExcelConditionalFormattingRuleStyle) condition1).Style.Fill.BackgroundColor.Color = Color.Green;
         IExcelConditionalFormattingEqual condition2 = ws.ConditionalFormatting.AddEqual(ws.Cells["A2"]);
         condition2.StopIfTrue = true;
         condition2.Priority = 2;
         condition2.Formula = "FALSE";
-        condition2.Style.Fill.BackgroundColor.Color = Color.Red;
+        ((IExcelConditionalFormattingRuleStyle) condition2).Style.Fill.BackgroundColor.Color = Color.Red;
     }
     [TestMethod]
     public void Databar()

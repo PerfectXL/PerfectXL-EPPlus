@@ -2401,7 +2401,7 @@ namespace EPPlusTest
             n.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             n.Style.TextRotation = 90;
             ws.Cells["a1:c3"].StyleName = "Normal";
-            //  n.CustomBuildin = true;
+            //  n.CustomBuiltin = true;
             pck.SaveAs(new FileInfo(@"c:\temp\style.xlsx"));
         }
         //[Ignore]

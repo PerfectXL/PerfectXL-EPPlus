@@ -55,6 +55,7 @@ using OfficeOpenXml.Utils;
 using System.Linq;
 using OfficeOpenXml.Compatibility;
 using OfficeOpenXml.Sparkline;
+using OfficeOpenXml.Style;
 
 namespace OfficeOpenXml
 {
@@ -632,7 +633,7 @@ namespace OfficeOpenXml
 
         private double GetRowHeightFromNormalStyle()
         {
-            var ix = Workbook.Styles.NamedStyles.FindIndexByID("Normal");
+            var ix = Workbook.Styles.NamedStyles.FindIndexById("Normal");
             if (ix >= 0)
             {
                 var f = Workbook.Styles.NamedStyles[ix].Style.Font;
@@ -4307,10 +4308,10 @@ namespace OfficeOpenXml
 		internal int GetStyleID(string StyleName)
 		{
 			ExcelNamedStyleXml namedStyle=null;
-            Workbook.Styles.NamedStyles.FindByID(StyleName, ref namedStyle);
+            Workbook.Styles.NamedStyles.FindById(StyleName, ref namedStyle);
             if (namedStyle.XfId == int.MinValue)
             {
-                namedStyle.XfId=Workbook.Styles.CellXfs.FindIndexByID(namedStyle.Style.Id);
+                namedStyle.XfId=Workbook.Styles.CellXfs.FindIndexById(namedStyle.Style.Id);
             }
             return namedStyle.XfId;
 		}
