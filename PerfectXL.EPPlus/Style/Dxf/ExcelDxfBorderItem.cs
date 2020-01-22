@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace OfficeOpenXml.Style.Dxf
 {
-    public class ExcelDxfBorderItem : DxfStyleBase<ExcelDxfBorderItem>
+    internal class ExcelDxfBorderItem : DxfStyleBase<ExcelDxfBorderItem>
     {
         internal ExcelDxfBorderItem(ExcelStyles styles) :
             base(styles)

@@ -568,7 +568,7 @@ namespace OfficeOpenXml.Table
             }
             set
             {
-                if (WorkSheet.Workbook.Styles.NamedStyles.FindIndexByID(value) < 0)
+                if (WorkSheet.Workbook.Styles.NamedStyles.FindIndexById(value) < 0)
                 {
                     throw (new Exception(string.Format("Named style {0} does not exist.", value)));
                 }
@@ -592,7 +592,7 @@ namespace OfficeOpenXml.Table
             }
             set
             {
-                if (WorkSheet.Workbook.Styles.NamedStyles.FindIndexByID(value) < 0)
+                if (WorkSheet.Workbook.Styles.NamedStyles.FindIndexById(value) < 0)
                 {
                     throw (new Exception(string.Format("Named style {0} does not exist.", value)));
                 }
@@ -619,7 +619,7 @@ namespace OfficeOpenXml.Table
             }
             set
             {
-                if (WorkSheet.Workbook.Styles.NamedStyles.FindIndexByID(value) < 0)
+                if (WorkSheet.Workbook.Styles.NamedStyles.FindIndexById(value) < 0)
                 {
                     throw (new Exception(string.Format("Named style {0} does not exist.", value)));
                 }

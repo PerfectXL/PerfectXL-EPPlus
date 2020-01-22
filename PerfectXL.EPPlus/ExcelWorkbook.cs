@@ -48,9 +48,11 @@ using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using OfficeOpenXml.Packaging.Ionic.Zip;
 using System.Drawing;
+using System.Linq;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.Compatibility;
 using OfficeOpenXml.Connection;
+using OfficeOpenXml.Packaging;
 using OfficeOpenXml.Theme;
 
 namespace OfficeOpenXml
@@ -375,7 +377,7 @@ namespace OfficeOpenXml
 		{
 			get
 			{
-                var ix = Styles.NamedStyles.FindIndexByID("Normal");
+                var ix = Styles.NamedStyles.FindIndexById("Normal");
                 if (ix >= 0)
                 {
                     if (_standardFontWidth == decimal.MinValue || _fontID != Styles.NamedStyles[ix].Style.Font.Id)
@@ -500,16 +502,18 @@ namespace OfficeOpenXml
         /// <summary>
         /// Create an empty VBA project.
         /// </summary>
+
         public void CreateVBAProject()
         {
             if (_vba != null || _package.Package.PartExists(new Uri(ExcelVbaProject.PartUri, UriKind.Relative)))
             {
-                throw (new InvalidOperationException("VBA project already exists."));
+                throw new InvalidOperationException("VBA project already exists.");
             }
-                        
+
             _vba = new ExcelVbaProject(this);
             _vba.Create();
-				}
+        }
+
 		/// <summary>
 		/// URI to the workbook inside the package
 		/// </summary>
@@ -674,73 +678,62 @@ namespace OfficeOpenXml
 			}
 		}
 		#endregion
-		#region StylesXml
-		private XmlDocument _stylesXml;
-		/// <summary>
-		/// Provides access to the XML data representing the styles in the package. 
-		/// </summary>
-		public XmlDocument StylesXml
-		{
-			get
-			{
-				if (_stylesXml == null)
-				{
-					if (_package.Package.PartExists(StylesUri))
-						_stylesXml = _package.GetXmlFromUri(StylesUri);
-					else
-					{
-						// create a new styles part and add to the package
-						Packaging.ZipPackagePart part = _package.Package.CreatePart(StylesUri, @"application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml", _package.Compression);
-						// create the style sheet
 
-						StringBuilder xml = new StringBuilder("<styleSheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\">");
-						xml.Append("<numFmts />");
-						xml.Append("<fonts count=\"1\"><font><sz val=\"11\" /><name val=\"Calibri\" /></font></fonts>");
-						xml.Append("<fills><fill><patternFill patternType=\"none\" /></fill><fill><patternFill patternType=\"gray125\" /></fill></fills>");
-						xml.Append("<borders><border><left /><right /><top /><bottom /><diagonal /></border></borders>");
-						xml.Append("<cellStyleXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" /></cellStyleXfs>");
-						xml.Append("<cellXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" xfId=\"0\" /></cellXfs>");
-						xml.Append("<cellStyles><cellStyle name=\"Normal\" xfId=\"0\" builtinId=\"0\" /></cellStyles>");
-                        xml.Append("<dxfs count=\"0\" />");
-                        xml.Append("</styleSheet>");
-						
-						_stylesXml = new XmlDocument();
-						_stylesXml.LoadXml(xml.ToString());
-						
-						//Save it to the package
-						StreamWriter stream = new StreamWriter(part.GetStream(FileMode.Create, FileAccess.Write));
+        #region StylesXml
+        private XmlDocument _stylesXml;
 
-						_stylesXml.Save(stream);
-						//stream.Close();
-						_package.Package.Flush();
+        /// <summary>
+        /// Provides access to the XML data representing the styles in the package.
+        /// </summary>
+        internal XmlDocument StylesXml
+        {
+            get => _stylesXml ?? (_stylesXml = _package.Package.PartExists(StylesUri) ? _package.GetXmlFromUri(StylesUri) : CreateNewStylesPartAndAddToPackage(_package));
+            set => _stylesXml = value;
+        }
 
-						// create the relationship between the workbook and the new shared strings part
-						_package.Workbook.Part.CreateRelationship(UriHelper.GetRelativeUri(WorkbookUri, StylesUri), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/styles");
-						_package.Package.Flush();
-					}
-				}
-				return (_stylesXml);
-			}
-			set
-			{
-				_stylesXml = value;
-			}
-		}
-		/// <summary>
-		/// Package styles collection. Used internally to access style data.
-		/// </summary>
-		public ExcelStyles Styles
-		{
-			get
-			{
-				if (_styles == null)
-				{
-					_styles = new ExcelStyles(NameSpaceManager, StylesXml, this);
-				}
-				return _styles;
-			}
-		}
-		#endregion
+        private XmlDocument CreateNewStylesPartAndAddToPackage(ExcelPackage package)
+        {
+            // create the style sheet
+            const string xmlString = "<styleSheet xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\"><numFmts />" +
+                                     "<fonts count=\"1\"><font><sz val=\"11\" /><name val=\"Calibri\" /></font></fonts>" +
+                                     "<fills><fill><patternFill patternType=\"none\" /></fill><fill><patternFill patternType=\"gray125\" /></fill></fills>" +
+                                     "<borders><border><left /><right /><top /><bottom /><diagonal /></border></borders>" +
+                                     "<cellStyleXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" /></cellStyleXfs>" +
+                                     "<cellXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" xfId=\"0\" /></cellXfs>" +
+                                     "<cellStyles><cellStyle name=\"Normal\" xfId=\"0\" builtinId=\"0\" /></cellStyles>" +
+                                     "<dxfs count=\"0\" /></styleSheet>";
+
+            var stylesXml = new XmlDocument();
+            stylesXml.LoadXml(xmlString);
+
+            ZipPackagePart part = package.Package.CreatePart(StylesUri, @"application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml",
+                package.Compression);
+
+            //Save it to the package
+            var stream = new StreamWriter(part.GetStream(FileMode.Create, FileAccess.Write));
+
+            stylesXml.Save(stream);
+            //stream.Close();
+            package.Package.Flush();
+
+            // create the relationship between the workbook and the new styles part
+            package.Workbook.Part.CreateRelationship(UriHelper.GetRelativeUri(WorkbookUri, StylesUri), TargetMode.Internal,
+                ExcelPackage.schemaRelationships + "/styles");
+            package.Package.Flush();
+            return stylesXml;
+        }
+
+        /// <summary>
+        /// Package styles collection. Used internally to access style data.
+        /// </summary>
+        internal ExcelStyles Styles => _styles ?? (_styles = new ExcelStyles(NameSpaceManager, StylesXml, this));
+
+        /// <summary>
+        /// Named styles in the workbook.
+        /// </summary>
+        public ExcelNamedStyleCollection NamedStyles => new ExcelNamedStyleCollection(Styles.NamedStyles, Styles);
+
+        #endregion
 
 		#region Office Document Properties
 		/// <summary>
@@ -1216,5 +1209,7 @@ namespace OfficeOpenXml
                 }
             }
         }
-    } // end Workbook
+    }
+
+    // end Workbook
 }

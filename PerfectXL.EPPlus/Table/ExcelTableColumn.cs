@@ -199,7 +199,7 @@ namespace OfficeOpenXml.Table
             }
             set
             {
-                if(_tbl.WorkSheet.Workbook.Styles.NamedStyles.FindIndexByID(value)<0)
+                if(_tbl.WorkSheet.Workbook.Styles.NamedStyles.FindIndexById(value)<0)
                 {
                     throw(new Exception(string.Format("Named style {0} does not exist.",value)));
                 }

@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace OfficeOpenXml.Style.Dxf
 {
-    public class ExcelDxfFill : DxfStyleBase<ExcelDxfFill>
+    internal class ExcelDxfFill : DxfStyleBase<ExcelDxfFill>
     {
         public ExcelDxfFill(ExcelStyles styles)
             : base(styles)

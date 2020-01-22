@@ -8,9 +8,10 @@ using System.Drawing;
 
 namespace OfficeOpenXml.Style.Dxf
 {
-    public class ExcelDxfStyleConditionalFormatting : DxfStyleBase<ExcelDxfStyleConditionalFormatting>
+    internal class ExcelDxfStyleConditionalFormatting : DxfStyleBase<ExcelDxfStyleConditionalFormatting>
     {
-        XmlHelperInstance _helper;
+        private readonly XmlHelperInstance _helper;
+
         internal ExcelDxfStyleConditionalFormatting(XmlNamespaceManager nameSpaceManager, XmlNode topNode, ExcelStyles styles) : base(styles)
         {
             NumberFormat = new ExcelDxfNumberFormat(_styles);
@@ -116,10 +117,10 @@ namespace OfficeOpenXml.Style.Dxf
             }
         }
         internal int DxfId { get; set; }
-        public ExcelDxfFontBase Font { get; set; }
-        public ExcelDxfNumberFormat NumberFormat { get; set; }
-        public ExcelDxfFill Fill { get; set; }
-        public ExcelDxfBorderBase Border { get; set; }
+        internal ExcelDxfFontBase Font { get; set; }
+        internal ExcelDxfNumberFormat NumberFormat { get; set; }
+        internal ExcelDxfFill Fill { get; set; }
+        internal ExcelDxfBorderBase Border { get; set; }
         protected internal override string Id
         {
             get

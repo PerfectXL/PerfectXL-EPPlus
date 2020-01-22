@@ -161,20 +161,23 @@ namespace OfficeOpenXml.Style
         /// </summary>
         RightToLeft=2
     }
+
     public abstract class StyleBase
     {
-        protected ExcelStyles _styles;
-        internal OfficeOpenXml.XmlHelper.ChangedEventHandler _ChangedEvent;
+        private protected ExcelStyles _styles;
+        internal XmlHelper.ChangedEventHandler _ChangedEvent;
         protected int _positionID;
         protected string _address;
-        internal StyleBase(ExcelStyles styles, OfficeOpenXml.XmlHelper.ChangedEventHandler ChangedEvent, int PositionID, string Address)
+
+        internal StyleBase(ExcelStyles styles, XmlHelper.ChangedEventHandler ChangedEvent, int PositionID, string Address)
         {
             _styles = styles;
             _ChangedEvent = ChangedEvent;
             _address = Address;
             _positionID = PositionID;
         }
-        public int Index { get; internal set;}
-        internal abstract string Id {get;}
+
+        public int Index { get; internal set; }
+        internal abstract string Id { get; }
     }
 }

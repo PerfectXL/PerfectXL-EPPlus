@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace OfficeOpenXml.Style.Dxf
 {
-    public abstract class DxfStyleBase<T>
+    internal abstract class DxfStyleBase<T>
     {
         protected ExcelStyles _styles;
         internal DxfStyleBase(ExcelStyles styles)
@@ -19,7 +19,8 @@ namespace OfficeOpenXml.Style.Dxf
         protected internal abstract bool HasValue{get;}
         protected internal abstract void CreateNodes(XmlHelper helper, string path);
         protected internal abstract T Clone();
-        protected void SetValueColor(XmlHelper helper,string path, ExcelDxfColor color)
+
+        private protected void SetValueColor(XmlHelper helper,string path, ExcelDxfColor color)
         {
             if (color != null && color.HasValue)
             {

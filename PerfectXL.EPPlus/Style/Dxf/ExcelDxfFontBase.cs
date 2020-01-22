@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace OfficeOpenXml.Style.Dxf
 {
-    public class ExcelDxfFontBase : DxfStyleBase<ExcelDxfFontBase>
+    internal class ExcelDxfFontBase : DxfStyleBase<ExcelDxfFontBase>
     {
         public ExcelDxfFontBase(ExcelStyles styles)
             : base(styles)

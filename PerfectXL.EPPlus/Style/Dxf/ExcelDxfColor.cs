@@ -7,8 +7,7 @@ using System.Xml;
 
 namespace OfficeOpenXml.Style.Dxf
 {
-    public class ExcelDxfColor : DxfStyleBase<ExcelDxfColor>
-
+    internal class ExcelDxfColor : DxfStyleBase<ExcelDxfColor>
     {
         public ExcelDxfColor(ExcelStyles styles) : base(styles)
         {

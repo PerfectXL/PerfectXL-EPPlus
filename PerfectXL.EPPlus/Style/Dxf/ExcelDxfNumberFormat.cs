@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace OfficeOpenXml.Style.Dxf
 {
-    public class ExcelDxfNumberFormat : DxfStyleBase<ExcelDxfNumberFormat>
+    internal class ExcelDxfNumberFormat : DxfStyleBase<ExcelDxfNumberFormat>
     {
         public ExcelDxfNumberFormat(ExcelStyles styles) : base(styles)
         {
@@ -84,7 +84,7 @@ namespace OfficeOpenXml.Style.Dxf
         {
             if (NumFmtID < 0 && !string.IsNullOrEmpty(Format))
             {
-                NumFmtID = _styles._nextDfxNumFmtID++;
+                NumFmtID = _styles.NextDfxNumFmtId++;
             }
             helper.CreateNode(path);
             SetValue(helper, path + "/@numFmtId", NumFmtID);

@@ -16,6 +16,7 @@ using OfficeOpenXml.Drawing.Chart;
 using System.Text;
 using System.Dynamic;
 using System.Globalization;
+using OfficeOpenXml.ConditionalFormatting.Contracts;
 using OfficeOpenXml.Drawing;
 using OfficeOpenXml.FormulaParsing;
 
@@ -1094,7 +1095,7 @@ namespace EPPlusTest
                 var worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
                 var equalsRule = worksheet.ConditionalFormatting.AddEqual(new ExcelAddress(2, 3, 6, 3));
                 equalsRule.Formula = "0";
-                equalsRule.Style.Fill.BackgroundColor.Color = Color.Blue;
+                ((IExcelConditionalFormattingRuleStyle) equalsRule).Style.Fill.BackgroundColor.Color = Color.Blue;
                 worksheet.ConditionalFormatting.AddDatabar(new ExcelAddress(4, 4, 4, 4), Color.Red);
                 excelPackage.Save();
             }
