@@ -100,7 +100,7 @@ namespace OfficeOpenXml.Style
         /// <summary>
         /// The indexed color number.
         /// </summary>
-        public int Indexed
+        public int? Indexed
         {
             get
             {
@@ -268,9 +268,13 @@ namespace OfficeOpenXml.Style
                 var hexValue = schemeColors?.ElementAtOrDefault(index)?.Value ?? "818181"; // arbitrary sensible value
                 rawColorString = $"#FF{hexValue}";
             }
+            else if (theColor.Indexed == null)
+            {
+                rawColorString = "#FF808080";
+            }
             else
             {
-                switch (theColor.Indexed)
+                switch (theColor.Indexed.Value)
                 {
                     case 64:
                         // System Foreground, assume black
@@ -281,7 +285,7 @@ namespace OfficeOpenXml.Style
                         rawColorString = "#FFFFFFFF";
                         break;
                     default:
-                        rawColorString = RgbLookup.ElementAtOrDefault(theColor.Indexed) ?? "#FF7F7F7F"; // arbitrary sensible value
+                        rawColorString = RgbLookup.ElementAtOrDefault(theColor.Indexed.Value) ?? "#FF7F7F7F"; // arbitrary sensible value
                         break;
                 }
             }

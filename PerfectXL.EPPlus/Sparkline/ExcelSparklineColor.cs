@@ -21,7 +21,7 @@ namespace OfficeOpenXml.Sparkline
         /// <summary>
         /// Indexed color
         /// </summary>
-        public int Indexed
+        public int? Indexed
         {
             get => GetXmlNodeInt("@indexed");
             set
@@ -30,8 +30,8 @@ namespace OfficeOpenXml.Sparkline
                 {
                     throw (new ArgumentOutOfRangeException("Index out of range"));
                 }
-                    
-                SetXmlNodeString("@indexed", value.ToString(CultureInfo.InvariantCulture));
+
+                SetXmlNodeString("@indexed", value.ToString(), true);
             }
         }
 

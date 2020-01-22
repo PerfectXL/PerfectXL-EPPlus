@@ -48,7 +48,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             _theme = "";
             _tint = 0;
             _rgb = "";
-            _indexed = int.MinValue;
+            _indexed = null;
         }
         internal ExcelColorXml(XmlNamespaceManager nsm, XmlNode topNode) :
             base(nsm, topNode)
@@ -64,7 +64,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _theme = GetXmlNodeString("@theme");
                 _tint = GetXmlNodeDecimalNull("@tint")??decimal.MinValue;
                 _rgb = GetXmlNodeString("@rgb");
-                _indexed = GetXmlNodeIntNull("@indexed") ?? int.MinValue;
+                _indexed = GetXmlNodeIntNull("@indexed");
             }
         }
         
@@ -137,19 +137,19 @@ namespace OfficeOpenXml.Style.XmlAccess
             {
                 _rgb = value;
                 _exists=true;
-                _indexed = int.MinValue;
+                _indexed = null;
                 _auto = false;
             }
         }
-        int _indexed;
+        int? _indexed;
         /// <summary>
         /// Indexed color value
         /// </summary>
-        public int Indexed
+        public int? Indexed
         {
             get
             {
-                return (_indexed == int.MinValue ? 0 : _indexed);
+                return _indexed;
             }
             set
             {
@@ -165,8 +165,8 @@ namespace OfficeOpenXml.Style.XmlAccess
         internal void Clear()
         {
             _theme = "";
-            _tint = decimal.MinValue;
-            _indexed = int.MinValue;
+            _tint = 0;
+            _indexed = null;
             _rgb = "";
             _auto = false;
         }
@@ -190,7 +190,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             else if (_indexed >= 0)
             {
-                SetXmlNodeString("@indexed", _indexed.ToString());
+                SetXmlNodeString("@indexed", _indexed.ToString(), true);
             }
             else if (_auto)
             {
