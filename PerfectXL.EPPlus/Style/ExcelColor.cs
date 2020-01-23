@@ -100,7 +100,7 @@ namespace OfficeOpenXml.Style
         /// <summary>
         /// The indexed color number.
         /// </summary>
-        public int Indexed
+        public int? Indexed
         {
             get
             {
@@ -250,38 +250,41 @@ namespace OfficeOpenXml.Style
         #endregion
 
         /// <summary>
-        /// Return the RGB value for the color object that uses the Indexed or Tint property
+        /// Return the ARGB value for the color object that uses the Indexed or Tint property
         /// </summary>
         /// <param name="theColor">The color object</param>
         /// <param name="schemeColors">The list of colors for the current color scheme</param>
-        /// <returns>The RGB color starting with a #</returns>
+        /// <returns>The ARGB color starting with a "#". Or, if the color is not set: null.</returns>
         public static string LookupColor(ExcelColor theColor, IList<SchemeColor> schemeColors = null)
         {
             string rawColorString;
             if (!string.IsNullOrEmpty(theColor.Rgb))
             {
-                rawColorString = $"#{theColor.Rgb}";
+                rawColorString = PrefixColorString(theColor.Rgb);
             }
             else if (!string.IsNullOrEmpty(theColor.Theme) && Regex.IsMatch(theColor.Theme, @"^\d+$"))
             {
                 var index = int.Parse(theColor.Theme);
-                var hexValue = schemeColors?.ElementAtOrDefault(index)?.Value ?? "818181"; // arbitrary sensible value
-                rawColorString = $"#FF{hexValue}";
+                rawColorString = PrefixColorString(schemeColors?.ElementAtOrDefault(index)?.Value);
+            }
+            else if (theColor.Indexed == null)
+            {
+                rawColorString = null;
             }
             else
             {
-                switch (theColor.Indexed)
+                switch (theColor.Indexed.Value)
                 {
                     case 64:
-                        // System Foreground, assume black
-                        rawColorString = "#FF000000";
+                        // System Foreground, get from theme color scheme, otherwise assume black
+                        rawColorString = PrefixColorString(schemeColors?.ElementAtOrDefault(1)?.Value ?? "000000");
                         break;
                     case 65:
-                        // System Background, assume white
-                        rawColorString = "#FFFFFFFF";
+                        // System Background, get from theme color scheme, otherwise assume black
+                        rawColorString = PrefixColorString(schemeColors?.ElementAtOrDefault(0)?.Value ?? "FFFFFF");
                         break;
                     default:
-                        rawColorString = RgbLookup.ElementAtOrDefault(theColor.Indexed) ?? "#FF7F7F7F"; // arbitrary sensible value
+                        rawColorString = RgbLookup.ElementAtOrDefault(theColor.Indexed.Value);
                         break;
                 }
             }
@@ -291,7 +294,7 @@ namespace OfficeOpenXml.Style
 
         private static string ApplyTint(string argbColor, decimal tint)
         {
-            if (tint == 0)
+            if (string.IsNullOrEmpty(argbColor) || tint == 0)
             {
                 return argbColor;
             }
@@ -300,12 +303,28 @@ namespace OfficeOpenXml.Style
             var (hue, li, sat) = ColorConversion.RgbToHls(color.R, color.G, color.B);
             li += tint < 0 ? li * (double) tint : (1.0 - li) * (double) tint;
             var (r, g, b) = ColorConversion.HlsToRgb(hue, li, sat);
-            return $"#FF{r:X2}{g:X2}{b:X2}";
+            return PrefixColorString($"{r:X2}{g:X2}{b:X2}");
         }
 
         private static Color HexValueToColor(string hexColor)
         {
             return Color.FromArgb(int.Parse(hexColor.TrimStart('#'), NumberStyles.AllowHexSpecifier));
+        }
+
+        // Standardize to 32-bits color value that starts with a hash.
+        private static string PrefixColorString(string hexValue)
+        {
+            if (hexValue == null)
+            {
+                return null;
+            }
+
+            if (hexValue.StartsWith("#"))
+            {
+                return hexValue;
+            }
+
+            return hexValue.Length == 8 ? $"#{hexValue}" : $"#FF{hexValue}";
         }
 
         #region ColorConversion

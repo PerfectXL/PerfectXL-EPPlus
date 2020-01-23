@@ -664,7 +664,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                     }
                     else if (styleProperty == eStyleProperty.IndexedColor)
                     {
-                        destColor.Indexed = (int)value;
+                        destColor.Indexed = (int?)value;
                     }
                     else
                     {
@@ -749,7 +749,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                     }
                     else if (styleProperty == eStyleProperty.IndexedColor)
                     {
-                        destColor.Indexed = (int)value;
+                        destColor.Indexed = (int?)value;
                     }
                     else
                     {
@@ -820,7 +820,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                     fnt.Color.Tint = (decimal)value;
                     break;
                 case eStyleProperty.IndexedColor:
-                    fnt.Color.Indexed = (int)value;
+                    fnt.Color.Indexed = (int?)value;
                     break;
                 case eStyleProperty.AutoColor:
                     fnt.Color.Auto = (bool)value;
