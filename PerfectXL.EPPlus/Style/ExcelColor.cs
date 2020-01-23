@@ -173,7 +173,7 @@ namespace OfficeOpenXml.Style
         /// </summary>
         /// <param name="schemeColors">The list of colors for the current color scheme</param>
         /// <returns>The RGB color starting with a #</returns>
-        public string LookupColor(IList<SchemeColor> schemeColors = null)
+        public string LookupColor(ICollection<SchemeColor> schemeColors = null)
         {
             return LookupColor(this, schemeColors);
         }
@@ -255,7 +255,7 @@ namespace OfficeOpenXml.Style
         /// <param name="theColor">The color object</param>
         /// <param name="schemeColors">The list of colors for the current color scheme</param>
         /// <returns>The ARGB color starting with a "#". Or, if the color is not set: null.</returns>
-        public static string LookupColor(ExcelColor theColor, IList<SchemeColor> schemeColors = null)
+        public static string LookupColor(ExcelColor theColor, ICollection<SchemeColor> schemeColors = null)
         {
             string rawColorString;
             if (!string.IsNullOrEmpty(theColor.Rgb))
@@ -265,7 +265,9 @@ namespace OfficeOpenXml.Style
             else if (!string.IsNullOrEmpty(theColor.Theme) && Regex.IsMatch(theColor.Theme, @"^\d+$"))
             {
                 var index = int.Parse(theColor.Theme);
-                rawColorString = PrefixColorString(schemeColors?.ElementAtOrDefault(index)?.Value);
+                rawColorString = Enum.IsDefined(typeof(ThemeColorName), index)
+                    ? PrefixColorString(schemeColors?.FirstOrDefault(x => x.ThemeColorName == (ThemeColorName) index)?.Value)
+                    : null;
             }
             else if (theColor.Indexed == null)
             {
@@ -277,11 +279,11 @@ namespace OfficeOpenXml.Style
                 {
                     case 64:
                         // System Foreground, get from theme color scheme, otherwise assume black
-                        rawColorString = PrefixColorString(schemeColors?.ElementAtOrDefault(1)?.Value ?? "000000");
+                        rawColorString = PrefixColorString(schemeColors?.FirstOrDefault(x => x.ThemeColorName == ThemeColorName.Dark1)?.Value ?? "000000");
                         break;
                     case 65:
-                        // System Background, get from theme color scheme, otherwise assume black
-                        rawColorString = PrefixColorString(schemeColors?.ElementAtOrDefault(0)?.Value ?? "FFFFFF");
+                        // System Background, get from theme color scheme, otherwise assume white
+                        rawColorString = PrefixColorString(schemeColors?.FirstOrDefault(x => x.ThemeColorName == ThemeColorName.Light1)?.Value ?? "FFFFFF");
                         break;
                     default:
                         rawColorString = RgbLookup.ElementAtOrDefault(theColor.Indexed.Value);
