@@ -111,13 +111,15 @@ namespace OfficeOpenXml.Style
                 _ChangedEvent(this, new StyleChangeEventArgs(_cls, eStyleProperty.IndexedColor, value, _positionID, _address));
             }
         }
+
         /// <summary>
         /// Set the color of the object
         /// </summary>
         /// <param name="color">The color</param>
         public void SetColor(Color color)
         {
-            Rgb = color.ToArgb().ToString("X");       
+            Rgb = color.ToArgb().ToString("X");
+            Tint = 0;
         }
         /// <summary>
         /// Set the color of the object
@@ -134,6 +136,7 @@ namespace OfficeOpenXml.Style
                 throw (new ArgumentException("Argument range must be from 0 to 255"));
             }
             Rgb = alpha.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
+            Tint = 0;
         }
         internal override string Id
         {
