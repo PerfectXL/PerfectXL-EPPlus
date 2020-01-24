@@ -21,6 +21,6 @@ namespace OfficeOpenXml.Style
         string Rgb { get; }
         string Theme { get; }
         decimal Tint { get; set; }
-        void SetColor(Color color);
+        void SetColor(Color color, bool resetTint);
     }
 }
