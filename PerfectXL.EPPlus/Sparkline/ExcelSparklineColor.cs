@@ -70,14 +70,10 @@ namespace OfficeOpenXml.Sparkline
         /// Set the color of the object
         /// </summary>
         /// <param name="color">The color</param>
-        /// <param name="resetTint">resets the Tint to 0 if true</param>
-        public void SetColor(Color color, bool resetTint = true)
+        public void SetColor(Color color)
         {
             Rgb = color.ToArgb().ToString("X");
-            if (resetTint)
-            {
-                Tint = 0;
-            }
+            Tint = 0;
         }
     }
 }

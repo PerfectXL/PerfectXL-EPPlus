@@ -116,14 +116,10 @@ namespace OfficeOpenXml.Style
         /// Set the color of the object
         /// </summary>
         /// <param name="color">The color</param>
-        /// <param name="resetTint">resets the Tint to 0 if true</param>
-        public void SetColor(Color color, bool resetTint = true)
+        public void SetColor(Color color)
         {
             Rgb = color.ToArgb().ToString("X");
-            if (resetTint)
-            {
-                Tint = 0;
-            }
+            Tint = 0;
         }
         /// <summary>
         /// Set the color of the object
@@ -132,8 +128,7 @@ namespace OfficeOpenXml.Style
         /// <param name="red">Red component value</param>
         /// <param name="green">Green component value</param>
         /// <param name="blue">Blue component value</param>
-        /// <param name="resetTint">resets the Tint to 0 if true</param>
-        public void SetColor(int alpha, int red, int green, int blue, bool resetTint = true)
+        public void SetColor(int alpha, int red, int green, int blue)
         {
             if(alpha < 0 || red < 0 || green < 0 ||blue < 0 ||
                alpha > 255 || red > 255 || green > 255 || blue > 255)
@@ -141,10 +136,7 @@ namespace OfficeOpenXml.Style
                 throw (new ArgumentException("Argument range must be from 0 to 255"));
             }
             Rgb = alpha.ToString("X2") + red.ToString("X2") + green.ToString("X2") + blue.ToString("X2");
-            if (resetTint)
-            {
-                Tint = 0;
-            }
+            Tint = 0;
         }
         internal override string Id
         {
