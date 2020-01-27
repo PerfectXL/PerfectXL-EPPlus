@@ -64,7 +64,7 @@ namespace OfficeOpenXml.DataValidation
         protected readonly string _formula1Path = "d:formula1";
         protected readonly string _formula2Path = "d:formula2";
 
-
+        protected eDataValidationStorageType _storageType;
         protected static string _x14Formula1Path = "x14:formula1/xm:f";
         protected static string _x14Formula2Path = "x14:formula2/xm:f";
         protected static string _x14SqrefPath = "x14:sqref";
@@ -111,6 +111,7 @@ namespace OfficeOpenXml.DataValidation
                 itemElementNode = TopNode.OwnerDocument.CreateElement(_itemElementNodeName.Split(':')[1], nsUri);
                 TopNode.AppendChild(itemElementNode);
             }
+            _storageType = storageType;
             TopNode = itemElementNode;
             ValidationType = validationType;
             Address = new ExcelAddress(address);
@@ -243,7 +244,7 @@ namespace OfficeOpenXml.DataValidation
         /// <summary>
         /// How this data validation is stored
         /// </summary>
-        public eDataValidationStorageType StorageType { get; set; }
+        public eDataValidationStorageType StorageType => _storageType;
 
         /// <summary>
         /// Operator for comparison between the entered value and Formula/Formulas.
@@ -399,7 +400,7 @@ namespace OfficeOpenXml.DataValidation
         {
             get
             {
-                return GetXmlNodeString(_formula1Path);
+                return GetXmlNodeString(_storageType == eDataValidationStorageType.X14 ? _x14Formula1Path : _formula1Path);
             }
         }
 
@@ -410,7 +411,7 @@ namespace OfficeOpenXml.DataValidation
         {
             get
             {
-                return GetXmlNodeString(_formula2Path);
+                return GetXmlNodeString(_storageType == eDataValidationStorageType.X14 ? _x14Formula2Path : _formula2Path);
             }
         }
 
