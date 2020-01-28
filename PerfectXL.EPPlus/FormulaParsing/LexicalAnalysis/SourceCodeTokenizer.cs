@@ -73,8 +73,6 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             {
                 return Enumerable.Empty<Token>();
             }
-            // MA 1401: Ignore leading plus in formula.
-            input = input.TrimStart('+');
             var context = new TokenizerContext(input);
             var handler = new TokenHandler(context, _tokenFactory, _separatorProvider);
             handler.Worksheet = worksheet;
@@ -146,45 +144,6 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                     for(var ix = 0; ix < nToRemove; ix++)
                     {
                         context.Result.RemoveAt(i + 1);
-                    }
-                }
-                // Clean up leading '+' along with the following operator combinations: ++, --, +-, -+
-                else if ((token.TokenType == TokenType.Operator || token.TokenType == TokenType.Negator) && i < context.Result.Count - 1 &&
-                         (token.Value=="+" || token.Value=="-"))
-                {
-                    //Remove '+' from start of formula and formula arguments
-                    if (token.Value == "+" && (i == 0 || context.Result[i - 1].TokenType  == TokenType.OpeningParenthesis || context.Result[i - 1].TokenType == TokenType.Comma))
-                    {
-                        context.Result.RemoveAt(i);
-                        SetNegatorOperator(context, i, tokens);
-                        i--;
-                        continue;
-                    }
-
-                    var nextToken = context.Result[i + 1];
-                    if (nextToken.TokenType == TokenType.Operator || nextToken.TokenType == TokenType.Negator)
-                    {
-                        // Remove leading '+' from operator combinations
-                        if (token.Value == "+" && (nextToken.Value=="+" || nextToken.Value == "-"))
-                        {
-                            context.Result.RemoveAt(i);
-                            SetNegatorOperator(context, i, tokens);
-                            i--;
-                        }
-                        // Remove trailing '+' from a negator operation
-                        else if (token.Value == "-" && nextToken.Value == "+")
-                        {
-                            context.Result.RemoveAt(i+1);
-                            SetNegatorOperator(context, i, tokens);
-                            i--;
-                        }
-                        // Convert double negator operation to positive declaration
-                        else if (token.Value == "-" && nextToken.Value == "-")
-                        {
-                            context.Result.RemoveAt(i);
-                            context.Result[i] = tokens["+"];
-                            i--;
-                        }
                     }
                 }
             }
