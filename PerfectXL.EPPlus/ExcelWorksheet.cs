@@ -1182,6 +1182,10 @@ namespace OfficeOpenXml
                     if (xr.GetAttribute("id", ExcelPackage.schemaRelationships) != null)
                     {
                         var rId = xr.GetAttribute("id", ExcelPackage.schemaRelationships);
+                        if (!Part.RelationshipExists(rId))
+                        {
+                            break;
+                        }
                         var uri = Part.GetRelationship(rId).TargetUri;
                         if (uri.IsAbsoluteUri)
                         {
