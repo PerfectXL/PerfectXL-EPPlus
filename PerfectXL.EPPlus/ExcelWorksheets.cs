@@ -68,7 +68,7 @@ namespace OfficeOpenXml
             _namespaceManager = nsm;
 			_worksheets = new Dictionary<int, ExcelWorksheet>();
 			int positionID = _pck._worksheetAdd;
-            var corruptSheets = new List<string>();
+            var missingSheets = new List<string>();
 
             foreach (XmlNode sheetNode in topNode.ChildNodes)
 			{
@@ -78,7 +78,7 @@ namespace OfficeOpenXml
                     string relId = sheetNode.Attributes.GetNamedItem("id", ExcelPackage.schemaRelationships).Value;
                     if (!IsRelIdValid(relId))
                     {
-                        corruptSheets.Add(name);
+                        missingSheets.Add(name);
                         continue;
                     }
 
@@ -104,7 +104,7 @@ namespace OfficeOpenXml
 			}
 
             //Create empty worksheet for sheets without valid rid
-            foreach (string sheetName in corruptSheets)
+            foreach (string sheetName in missingSheets)
             {
                 AddSheet(sheetName, false, null);
             }
