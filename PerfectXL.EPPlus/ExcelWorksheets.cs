@@ -36,6 +36,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.Drawing;
@@ -67,21 +68,24 @@ namespace OfficeOpenXml
             _namespaceManager = nsm;
 			_worksheets = new Dictionary<int, ExcelWorksheet>();
 			int positionID = _pck._worksheetAdd;
+            var corruptSheets = new List<string>();
 
             foreach (XmlNode sheetNode in topNode.ChildNodes)
 			{
                 if (sheetNode.NodeType == XmlNodeType.Element)
                 {
                     string name = sheetNode.Attributes["name"].Value;
-                    //Get the relationship id
                     string relId = sheetNode.Attributes.GetNamedItem("id", ExcelPackage.schemaRelationships).Value;
-                    int sheetID = Convert.ToInt32(sheetNode.Attributes["sheetId"].Value);
+                    if (!IsRelIdValid(relId))
+                    {
+                        corruptSheets.Add(name);
+                        continue;
+                    }
 
-                    //Hidden property
+                    int sheetID = Convert.ToInt32(sheetNode.Attributes["sheetId"].Value);
                     eWorkSheetHidden hidden = eWorkSheetHidden.Visible;
                     XmlNode attr = sheetNode.Attributes["state"];
-                    if (attr != null)
-                        hidden = TranslateHidden(attr.Value);
+                    if (attr != null) hidden = TranslateHidden(attr.Value);
 
                     var sheetRelation = pck.Workbook.Part.GetRelationship(relId);
                     Uri uriWorksheet = UriHelper.ResolvePartUri(pck.Workbook.WorkbookUri, sheetRelation.TargetUri);
@@ -98,7 +102,18 @@ namespace OfficeOpenXml
                     positionID++;
                 }
 			}
-		}
+
+            //Create empty worksheet for sheets without valid rid
+            foreach (string sheetName in corruptSheets)
+            {
+                AddSheet(sheetName, false, null);
+            }
+
+            bool IsRelIdValid(string relId)
+            {
+                return Regex.IsMatch(relId, @"rId\d+") && _pck.Workbook.Part.RelationshipExists(relId);
+            }
+        }
 
         private eWorkSheetHidden TranslateHidden(string value)
         {
