@@ -25,9 +25,8 @@ namespace OfficeOpenXml
 
                 TopNode = externalLinkXml.DocumentElement;
                 string rId = GetXmlNodeString("/d:externalLink/d:externalBook/@r:id");
-                if (!string.IsNullOrEmpty(rId))
+                if (zipPackagePart.TryGetRelationshipById(rId, out var relation))
                 {
-                    var relation = zipPackagePart.GetRelationship(rId);
                     ExternalFileUri.Add(i, relation.TargetUri);
                 }
 

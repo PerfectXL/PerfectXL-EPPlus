@@ -76,7 +76,7 @@ namespace OfficeOpenXml
                 {
                     string name = sheetNode.Attributes["name"].Value;
                     string relId = sheetNode.Attributes.GetNamedItem("id", ExcelPackage.schemaRelationships).Value;
-                    if (!IsRelIdValid(relId))
+                    if (!pck.Workbook.Part.TryGetRelationshipById(relId, out var sheetRelation))
                     {
                         missingSheets.Add(name);
                         continue;
@@ -87,7 +87,6 @@ namespace OfficeOpenXml
                     XmlNode attr = sheetNode.Attributes["state"];
                     if (attr != null) hidden = TranslateHidden(attr.Value);
 
-                    var sheetRelation = pck.Workbook.Part.GetRelationship(relId);
                     Uri uriWorksheet = UriHelper.ResolvePartUri(pck.Workbook.WorkbookUri, sheetRelation.TargetUri);
 
                     //add the worksheet
@@ -107,11 +106,6 @@ namespace OfficeOpenXml
             foreach (string sheetName in missingSheets)
             {
                 AddSheet(sheetName, false, null);
-            }
-
-            bool IsRelIdValid(string relId)
-            {
-                return Regex.IsMatch(relId, @"rId\d+") && _pck.Workbook.Part.RelationshipExists(relId);
             }
         }
 

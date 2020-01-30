@@ -1136,7 +1136,11 @@ namespace OfficeOpenXml
 				foreach (XmlElement elem in nl)
 				{
 					string rID = elem.GetAttribute("r:id");
-					var rel = Part.GetRelationship(rID);
+                    if (!Part.TryGetRelationshipById(rID, out var rel))
+                    {
+                        continue;
+                    }
+
 					var part = _package.Package.GetPart(UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri));
 					XmlDocument xmlExtRef = new XmlDocument();
                     LoadXmlSafe(xmlExtRef, part.GetStream()); 
@@ -1145,13 +1149,11 @@ namespace OfficeOpenXml
 					if(book!=null)
 					{
 						string rId_ExtRef = book.GetAttribute("r:id");
-						var rel_extRef = part.GetRelationship(rId_ExtRef);
-						if (rel_extRef != null)
+						if (part.TryGetRelationshipById(rId_ExtRef, out var rel_extRef))
 						{
 							_externalReferences.Add(rel_extRef.TargetUri.OriginalString);
 						}
-
-					}
+                    }
 				}
 			}
 		}

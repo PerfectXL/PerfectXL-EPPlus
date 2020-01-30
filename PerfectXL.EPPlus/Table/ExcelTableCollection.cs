@@ -51,7 +51,11 @@ namespace OfficeOpenXml.Table
             _ws = ws;
             foreach(XmlElement node in ws.WorksheetXml.SelectNodes("//d:tableParts/d:tablePart", ws.NameSpaceManager))
             {
-                var rel = ws.Part.GetRelationship(node.GetAttribute("id",ExcelPackage.schemaRelationships));
+                if (!ws.Part.TryGetRelationshipById(node.GetAttribute("id", ExcelPackage.schemaRelationships), out var rel))
+                {
+                    continue;
+                }
+
                 var tbl = new ExcelTable(rel, ws);
                 _tableNames.Add(tbl.Name, _tables.Count);
                 _tables.Add(tbl);
