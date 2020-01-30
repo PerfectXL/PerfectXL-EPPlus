@@ -470,11 +470,9 @@ namespace OfficeOpenXml
                     }
                     else
                     {
-                        if (_ws.Part.RelationshipExists(vmlNode.Value))
+                        if (_ws.Part.TryGetRelationshipById(vmlNode.Value, out var rel))
                         {
-                            var rel = _ws.Part.GetRelationship(vmlNode.Value);
                             var vmlUri = UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri);
-
                             _vmlDrawingsHF = new ExcelVmlDrawingPictureCollection(_ws._package, _ws, vmlUri);
                             _vmlDrawingsHF.RelId = rel.Id;
                         }

@@ -88,6 +88,11 @@ namespace OfficeOpenXml.Packaging
         {
             return _rels[id];
         }
+
+        internal bool TryGetRelationshipById(string id, out ZipPackageRelationship relationship)
+        {
+            return _rels.TryGetRelationshipsById(id, out relationship);
+        }
         internal void ReadRelation(string xml, string source)
         {
             var doc = new XmlDocument();

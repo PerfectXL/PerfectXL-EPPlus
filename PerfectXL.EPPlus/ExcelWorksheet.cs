@@ -854,9 +854,8 @@ namespace OfficeOpenXml
             }
             else
             {
-                if (Part.RelationshipExists(vmlNode.Value))
+                if (Part.TryGetRelationshipById(vmlNode.Value, out var rel))
                 {
-                    var rel = Part.GetRelationship(vmlNode.Value);
                     var vmlUri = UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri);
 
                     _vmlDrawings = new ExcelVmlDrawingCommentCollection(_package, this, vmlUri);
@@ -1182,11 +1181,17 @@ namespace OfficeOpenXml
                     if (xr.GetAttribute("id", ExcelPackage.schemaRelationships) != null)
                     {
                         var rId = xr.GetAttribute("id", ExcelPackage.schemaRelationships);
-                        if (!Part.RelationshipExists(rId))
+                        if (!Part.TryGetRelationshipById(rId, out var rel))
                         {
                             break;
                         }
-                        var uri = Part.GetRelationship(rId).TargetUri;
+
+                        var uri = rel.TargetUri;
+                        if (uri == null)
+                        {
+                            break;
+                        }
+                        
                         if (uri.IsAbsoluteUri)
                         {
                             try
@@ -3086,17 +3091,19 @@ namespace OfficeOpenXml
                 string relID = attr.Value;
                 //First delete the attribute from the XML
                 attr.OwnerElement.Attributes.Remove(attr);
-                if(Part.RelationshipExists(relID))
-                {
-                    var rel = Part.GetRelationship(relID);
-                    Uri printerSettingsUri = UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri);
-                    Part.DeleteRelationship(rel.Id);
 
-                    //Delete the part from the package
-                    if(_package.Package.PartExists(printerSettingsUri))
-                    {
-                        _package.Package.DeletePart(printerSettingsUri);
-                    }
+                if (!Part.TryGetRelationshipById(relID, out var rel))
+                {
+                    return;
+                }
+
+                Uri printerSettingsUri = UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri);
+                Part.DeleteRelationship(rel.Id);
+
+                //Delete the part from the package
+                if(_package.Package.PartExists(printerSettingsUri))
+                {
+                    _package.Package.DeletePart(printerSettingsUri);
                 }
             }
         }

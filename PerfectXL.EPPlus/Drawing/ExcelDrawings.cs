@@ -78,25 +78,27 @@ namespace OfficeOpenXml.Drawing
         internal Packaging.ZipPackageRelationship _drawingRelation = null;
         internal ExcelDrawings(ExcelPackage xlPackage, ExcelWorksheet sheet)
         {
-                _drawingsXml = new XmlDocument();                
-                _drawingsXml.PreserveWhitespace = false;
-                _drawings = new List<ExcelDrawing>();
-                _drawingNames = new Dictionary<string,int>(StringComparer.OrdinalIgnoreCase);
-                _package = xlPackage;
-                Worksheet = sheet;
-                XmlNode node = sheet.WorksheetXml.SelectSingleNode("//d:drawing", sheet.NameSpaceManager);
-                CreateNSM();
-                if (node != null)
-                {
-                    _drawingRelation = sheet.Part.GetRelationship(node.Attributes["r:id"].Value);
-                    _uriDrawing = UriHelper.ResolvePartUri(sheet.WorksheetUri, _drawingRelation.TargetUri);
+            _drawingsXml = new XmlDocument();                
+            _drawingsXml.PreserveWhitespace = false;
+            _drawings = new List<ExcelDrawing>();
+            _drawingNames = new Dictionary<string,int>(StringComparer.OrdinalIgnoreCase);
+            _package = xlPackage;
+            Worksheet = sheet;
+            XmlNode node = sheet.WorksheetXml.SelectSingleNode("//d:drawing", sheet.NameSpaceManager);
+            CreateNSM();
 
-                    _part = xlPackage.Package.GetPart(_uriDrawing);
-                    XmlHelper.LoadXmlSafe(_drawingsXml, _part.GetStream()); 
+            if (node == null || !sheet.Part.TryGetRelationshipById(node.Attributes["r:id"].Value, out var relationship))
+            {
+                return;
+            }
 
-                    AddDrawings();
-                }
-         }
+            _drawingRelation = relationship;
+            _uriDrawing = UriHelper.ResolvePartUri(sheet.WorksheetUri, _drawingRelation.TargetUri);
+            _part = xlPackage.Package.GetPart(_uriDrawing);
+            XmlHelper.LoadXmlSafe(_drawingsXml, _part.GetStream()); 
+
+            AddDrawings();
+        }
         internal ExcelWorksheet Worksheet { get; set; }
         /// <summary>
         /// A reference to the drawing xml document

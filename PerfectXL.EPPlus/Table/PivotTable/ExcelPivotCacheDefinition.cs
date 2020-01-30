@@ -267,9 +267,8 @@ namespace OfficeOpenXml.Table.PivotTable
 
                 string workbook = "";
                 string rId = GetXmlNodeString("d:cacheSource/d:worksheetSource/@r:id");
-                if (rId != "")
+                if (Part.TryGetRelationshipById(rId, out var relation))
                 {
-                    var relation = Part.GetRelationship(rId);
                     workbook = relation.TargetUri.IsAbsoluteUri ? relation.TargetUri.LocalPath.Split('\\').Last() : relation.TargetUri.ToString();
                 }
 

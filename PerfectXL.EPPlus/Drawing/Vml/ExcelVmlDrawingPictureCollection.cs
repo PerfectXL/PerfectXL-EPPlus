@@ -67,7 +67,11 @@ namespace OfficeOpenXml.Drawing.Vml
             foreach (XmlNode node in nodes)
             {
                 var img = new ExcelVmlDrawingPicture(node, NameSpaceManager, _ws);
-                var rel = Part.GetRelationship(img.RelId);
+                if (!Part.TryGetRelationshipById(img.RelId, out var rel))
+                {
+                    continue;
+                }
+
                 img.ImageUri = UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri);
                 _images.Add(img);
             }
