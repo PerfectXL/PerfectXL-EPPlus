@@ -144,21 +144,8 @@ namespace OfficeOpenXml
                 sh = part.Substring(0, shInd + 1);
                 part = part.Substring(shInd + 1);
             }
-            int delim = part.IndexOf(':');
-            if (delim > 0)
-            {
-                string p1 = ToR1C1_1(part.Substring(0, delim), row, col);
-                string p2 = ToR1C1_1(part.Substring(delim + 1), row, col);
-                if (p1.Equals(p2))
-                {
-                    return sh + p1;
-                }
 
-                return sh + p1 + ":" + p2;
-            }
-
-            else
-                return sh + ToR1C1_1(part, row, col);
+            return sh + ToR1C1_1(part, row, col);
         }
         private static string ToR1C1_1(string part, int row, int col)
         {
