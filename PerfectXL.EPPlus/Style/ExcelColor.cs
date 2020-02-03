@@ -62,17 +62,17 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return GetSource().Theme;
+                return GetSource()?.Theme;
             }
         }
         /// <summary>
         /// The tint value
         /// </summary>
-        public decimal Tint
+        public decimal? Tint
         {
             get
             {
-                return GetSource().Tint;
+                return GetSource()?.Tint;
             }
             set
             {
@@ -80,6 +80,7 @@ namespace OfficeOpenXml.Style
                 {
                     throw (new ArgumentOutOfRangeException("Value must be between -1 and 1"));
                 }
+
                 _ChangedEvent(this, new StyleChangeEventArgs(_cls, eStyleProperty.Tint, value, _positionID, _address));
             }
         }
@@ -90,7 +91,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return GetSource().Rgb;
+                return GetSource()?.Rgb;
             }
             internal set
             {
@@ -104,7 +105,7 @@ namespace OfficeOpenXml.Style
         {
             get
             {
-                return GetSource().Indexed;
+                return GetSource()?.Indexed;
             }
             set
             {
@@ -294,7 +295,7 @@ namespace OfficeOpenXml.Style
                 }
             }
 
-            return ApplyTint(rawColorString, theColor.Tint);
+            return ApplyTint(rawColorString, theColor.Tint ?? 0);
         }
 
         private static string ApplyTint(string argbColor, decimal tint)
