@@ -20,7 +20,7 @@ namespace OfficeOpenXml.Style
         int? Indexed { get; set; }
         string Rgb { get; }
         string Theme { get; }
-        decimal Tint { get; set; }
+        decimal? Tint { get; set; }
         void SetColor(Color color);
     }
 }

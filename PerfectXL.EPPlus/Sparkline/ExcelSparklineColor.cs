@@ -31,7 +31,14 @@ namespace OfficeOpenXml.Sparkline
                     throw (new ArgumentOutOfRangeException("Index out of range"));
                 }
 
-                SetXmlNodeString("@indexed", value.ToString(), true);
+                if (value == null)
+                {
+                    DeleteNode("@indexed");
+                }
+                else
+                {
+                    SetXmlNodeString("@indexed", value.ToString(), true);
+                }
             }
         }
 
@@ -53,7 +60,7 @@ namespace OfficeOpenXml.Sparkline
         /// <summary>
         /// The tint value
         /// </summary>
-        public decimal Tint
+        public decimal? Tint
         {
             get=> GetXmlNodeDecimal("@tint");
             set
@@ -62,7 +69,15 @@ namespace OfficeOpenXml.Sparkline
                 {
                     throw (new ArgumentOutOfRangeException("Value must be between -1 and 1"));
                 }
-                SetXmlNodeString("@tint", value.ToString(CultureInfo.InvariantCulture));
+
+                if (value == null)
+                {
+                    DeleteNode("@tint");
+                }
+                else
+                {
+                    SetXmlNodeString("@tint", value.Value.ToString(CultureInfo.InvariantCulture));
+                }
             }
         }
 
