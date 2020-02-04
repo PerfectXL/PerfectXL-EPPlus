@@ -257,26 +257,7 @@ namespace OfficeOpenXml
                                 namedRange = nameWorksheet.Names.Add(elem.GetAttribute("name"), range);
                             }
 
-                            if (ConvertUtil._invariantCompareInfo.IsPrefix(fullAddress, "\"")) //String value
-                            {
-                                namedRange.NameValue = fullAddress.Substring(1, fullAddress.Length - 2);
-                            }
-                            else if (double.TryParse(fullAddress, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
-                            {
-                                namedRange.NameValue = value;
-                            }
-                            else
-                            {
-                                //if (addressType == ExcelAddressBase.AddressType.ExternalAddress || addressType == ExcelAddressBase.AddressType.ExternalName)
-                                //{
-                                //    var r = new ExcelAddress(fullAddress);
-                                //    namedRange.NameFormula = '\'[' + r._wb
-                                //}
-                                //else
-                                //{
-                                namedRange.NameFormula = fullAddress;
-                                //}
-                            }
+                            namedRange.NameFormula = fullAddress;
                         }
                         else
                         {
