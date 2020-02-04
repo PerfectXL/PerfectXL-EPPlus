@@ -298,8 +298,12 @@ namespace OfficeOpenXml
                                 namedRange = _names.Add(elem.GetAttribute("name"), new ExcelRangeBase(this, ws, fullAddress, false));
                             }
                         }
-                        if (elem.GetAttribute("hidden") == "1" && namedRange != null) namedRange.IsNameHidden = true;
+
+                        if (namedRange == null) continue;
+                        namedRange.RawFormula = elem.InnerText;
+                        if (elem.GetAttribute("hidden") == "1") namedRange.IsNameHidden = true;
                         if (!string.IsNullOrEmpty(elem.GetAttribute("comment"))) namedRange.NameComment = elem.GetAttribute("comment");
+                        
                     }
                     catch (Exception e)
                     {
