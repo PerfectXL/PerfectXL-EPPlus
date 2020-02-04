@@ -180,7 +180,7 @@ namespace OfficeOpenXml.DataValidation
         private void ValidateAddress(string address, IExcelDataValidation validatingValidation)
         {
             Require.Argument(address).IsNotNullOrEmpty("address");
-
+            
             if (!InternalValidationEnabled) return;
 
             // ensure that the new address does not collide with an existing validation.
@@ -217,8 +217,6 @@ namespace OfficeOpenXml.DataValidation
             foreach (var validation in _validations)
             {
                 validation.Validate();
-
-                ValidateAddress(validation.Address.Address, validation);
             }
         }
 
