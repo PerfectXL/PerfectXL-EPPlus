@@ -257,7 +257,26 @@ namespace OfficeOpenXml
                                 namedRange = nameWorksheet.Names.Add(elem.GetAttribute("name"), range);
                             }
 
-                            namedRange.NameFormula = fullAddress;
+                            if (ConvertUtil._invariantCompareInfo.IsPrefix(fullAddress, "\"")) //String value
+                            {
+                                namedRange.NameValue = fullAddress.Substring(1, fullAddress.Length - 2);
+                            }
+                            else if (double.TryParse(fullAddress, NumberStyles.Number, CultureInfo.InvariantCulture, out value))
+                            {
+                                namedRange.NameValue = value;
+                            }
+                            else
+                            {
+                                //if (addressType == ExcelAddressBase.AddressType.ExternalAddress || addressType == ExcelAddressBase.AddressType.ExternalName)
+                                //{
+                                //    var r = new ExcelAddress(fullAddress);
+                                //    namedRange.NameFormula = '\'[' + r._wb
+                                //}
+                                //else
+                                //{
+                                namedRange.NameFormula = fullAddress;
+                                //}
+                            }
                         }
                         else
                         {
@@ -279,8 +298,12 @@ namespace OfficeOpenXml
                                 namedRange = _names.Add(elem.GetAttribute("name"), new ExcelRangeBase(this, ws, fullAddress, false));
                             }
                         }
-                        if (elem.GetAttribute("hidden") == "1" && namedRange != null) namedRange.IsNameHidden = true;
+
+                        if (namedRange == null) continue;
+                        namedRange.RawFormula = elem.InnerText;
+                        if (elem.GetAttribute("hidden") == "1") namedRange.IsNameHidden = true;
                         if (!string.IsNullOrEmpty(elem.GetAttribute("comment"))) namedRange.NameComment = elem.GetAttribute("comment");
+                        
                     }
                     catch (Exception e)
                     {
