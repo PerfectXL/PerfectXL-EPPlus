@@ -287,7 +287,7 @@ namespace OfficeOpenXml
                     var xmlNodeString = _extendedHelper.GetXmlNodeString(HyperlinkBasePath);
                     return string.IsNullOrEmpty(xmlNodeString) ? null : new Uri(xmlNodeString, UriKind.Absolute);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     return null;
                 }

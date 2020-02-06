@@ -305,7 +305,7 @@ namespace OfficeOpenXml
                         if (!string.IsNullOrEmpty(elem.GetAttribute("comment"))) namedRange.NameComment = elem.GetAttribute("comment");
                         
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // Quickfix: Hidden named ranges that references worksheets which do not exist will not be added to all defined names.
                     }
