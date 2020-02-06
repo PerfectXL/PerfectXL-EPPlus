@@ -85,7 +85,7 @@ namespace OfficeOpenXml.Style
             }
         }
 
-        public bool IsFormatDate()
+        public bool IsFormattedAsDate()
         {
             ExcelNumberFormatXml numberFormat = _styles.NumberFormats.FirstOrDefault(x => x.NumFmtId == Index);
             return numberFormat?.FormatTranslator.DataType == ExcelNumberFormatXml.eFormatType.DateTime;
