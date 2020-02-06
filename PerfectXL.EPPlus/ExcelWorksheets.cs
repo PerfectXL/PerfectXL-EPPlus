@@ -345,7 +345,8 @@ namespace OfficeOpenXml
                 {
                     newName=added.Names.AddValue(name.Name, name.Value);
                 }
-               newName.NameComment = name.NameComment;
+                newName.RawFormula = name.RawFormula;
+                newName.NameComment = name.NameComment;
             }
         }
 
