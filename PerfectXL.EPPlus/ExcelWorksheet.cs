@@ -876,13 +876,12 @@ namespace OfficeOpenXml
             _package.DoAdjustDrawings = false;
             Stream stream = packPart.GetStream();
 
-#if Core
-            var xr = XmlReader.Create(stream,new XmlReaderSettings() { DtdProcessing = DtdProcessing.Prohibit, IgnoreWhitespace = true });
-#else
-            var xr = new XmlTextReader(stream);
-            xr.ProhibitDtd = true;
-            xr.WhitespaceHandling = WhitespaceHandling.None;
-#endif
+            var xr = XmlReader.Create(stream, new XmlReaderSettings
+            {
+                DtdProcessing = DtdProcessing.Prohibit,
+                IgnoreWhitespace = true
+            });
+
             LoadColumns(xr);    //columnXml
             long start = stream.Position;
             LoadCells(xr);
