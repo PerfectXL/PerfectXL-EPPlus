@@ -1062,7 +1062,7 @@ namespace OfficeOpenXml
 				}
 				else
 				{
-					elem.InnerText = name.NameFormula;
+					elem.InnerText = name.RawFormula;
 				}
 			}
 			else
