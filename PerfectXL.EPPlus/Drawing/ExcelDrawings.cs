@@ -443,10 +443,7 @@ namespace OfficeOpenXml.Drawing
                     while (package.PartExists(_uriDrawing));
 
                     _part = package.CreatePart(_uriDrawing, "application/vnd.openxmlformats-officedocument.drawing+xml", _package.Compression);
-
-                    StreamWriter streamChart = new StreamWriter(_part.GetStream(FileMode.Create, FileAccess.Write));
-                    DrawingXml.Save(streamChart);
-                    streamChart.Close();
+                    _part.SaveXml(DrawingXml);
                     package.Flush();
 
                     _drawingRelation = Worksheet.Part.CreateRelationship(UriHelper.GetRelativeUri(Worksheet.WorksheetUri, _uriDrawing), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/drawing");

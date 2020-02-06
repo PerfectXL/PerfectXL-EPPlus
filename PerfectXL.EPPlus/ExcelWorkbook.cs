@@ -675,8 +675,7 @@ namespace OfficeOpenXml
 				bookViews.AppendChild(workbookView);
 
 				// save it to the package
-				StreamWriter stream = new StreamWriter(partWorkbook.GetStream(FileMode.Create, FileAccess.Write));
-				_workbookXml.Save(stream);
+                partWorkbook.SaveXml(_workbookXml);
 				//stream.Close();
 				_package.Package.Flush();
 			}
@@ -714,10 +713,7 @@ namespace OfficeOpenXml
                 package.Compression);
 
             //Save it to the package
-            var stream = new StreamWriter(part.GetStream(FileMode.Create, FileAccess.Write));
-
-            stylesXml.Save(stream);
-            //stream.Close();
+            part.SaveXml(stylesXml);
             package.Package.Flush();
 
             // create the relationship between the workbook and the new styles part
