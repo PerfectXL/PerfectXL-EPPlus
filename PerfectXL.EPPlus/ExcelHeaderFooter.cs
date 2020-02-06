@@ -553,7 +553,7 @@ namespace OfficeOpenXml
                             draw.RelId = rel.Id;
                         }
                     }
-                    _vmlDrawingsHF.VmlDrawingXml.Save(_vmlDrawingsHF.Part.GetStream());
+                    _vmlDrawingsHF.Part.SaveXml(_vmlDrawingsHF.VmlDrawingXml);
                 }
             }
         }

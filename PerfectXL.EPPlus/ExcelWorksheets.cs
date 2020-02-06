@@ -176,9 +176,8 @@ namespace OfficeOpenXml
                 Packaging.ZipPackagePart worksheetPart = _pck.Package.CreatePart(uriWorksheet, isChart ? CHARTSHEET_CONTENTTYPE : WORKSHEET_CONTENTTYPE, _pck.Compression);
 
                 //Create the new, empty worksheet and save it to the package
-                StreamWriter streamWorksheet = new StreamWriter(worksheetPart.GetStream(FileMode.Create, FileAccess.Write));
                 XmlDocument worksheetXml = CreateNewWorksheet(isChart);
-                worksheetXml.Save(streamWorksheet);
+                worksheetPart.SaveXml(worksheetXml);
                 _pck.Package.Flush();
 
                 string rel = CreateWorkbookRel(Name, sheetID, uriWorksheet, isChart);
@@ -229,10 +228,9 @@ namespace OfficeOpenXml
 
                 //Create a copy of the worksheet XML
                 Packaging.ZipPackagePart worksheetPart = _pck.Package.CreatePart(uriWorksheet, WORKSHEET_CONTENTTYPE, _pck.Compression);
-                StreamWriter streamWorksheet = new StreamWriter(worksheetPart.GetStream(FileMode.Create, FileAccess.Write));
                 XmlDocument worksheetXml = new XmlDocument();
                 worksheetXml.LoadXml(Copy.WorksheetXml.OuterXml);
-                worksheetXml.Save(streamWorksheet);
+                worksheetPart.SaveXml(worksheetXml);
                 _pck.Package.Flush();
 
 

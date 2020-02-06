@@ -33,6 +33,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Xml;
 using OfficeOpenXml.Packaging.Ionic.Zip;
 
 namespace OfficeOpenXml.Packaging
@@ -160,6 +161,14 @@ namespace OfficeOpenXml.Packaging
             b = null;
         }
 
+        internal void SaveXml(XmlDocument xmlDoc)
+        {
+            var stream = GetStream(FileMode.Create, FileAccess.Write);
+            var xr = new XmlTextWriter(stream, Encoding.UTF8);
+            xr.Formatting = Formatting.None;
+            
+            xmlDoc.Save(xr);
+        }
 
         public void Dispose()
         {

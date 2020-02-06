@@ -2997,11 +2997,10 @@ namespace OfficeOpenXml
                             if (d is ExcelChart)
                             {
                                 ExcelChart c = (ExcelChart)d;
-                                c.ChartXml.Save(c.Part.GetStream(FileMode.Create, FileAccess.Write));
+                                c.Part.SaveXml(c.ChartXml);
                             }
                         }
-                        Packaging.ZipPackagePart partPack = Drawings.Part;
-                        Drawings.DrawingXml.Save(partPack.GetStream(FileMode.Create, FileAccess.Write));
+                        Drawings.Part.SaveXml(Drawings.DrawingXml);
                 }
             }
         }
@@ -3132,7 +3131,7 @@ namespace OfficeOpenXml
                         _comments.Part = _package.Package.CreatePart(_comments.Uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml", _package.Compression);
                         var rel = Part.CreateRelationship(UriHelper.GetRelativeUri(WorksheetUri, _comments.Uri), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships+"/comments");
                     }
-                    _comments.CommentXml.Save(_comments.Part.GetStream(FileMode.Create));
+                    _comments.Part.SaveXml(_comments.CommentXml);
                 }
             }
 
@@ -3160,7 +3159,7 @@ namespace OfficeOpenXml
                         SetXmlNodeString("d:legacyDrawing/@r:id", rel.Id);
                         _vmlDrawings.RelId = rel.Id;
                     }
-                    _vmlDrawings.VmlDrawingXml.Save(_vmlDrawings.Part.GetStream(FileMode.Create));
+                    _vmlDrawings.Part.SaveXml(_vmlDrawings.VmlDrawingXml);
                 }
             }
         }
@@ -3223,8 +3222,7 @@ namespace OfficeOpenXml
                     tbl.TableUri = GetNewUri(_package.Package, @"/xl/tables/table{0}.xml", ref id);
                     tbl.Id = id;
                     tbl.Part = _package.Package.CreatePart(tbl.TableUri, "application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml", Workbook._package.Compression);
-                    var stream = tbl.Part.GetStream(FileMode.Create);
-                    tbl.TableXml.Save(stream);
+                    tbl.Part.SaveXml(tbl.TableXml);
                     var rel = Part.CreateRelationship(UriHelper.GetRelativeUri(WorksheetUri, tbl.TableUri), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/table");
                     tbl.RelationshipID = rel.Id;
 
@@ -3237,8 +3235,7 @@ namespace OfficeOpenXml
                 }
                 else
                 {
-                    var stream = tbl.Part.GetStream(FileMode.Create);
-                    tbl.TableXml.Save(stream);
+                    tbl.Part.SaveXml(tbl.TableXml);
                 }
             }
         }
@@ -3424,8 +3421,8 @@ namespace OfficeOpenXml
                         }
                     }
                 }
-                pt.PivotTableXml.Save(pt.Part.GetStream(FileMode.Create));
-                pt.CacheDefinition.CacheDefinitionXml.Save(pt.CacheDefinition.Part.GetStream(FileMode.Create));
+                pt.Part.SaveXml(pt.PivotTableXml);
+                pt.CacheDefinition.Part.SaveXml(pt.CacheDefinition.CacheDefinitionXml);
             }
         }
 

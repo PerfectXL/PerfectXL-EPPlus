@@ -486,12 +486,7 @@ namespace OfficeOpenXml.Drawing.Chart
 
                // save it to the package
                Part = package.CreatePart(UriChart, "application/vnd.openxmlformats-officedocument.drawingml.chart+xml", _drawings._package.Compression);
-
-               StreamWriter streamChart = new StreamWriter(Part.GetStream(FileMode.Create, FileAccess.Write));
-               ChartXml.Save(streamChart);
-#if !Core
-                streamChart.Close();
-#endif
+               Part.SaveXml(ChartXml);
                package.Flush();
 
                var chartRelation = drawings.Part.CreateRelationship(UriHelper.GetRelativeUri(drawings.UriDrawing, UriChart), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/chart");

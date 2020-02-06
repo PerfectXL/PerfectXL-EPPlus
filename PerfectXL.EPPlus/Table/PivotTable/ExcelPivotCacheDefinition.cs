@@ -111,7 +111,7 @@ namespace OfficeOpenXml.Table.PivotTable
             RecordRelationship = Part.CreateRelationship(UriHelper.ResolvePartUri(CacheDefinitionUri, CacheRecordUri), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/pivotCacheRecords");
             RecordRelationshipID = RecordRelationship.Id;
 
-            CacheDefinitionXml.Save(Part.GetStream());
+            Part.SaveXml(CacheDefinitionXml);
         }        
         /// <summary>
         /// Reference to the internal package part
