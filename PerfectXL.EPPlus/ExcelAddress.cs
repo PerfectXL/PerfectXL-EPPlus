@@ -894,8 +894,7 @@ namespace OfficeOpenXml
         internal enum AddressType
         {
             Invalid,
-            InternalAddress,
-            ExternalAddress,
+            CellAddress,
             InternalName,
             ExternalName,
             Formula,
@@ -910,64 +909,27 @@ namespace OfficeOpenXml
             {
                 return AddressType.Invalid;
             }
-            else if(double.TryParse(Address, NumberStyles.Any, CultureInfo.InvariantCulture, out d)) //A double, no valid address
+            
+            if(double.TryParse(Address, NumberStyles.Any, CultureInfo.InvariantCulture, out d)) //A double, no valid address
             {
                 return AddressType.Invalid;
             }
-            else if (IsFormula(Address))
+            if (IsFormula(Address))
             {
                 return AddressType.Formula;
             }
-            
-            else
+
+            if (r1c1 && IsR1C1(Address))
             {
-                if (r1c1 && IsR1C1(Address))
-                {
-                    return AddressType.R1C1;
-                }
-                else
-                {
-                    string wb, ws, intAddress;
-                    if (SplitAddress(Address, out wb, out ws, out intAddress))
-                    {
-                        if (intAddress.Contains("[")) //Table reference
-                        {
-                            if (!string.IsNullOrEmpty(wb))
-                            {
-                                return AddressType.ExternalAddress;
-                            }
-
-                            normalizedAddress = NormalizeAddress(Address, ws, intAddress);
-                            return AddressType.InternalAddress;
-                        }
-
-                        string addressToTest = intAddress.Contains(",") ? intAddress.Substring(0, intAddress.IndexOf(',')) : intAddress;
-                        if (IsAddress(addressToTest))
-                        {
-                            if (!string.IsNullOrEmpty(wb))
-                            {
-                                return AddressType.ExternalAddress;
-                            }
-
-                            normalizedAddress = NormalizeAddress(Address, ws, intAddress);
-                            return AddressType.InternalAddress;
-                        }
-                        else
-                        {
-                            return string.IsNullOrEmpty(wb) ? AddressType.InternalName : AddressType.ExternalName;
-                        }
-                    }
-                    else
-                    {
-                        return AddressType.Invalid;
-                    }
-                }
+                return AddressType.R1C1;
             }
-        }
 
-        private static string NormalizeAddress(string fullAddress, string ws, string intAddress)
-        {
-            return fullAddress.StartsWith("!") ? fullAddress : string.IsNullOrEmpty(ws) ? intAddress : $"{ws}!{intAddress.ToUpperInvariant()}";
+            if (Regex.IsMatch(Address, RegexConstants.SingleCellRangePattern, RegexOptions.IgnorePatternWhitespace))
+            {
+                return AddressType.CellAddress;
+            }
+
+            return AddressType.Invalid;
         }
 
         private static bool IsR1C1(string address)

@@ -47,22 +47,22 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis.TokenSeparatorHandlers
                     context.AppendToCurrentToken(c);
                     return true;
                 }
-                if (tokenSeparator.TokenType != TokenType.WorksheetName)
+                if (tokenSeparator.TokenType != TokenType.WorksheetQuote)
                 {
                     context.AppendToCurrentToken(c);
                     return true;
                 }
             }
 
-            if (tokenSeparator.TokenType == TokenType.WorksheetName)
+            if (tokenSeparator.TokenType == TokenType.WorksheetQuote)
             {
-                if (context.LastToken != null && context.LastToken.TokenType == TokenType.WorksheetName)
+                if (context.LastToken != null && context.LastToken.TokenType == TokenType.WorksheetQuote)
                 {
                     context.AddToken(!context.CurrentTokenHasValue
-                        ? new Token(string.Empty, TokenType.WorksheetNameContent)
-                        : new Token(context.CurrentToken, TokenType.WorksheetNameContent));
+                        ? new Token(string.Empty, TokenType.WorksheetName)
+                        : new Token(context.CurrentToken, TokenType.WorksheetName));
                 }
-                context.AddToken(new Token("'", TokenType.WorksheetName));
+                context.AddToken(new Token("'", TokenType.WorksheetQuote));
                 context.ToggleIsInSheetName();
                 context.NewToken();
                 return true;

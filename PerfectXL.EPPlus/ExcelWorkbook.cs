@@ -244,7 +244,7 @@ namespace OfficeOpenXml
                             }
                         }
 
-                        if (addressType == ExcelAddressBase.AddressType.Invalid || addressType == ExcelAddressBase.AddressType.InternalName || addressType == ExcelAddressBase.AddressType.ExternalName || addressType == ExcelAddressBase.AddressType.Formula || addressType == ExcelAddressBase.AddressType.ExternalAddress)    //A value or a formula
+                        if (addressType == ExcelAddressBase.AddressType.Invalid || addressType == ExcelAddressBase.AddressType.InternalName || addressType == ExcelAddressBase.AddressType.ExternalName || addressType == ExcelAddressBase.AddressType.Formula || addressType == ExcelAddressBase.AddressType.CellAddress)    //A value or a formula
                         {
                             double value;
                             range = new ExcelRangeBase(this, nameWorksheet, elem.GetAttribute("name"), true);

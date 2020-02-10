@@ -28,17 +28,15 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
+
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using OfficeOpenXml.FormulaParsing.Excel.Functions;
 namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 {
     public class SourceCodeTokenizer : ISourceCodeTokenizer
     {
+        private static readonly TokenType[] _sheetReferenceTokens = { TokenType.ExcelAddressR1C1, TokenType.ExcelAddress, TokenType.NameValue, TokenType.Unrecognized };
         public static ISourceCodeTokenizer Default
         {
             get { return new SourceCodeTokenizer(FunctionNameProvider.Empty, NameValueProvider.Empty, false); }
@@ -85,7 +83,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                 context.AddToken(CreateToken(context, worksheet));
             }
 
-            CleanupTokens(context, _separatorProvider.Tokens);
+            HandleUnrecognizedTokens(context, _separatorProvider.Tokens);
 
             return context.Result;
         }
@@ -93,59 +91,45 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         
 
 
-        private static void CleanupTokens(TokenizerContext context, IDictionary<string, Token>  tokens)
+        private static void HandleUnrecognizedTokens(TokenizerContext context, IDictionary<string, Token>  tokens)
         {
-            for (int i = 0; i < context.Result.Count; i++)
+            int i = 0;
+            while (i < context.Result.Count)
             {
                 var token=context.Result[i];
+                
                 if (token.TokenType == TokenType.Unrecognized)
                 {
-                    if (i < context.Result.Count - 1)
+                    //Check 3-D sheet reference, Note: 3-D reference with single sheet name will be seen as a single sheet name
+                    if (i < context.Result.Count - 4 && context.Result[i+1].TokenType == TokenType.Colon && context.Result[i + 2].TokenType == TokenType.Unrecognized 
+                            && context.Result[i + 3].TokenType == TokenType.ExclamationMark && _sheetReferenceTokens.Contains(context.Result[i + 4].TokenType))
                     {
-                        if (context.Result[i+1].TokenType == TokenType.OpeningParenthesis)
-                        {
-                            token.TokenType = TokenType.Function;
-                        }
-                        else
-                        {
-                            token.TokenType = TokenType.NameValue;
-                        }
+                        token.TokenType = TokenType.WorksheetName;
+                        context.Result[i + 2].TokenType = TokenType.WorksheetName;
+                        i += 4;
+                        continue;
                     }
-                    else
+
+                    //Check regular sheet reference
+                    if (i < context.Result.Count - 2 && context.Result[i + 1].TokenType == TokenType.ExclamationMark && _sheetReferenceTokens.Contains(context.Result[i + 2].TokenType))
                     {
-                        token.TokenType = TokenType.NameValue;
+                        token.TokenType = TokenType.WorksheetName;
+                        i += 3;
+                        continue;
                     }
+
+                    //Check if function
+                    if (i < context.Result.Count - 1 && context.Result[i + 1].TokenType == TokenType.OpeningParenthesis)
+                    {
+                        token.TokenType = TokenType.Function;
+                        i += 2;
+                        continue;
+                    }
+
+                    token.TokenType = TokenType.NameValue;
                 }
-                else if(token.TokenType == TokenType.WorksheetName){
-                    // use this and the following three tokens
-                    token.TokenType = context.Result[i + 3].TokenType;
-                    var sb = new StringBuilder();
-                    var nToRemove = 3;
-                    if (context.Result.Count < i + nToRemove)
-                    {
-                        token.TokenType = TokenType.InvalidReference;
-                        nToRemove = context.Result.Count - i - 1;
-                    }
-                    else if(context.Result[i + 3].TokenType != TokenType.ExcelAddress &&
-                            context.Result[i + 3].TokenType != TokenType.ExcelAddressR1C1)
-                    {
-                        token.TokenType = TokenType.InvalidReference;
-                        context.Result[i + 3].Value = "#REF!";
-                        nToRemove--;
-                    }
-                    else
-                    {
-                        for (var ix = 0; ix < 4; ix++)
-                        {
-                            sb.Append(context.Result[i + ix].Value);
-                        }
-                    }
-                    token.Value = sb.ToString();
-                    for(var ix = 0; ix < nToRemove; ix++)
-                    {
-                        context.Result.RemoveAt(i + 1);
-                    }
-                }
+
+                i++;
             }
         }
 

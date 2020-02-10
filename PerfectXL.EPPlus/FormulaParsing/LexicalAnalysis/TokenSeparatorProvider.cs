@@ -56,7 +56,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             _tokens.Add(")", new Token(")", TokenType.ClosingParenthesis));
             _tokens.Add("{", new Token("{", TokenType.OpeningEnumerable));
             _tokens.Add("}", new Token("}", TokenType.ClosingEnumerable));
-            _tokens.Add("'", new Token("'", TokenType.WorksheetName));
+            _tokens.Add("'", new Token("'", TokenType.WorksheetQuote));
             _tokens.Add("\"", new Token("\"", TokenType.String));
             _tokens.Add(",", new Token(",", TokenType.Comma));
             _tokens.Add(";", new Token(";", TokenType.SemiColon));
@@ -66,6 +66,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             _tokens.Add("\n", new Token("\n", TokenType.NewLine));
             _tokens.Add(" ", new Token(" ", TokenType.WhiteSpace));
             _tokens.Add(":", new Token(":", TokenType.Colon));
+            _tokens.Add("!", new Token("!", TokenType.ExclamationMark));
         }
 
         IDictionary<string, Token> ITokenSeparatorProvider.Tokens
