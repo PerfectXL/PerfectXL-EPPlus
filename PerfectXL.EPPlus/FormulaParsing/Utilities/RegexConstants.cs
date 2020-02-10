@@ -48,7 +48,9 @@ namespace OfficeOpenXml.FormulaParsing.Utilities
         public const string DefinedNamePattern = @"^((?<Workheet> .+)!)? (?<Name> [^!\s]+)$";
         public const string SingleCellRangePattern = @"^" + ColumnPattern + RowPattern + @"$";
         public const string ColumnPattern = @"\$? ([A-Z]{1,2} | [A-W][A-Z]{1,2} | X[A-E][A-Z] | XF[A-D])";
+        public const string ColumnReferencePattern = @"^" + ColumnPattern + ":" + ColumnPattern + @"$";
         public const string RowPattern = @"\$? ([1-9]\d{0,5} | 10[0-3]\d{4} | 104[0-7]\d{3} | 1048[0-4]\d{2} | 10485[0-6]\d | 104857[0-6])";
+        public const string RowReferencePattern = @"^" + RowPattern + ":" + RowPattern + @"$";
         public const string CellRangePattern = @"(" + ColumnPattern + RowPattern + @"(:" + ColumnPattern + RowPattern + @")?)";
         public const string ExternalCellRange = @"^ (\[ (?<ExternalFileNumber> \d+) \] (?<Worksheet> [^\[\]]+) ! (?<Address>" + CellRangePattern + @")) | ('\[ (?<ExternalFileNumber> \d+) \] (?<Worksheet> [^\[\]]+) '! (?<Address>" + CellRangePattern + @"))$";
 

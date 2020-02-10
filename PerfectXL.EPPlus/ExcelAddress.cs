@@ -901,32 +901,32 @@ namespace OfficeOpenXml
             R1C1
         }
 
-        internal static AddressType IsValid(string Address, out string normalizedAddress, bool r1c1 = false)
+        internal static AddressType IsValid(string address, out string normalizedAddress, bool r1c1 = false)
         {
-            normalizedAddress = Address;
+            normalizedAddress = address;
             double d;
-            if (Address == "#REF!")
+            if (address == "#REF!")
             {
                 return AddressType.Invalid;
             }
-            
-            if(double.TryParse(Address, NumberStyles.Any, CultureInfo.InvariantCulture, out d)) //A double, no valid address
+
+            if (Regex.IsMatch(address, RegexConstants.SingleCellRangePattern, RegexOptions.IgnorePatternWhitespace))
+            {
+                return AddressType.CellAddress;
+            }
+
+            if (double.TryParse(address, NumberStyles.Any, CultureInfo.InvariantCulture, out d)) //A double, no valid address
             {
                 return AddressType.Invalid;
             }
-            if (IsFormula(Address))
+            if (IsFormula(address))
             {
                 return AddressType.Formula;
             }
 
-            if (r1c1 && IsR1C1(Address))
+            if (r1c1 && IsR1C1(address))
             {
                 return AddressType.R1C1;
-            }
-
-            if (Regex.IsMatch(Address, RegexConstants.SingleCellRangePattern, RegexOptions.IgnorePatternWhitespace))
-            {
-                return AddressType.CellAddress;
             }
 
             return AddressType.Invalid;

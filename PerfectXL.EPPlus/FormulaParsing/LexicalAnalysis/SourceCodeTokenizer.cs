@@ -31,7 +31,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using OfficeOpenXml.FormulaParsing.Excel.Functions;
+using OfficeOpenXml.FormulaParsing.Utilities;
+
 namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 {
     public class SourceCodeTokenizer : ISourceCodeTokenizer
@@ -114,17 +117,28 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                     if (i < context.Result.Count - 2 && context.Result[i + 1].TokenType == TokenType.ExclamationMark && _sheetReferenceTokens.Contains(context.Result[i + 2].TokenType))
                     {
                         token.TokenType = TokenType.WorksheetName;
-                        i += 3;
+                        i += 2;
                         continue;
                     }
 
-                    //Check if function
+                    //Check for function
                     if (i < context.Result.Count - 1 && context.Result[i + 1].TokenType == TokenType.OpeningParenthesis)
                     {
                         token.TokenType = TokenType.Function;
                         i += 2;
                         continue;
                     }
+
+                    //Check for Column / Row reference
+                    if (i < context.Result.Count - 2 && context.Result[i + 1].TokenType == TokenType.Colon && context.Result[i + 2].TokenType == TokenType.Unrecognized 
+                        && IsColumnOrRowReference($"{token.Value}:{context.Result[i + 2].Value}"))
+                    {
+                        token.TokenType = TokenType.ExcelAddress;
+                        context.Result[i + 2].TokenType = TokenType.ExcelAddress;
+                        i += 3;
+                        continue;
+                    }
+                    
 
                     token.TokenType = TokenType.NameValue;
                 }
@@ -133,38 +147,10 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             }
         }
 
-        private static void SetNegatorOperator(TokenizerContext context, int i, IDictionary<string, Token>  tokens)
+        private static bool IsColumnOrRowReference(string address)
         {
-            if (context.Result[i].Value == "-" && i > 0 && (context.Result[i].TokenType == TokenType.Operator || context.Result[i].TokenType == TokenType.Negator))
-            {
-                if (TokenIsNegator(context.Result[i - 1]))
-                {
-                    context.Result[i] = new Token("-", TokenType.Negator);
-                }
-                else
-                {
-                    context.Result[i] = tokens["-"];
-                }
-            }
-        }
-
-        private static bool TokenIsNegator(TokenizerContext context)
-        {
-            return TokenIsNegator(context.LastToken);
-        }
-        private static bool TokenIsNegator(Token t)
-        {
-            return t == null
-                        ||
-                        t.TokenType == TokenType.Operator
-                        ||
-                        t.TokenType == TokenType.OpeningParenthesis
-                        ||
-                        t.TokenType == TokenType.Comma
-                        ||
-                        t.TokenType == TokenType.SemiColon
-                        ||
-                        t.TokenType == TokenType.OpeningEnumerable;
+            return Regex.IsMatch(address, RegexConstants.ColumnReferencePattern, RegexOptions.IgnorePatternWhitespace) 
+                   || Regex.IsMatch(address, RegexConstants.RowReferencePattern, RegexOptions.IgnorePatternWhitespace);
         }
 
         private Token CreateToken(TokenizerContext context, string worksheet)

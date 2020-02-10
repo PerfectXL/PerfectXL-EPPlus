@@ -45,6 +45,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 {
     public class TokenFactory : ITokenFactory
     {
+        private static readonly TokenType[] ReferenceTokens = {TokenType.ExclamationMark, TokenType.Colon};
         public TokenFactory(IFunctionNameProvider functionRepository, INameValueProvider nameValueProvider, bool r1c1=false)
             : this(new TokenSeparatorProvider(), nameValueProvider, functionRepository, r1c1)
         {
@@ -69,61 +70,41 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         }
         public Token Create(IEnumerable<Token> tokens, string token, string worksheet)
         {
-            Token tokenSeparator = null;
-            if (_tokenSeparatorProvider.Tokens.TryGetValue(token, out tokenSeparator))
+            if (_tokenSeparatorProvider.Tokens.TryGetValue(token, out Token tokenSeparator))
             {
                 return tokenSeparator;
             }
             var tokenList = (IList<Token>)tokens;
-            //Address with worksheet-string before  /JK
-            if (token.StartsWith("!") && tokenList[tokenList.Count-1].TokenType == TokenType.String)
-            {
-                string addr = "";
-                var i = tokenList.Count - 2;
-                if (i > 0)
-                {
-                    if (tokenList[i].TokenType == TokenType.StringContent)
-                    {
-                        addr = "'" + tokenList[i].Value.Replace("'", "''") + "'";
-                    }
-                    else
-                    {
-                        throw(new ArgumentException(string.Format("Invalid formula token sequence near {0}",token)));
-                    }
-                    //Remove the string tokens and content
-                    tokenList.RemoveAt(tokenList.Count - 1);
-                    tokenList.RemoveAt(tokenList.Count - 1);
-                    tokenList.RemoveAt(tokenList.Count - 1);
+            var previousTokenType = tokenList.Count > 0 ? tokenList[tokenList.Count - 1].TokenType : TokenType.Unrecognized;
 
-                    return new Token(addr + token, TokenType.ExcelAddress);
-                }
-                else
-                {
-                    throw(new ArgumentException(string.Format("Invalid formula token sequence near {0}",token)));
-                }
-                
-            }
-
-            if (tokens.Any() && tokens.Last().TokenType == TokenType.String)
+            if (tokenList.Any() && tokenList.Last().TokenType == TokenType.String)
             {
                 return new Token(token, TokenType.StringContent);
             }
+
             if (!string.IsNullOrEmpty(token))
             {
                 token = token.Trim();
             }
-            if (Regex.IsMatch(token, RegexConstants.Decimal))
+
+            if (!ReferenceTokens.Contains(previousTokenType))
             {
-                return new Token(token, TokenType.Decimal);
+                if (Regex.IsMatch(token, RegexConstants.Decimal))
+                {
+                    return new Token(token, TokenType.Decimal);
+                }
+
+                if (Regex.IsMatch(token, RegexConstants.Integer))
+                {
+                    return new Token(token, TokenType.Integer);
+                }
+
+                if (Regex.IsMatch(token, RegexConstants.Boolean, RegexOptions.IgnoreCase))
+                {
+                    return new Token(token, TokenType.Boolean);
+                }
             }
-            if(Regex.IsMatch(token, RegexConstants.Integer))
-            {
-                return new Token(token, TokenType.Integer);
-            }
-            if (Regex.IsMatch(token, RegexConstants.Boolean, RegexOptions.IgnoreCase))
-            {
-                return new Token(token, TokenType.Boolean);
-            }
+
             if (token.ToUpper(CultureInfo.InvariantCulture).Contains("#REF!"))
             {
                 return new Token(token, TokenType.InvalidReference);
@@ -148,11 +129,11 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             {
                 return new Token(token, TokenType.Function);
             }
-            if (tokenList.Count > 0 && tokenList[tokenList.Count - 1].TokenType == TokenType.OpeningEnumerable)
+            if (previousTokenType == TokenType.OpeningEnumerable)
             {
                 return new Token(token, TokenType.Enumerable);
             }
-            var at = OfficeOpenXml.ExcelAddressBase.IsValid(token, out string normalizedToken, _r1c1);
+            var at = ExcelAddressBase.IsValid(token, out string normalizedToken, _r1c1);
             if (at==ExcelAddressBase.AddressType.CellAddress)
             {
                 return new Token(normalizedToken, TokenType.ExcelAddress);
