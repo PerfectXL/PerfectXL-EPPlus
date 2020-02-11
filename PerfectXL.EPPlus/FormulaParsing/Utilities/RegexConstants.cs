@@ -28,10 +28,6 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.FormulaParsing.Utilities
 {
@@ -55,5 +51,11 @@ namespace OfficeOpenXml.FormulaParsing.Utilities
         public const string ExternalCellRange = @"^ (\[ (?<ExternalFileNumber> \d+) \] (?<Worksheet> [^\[\]]+) ! (?<Address>" + CellRangePattern + @")) | ('\[ (?<ExternalFileNumber> \d+) \] (?<Worksheet> [^\[\]]+) '! (?<Address>" + CellRangePattern + @"))$";
 
         public const string WorkbookNameSingleQuotes = @"((^[.]) | ([ -]))";
+
+        public const string Name = @"[^\s\[\]]+";
+        public const string ItemSpecifier = @"\#(All | Data | Headers | Totals | This\sRow)";
+        public const string TableReference = @"^" + Name + @"((\[(" + Name + @"|" + ItemSpecifier + @")\]) 
+                                                            | (\[ \s* \[" + Name + @"\]:\[" + Name + @"\] \s* \]) 
+                                                            | (\[ \s* \[" + ItemSpecifier + @"\] \s* , \s* \[" + Name + @"\](:\[" + Name + @"\])? \s* \]))$";
     }
 }

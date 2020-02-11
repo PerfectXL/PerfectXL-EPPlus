@@ -139,7 +139,6 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                         continue;
                     }
                     
-
                     token.TokenType = TokenType.NameValue;
                 }
 

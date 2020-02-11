@@ -898,13 +898,12 @@ namespace OfficeOpenXml
             InternalName,
             ExternalName,
             Formula,
-            R1C1
+            R1C1,
+            TableReference
         }
 
-        internal static AddressType IsValid(string address, out string normalizedAddress, bool r1c1 = false)
+        internal static AddressType IsValid(string address, bool r1c1 = false)
         {
-            normalizedAddress = address;
-            double d;
             if (address == "#REF!")
             {
                 return AddressType.Invalid;
@@ -915,7 +914,7 @@ namespace OfficeOpenXml
                 return AddressType.CellAddress;
             }
 
-            if (double.TryParse(address, NumberStyles.Any, CultureInfo.InvariantCulture, out d)) //A double, no valid address
+            if (double.TryParse(address, NumberStyles.Any, CultureInfo.InvariantCulture, out double d)) //A double, no valid address
             {
                 return AddressType.Invalid;
             }
@@ -927,6 +926,11 @@ namespace OfficeOpenXml
             if (r1c1 && IsR1C1(address))
             {
                 return AddressType.R1C1;
+            }
+
+            if (Regex.IsMatch(address, RegexConstants.TableReference, RegexOptions.IgnorePatternWhitespace))
+            {
+                return AddressType.TableReference;
             }
 
             return AddressType.Invalid;

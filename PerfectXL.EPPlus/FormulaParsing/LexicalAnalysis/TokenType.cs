@@ -69,6 +69,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         NewLine,
         WhiteSpace,
         Colon,
-        ExclamationMark
+        ExclamationMark,
+        TableReference
     }
 }

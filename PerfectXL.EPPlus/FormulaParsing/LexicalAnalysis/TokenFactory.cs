@@ -133,17 +133,20 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             {
                 return new Token(token, TokenType.Enumerable);
             }
-            var at = ExcelAddressBase.IsValid(token, out string normalizedToken, _r1c1);
+            var at = ExcelAddressBase.IsValid(token, _r1c1);
             if (at==ExcelAddressBase.AddressType.CellAddress)
             {
-                return new Token(normalizedToken, TokenType.ExcelAddress);
+                return new Token(token, TokenType.ExcelAddress);
             } 
-            else if (at == ExcelAddressBase.AddressType.R1C1)
+            if (at == ExcelAddressBase.AddressType.R1C1)
             {
                 return new Token(token.ToUpper(CultureInfo.InvariantCulture), TokenType.ExcelAddressR1C1);
             }
+            if (at == ExcelAddressBase.AddressType.TableReference)
+            {
+                return new Token(token, TokenType.TableReference);
+            }
             return new Token(token, TokenType.Unrecognized);
-
         }
 
         public Token Create(string token, TokenType explicitTokenType)
