@@ -36,6 +36,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 using OfficeOpenXml.Style;
 using OfficeOpenXml.Drawing;
@@ -67,23 +68,25 @@ namespace OfficeOpenXml
             _namespaceManager = nsm;
 			_worksheets = new Dictionary<int, ExcelWorksheet>();
 			int positionID = _pck._worksheetAdd;
+            var missingSheets = new List<string>();
 
             foreach (XmlNode sheetNode in topNode.ChildNodes)
 			{
                 if (sheetNode.NodeType == XmlNodeType.Element)
                 {
                     string name = sheetNode.Attributes["name"].Value;
-                    //Get the relationship id
                     string relId = sheetNode.Attributes.GetNamedItem("id", ExcelPackage.schemaRelationships).Value;
-                    int sheetID = Convert.ToInt32(sheetNode.Attributes["sheetId"].Value);
+                    if (!pck.Workbook.Part.TryGetRelationshipById(relId, out var sheetRelation))
+                    {
+                        missingSheets.Add(name);
+                        continue;
+                    }
 
-                    //Hidden property
+                    int sheetID = Convert.ToInt32(sheetNode.Attributes["sheetId"].Value);
                     eWorkSheetHidden hidden = eWorkSheetHidden.Visible;
                     XmlNode attr = sheetNode.Attributes["state"];
-                    if (attr != null)
-                        hidden = TranslateHidden(attr.Value);
+                    if (attr != null) hidden = TranslateHidden(attr.Value);
 
-                    var sheetRelation = pck.Workbook.Part.GetRelationship(relId);
                     Uri uriWorksheet = UriHelper.ResolvePartUri(pck.Workbook.WorkbookUri, sheetRelation.TargetUri);
 
                     //add the worksheet
@@ -98,7 +101,13 @@ namespace OfficeOpenXml
                     positionID++;
                 }
 			}
-		}
+
+            //Create empty worksheet for sheets without valid rid
+            foreach (string sheetName in missingSheets)
+            {
+                AddSheet(sheetName, false, null);
+            }
+        }
 
         private eWorkSheetHidden TranslateHidden(string value)
         {
@@ -167,9 +176,8 @@ namespace OfficeOpenXml
                 Packaging.ZipPackagePart worksheetPart = _pck.Package.CreatePart(uriWorksheet, isChart ? CHARTSHEET_CONTENTTYPE : WORKSHEET_CONTENTTYPE, _pck.Compression);
 
                 //Create the new, empty worksheet and save it to the package
-                StreamWriter streamWorksheet = new StreamWriter(worksheetPart.GetStream(FileMode.Create, FileAccess.Write));
                 XmlDocument worksheetXml = CreateNewWorksheet(isChart);
-                worksheetXml.Save(streamWorksheet);
+                worksheetPart.SaveXml(worksheetXml);
                 _pck.Package.Flush();
 
                 string rel = CreateWorkbookRel(Name, sheetID, uriWorksheet, isChart);
@@ -220,10 +228,9 @@ namespace OfficeOpenXml
 
                 //Create a copy of the worksheet XML
                 Packaging.ZipPackagePart worksheetPart = _pck.Package.CreatePart(uriWorksheet, WORKSHEET_CONTENTTYPE, _pck.Compression);
-                StreamWriter streamWorksheet = new StreamWriter(worksheetPart.GetStream(FileMode.Create, FileAccess.Write));
                 XmlDocument worksheetXml = new XmlDocument();
                 worksheetXml.LoadXml(Copy.WorksheetXml.OuterXml);
-                worksheetXml.Save(streamWorksheet);
+                worksheetPart.SaveXml(worksheetXml);
                 _pck.Package.Flush();
 
 
@@ -336,7 +343,8 @@ namespace OfficeOpenXml
                 {
                     newName=added.Names.AddValue(name.Name, name.Value);
                 }
-               newName.NameComment = name.NameComment;
+                newName.RawFormula = name.RawFormula;
+                newName.NameComment = name.NameComment;
             }
         }
 

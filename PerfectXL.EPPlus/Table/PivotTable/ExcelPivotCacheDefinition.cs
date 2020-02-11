@@ -111,7 +111,7 @@ namespace OfficeOpenXml.Table.PivotTable
             RecordRelationship = Part.CreateRelationship(UriHelper.ResolvePartUri(CacheDefinitionUri, CacheRecordUri), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/pivotCacheRecords");
             RecordRelationshipID = RecordRelationship.Id;
 
-            CacheDefinitionXml.Save(Part.GetStream());
+            Part.SaveXml(CacheDefinitionXml);
         }        
         /// <summary>
         /// Reference to the internal package part
@@ -267,9 +267,8 @@ namespace OfficeOpenXml.Table.PivotTable
 
                 string workbook = "";
                 string rId = GetXmlNodeString("d:cacheSource/d:worksheetSource/@r:id");
-                if (rId != "")
+                if (Part.TryGetRelationshipById(rId, out var relation))
                 {
-                    var relation = Part.GetRelationship(rId);
                     workbook = relation.TargetUri.IsAbsoluteUri ? relation.TargetUri.LocalPath.Split('\\').Last() : relation.TargetUri.ToString();
                 }
 

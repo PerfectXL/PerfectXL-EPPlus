@@ -34,6 +34,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using System.Linq;
+using OfficeOpenXml.Style.XmlAccess;
 
 namespace OfficeOpenXml.Style
 {
@@ -81,6 +83,12 @@ namespace OfficeOpenXml.Style
             {                
                 _ChangedEvent(this, new StyleChangeEventArgs(eStyleClass.Numberformat, eStyleProperty.Format, (string.IsNullOrEmpty(value) ? "General" : value), _positionID, _address));
             }
+        }
+
+        public bool IsFormattedAsDate()
+        {
+            ExcelNumberFormatXml numberFormat = _styles.NumberFormats.FirstOrDefault(x => x.NumFmtId == Index);
+            return numberFormat?.FormatTranslator.DataType == ExcelNumberFormatXml.eFormatType.DateTime;
         }
 
         internal override string Id

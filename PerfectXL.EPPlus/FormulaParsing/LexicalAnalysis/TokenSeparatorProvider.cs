@@ -28,11 +28,8 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 {
@@ -68,6 +65,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             _tokens.Add("%", new Token("%", TokenType.Percent));
             _tokens.Add("\n", new Token("\n", TokenType.NewLine));
             _tokens.Add(" ", new Token(" ", TokenType.WhiteSpace));
+            _tokens.Add(":", new Token(":", TokenType.Colon));
         }
 
         IDictionary<string, Token> ITokenSeparatorProvider.Tokens

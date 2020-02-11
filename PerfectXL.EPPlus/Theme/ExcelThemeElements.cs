@@ -45,6 +45,11 @@ namespace OfficeOpenXml.Theme
             return new ExcelThemeElements(package, namespaceManager);
         }
 
+        public ICollection<SchemeColor> GetSchemeColors()
+        {
+            return this.OfType<ExcelThemeColorScheme>().FirstOrDefault()?.SchemeColors ?? new List<SchemeColor>();
+        }
+
         private static XmlNode GetThemesXmlTopNode(ExcelPackage package)
         {
             ZipPackageRelationship zipPackageRelationship =

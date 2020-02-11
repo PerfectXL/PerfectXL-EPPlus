@@ -71,6 +71,11 @@ namespace OfficeOpenXml.Packaging
                 return _rels[id];
             }
         }
+
+        internal bool TryGetRelationshipsById(string id, out ZipPackageRelationship relationship)
+        {
+            return _rels.TryGetValue(id, out relationship);
+        }
         internal ZipPackageRelationshipCollection GetRelationshipsByType(string relationshipType)
         {
             var ret = new ZipPackageRelationshipCollection();

@@ -750,12 +750,8 @@ namespace OfficeOpenXml
         internal void SavePart(Uri uri, XmlDocument xmlDoc)
         {
             Packaging.ZipPackagePart part = _package.GetPart(uri);
-            var stream = part.GetStream(FileMode.Create, FileAccess.Write);
-            var xr = new XmlTextWriter(stream, Encoding.UTF8);
-            xr.Formatting = Formatting.None;
-
-            xmlDoc.Save(xr);
-        }
+            part.SaveXml(xmlDoc);
+		}
         /// <summary>
 		/// Saves the XmlDocument into the package at the specified Uri.
 		/// </summary>

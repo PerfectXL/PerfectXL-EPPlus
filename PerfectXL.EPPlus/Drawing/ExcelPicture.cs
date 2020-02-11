@@ -53,42 +53,44 @@ namespace OfficeOpenXml.Drawing
             base(drawings, node, "xdr:pic/xdr:nvPicPr/xdr:cNvPr/@name")
         {
             XmlNode picNode = node.SelectSingleNode("xdr:pic/xdr:blipFill/a:blip", drawings.NameSpaceManager);
-            if (picNode != null)
+            if (picNode == null || !drawings.Part.TryGetRelationshipById(picNode.Attributes["r:embed"].Value, out var relation))
             {
-                RelPic = drawings.Part.GetRelationship(picNode.Attributes["r:embed"].Value);
-                UriPic = UriHelper.ResolvePartUri(drawings.UriDrawing, RelPic.TargetUri);
+                return;
+            }
 
-                Part = drawings.Part.Package.GetPart(UriPic);
-                FileInfo f = new FileInfo(UriPic.OriginalString);
-                ContentType = GetContentType(f.Extension);
-                _image = Image.FromStream(Part.GetStream());
+            RelPic = relation;
+            UriPic = UriHelper.ResolvePartUri(drawings.UriDrawing, RelPic.TargetUri);
+
+            Part = drawings.Part.Package.GetPart(UriPic);
+            FileInfo f = new FileInfo(UriPic.OriginalString);
+            ContentType = GetContentType(f.Extension);
+            _image = Image.FromStream(Part.GetStream());
 
 #if (Core)
-                byte[] iby = ImageCompat.GetImageAsByteArray(_image);
+            byte[] iby = ImageCompat.GetImageAsByteArray(_image);
 #else
                 ImageConverter ic =new ImageConverter();
                 var iby=(byte[])ic.ConvertTo(_image, typeof(byte[]));
 #endif
-                var ii = _drawings._package.LoadImage(iby, UriPic, Part);
-                ImageHash = ii.Hash;
+            var ii = _drawings._package.LoadImage(iby, UriPic, Part);
+            ImageHash = ii.Hash;
 
-                //_height = _image.Height;
-                //_width = _image.Width;
-                string relID = GetXmlNodeString("xdr:pic/xdr:nvPicPr/xdr:cNvPr/a:hlinkClick/@r:id");
-                if (!string.IsNullOrEmpty(relID))
-                {
-                    HypRel = drawings.Part.GetRelationship(relID);
-                    if (HypRel.TargetUri.IsAbsoluteUri)
-                    {
-                        _hyperlink = new ExcelHyperLink(HypRel.TargetUri.AbsoluteUri);
-                    }
-                    else
-                    {
-                        _hyperlink = new ExcelHyperLink(HypRel.TargetUri.OriginalString, UriKind.Relative);
-                    }
-                    ((ExcelHyperLink)_hyperlink).ToolTip = GetXmlNodeString("xdr:pic/xdr:nvPicPr/xdr:cNvPr/a:hlinkClick/@tooltip");
-                }
+            string relID = GetXmlNodeString("xdr:pic/xdr:nvPicPr/xdr:cNvPr/a:hlinkClick/@r:id");
+            if (!drawings.Part.TryGetRelationshipById(relID, out relation))
+            {
+                return;
             }
+
+            HypRel = relation;
+            if (HypRel.TargetUri.IsAbsoluteUri)
+            {
+                _hyperlink = new ExcelHyperLink(HypRel.TargetUri.AbsoluteUri);
+            }
+            else
+            {
+                _hyperlink = new ExcelHyperLink(HypRel.TargetUri.OriginalString, UriKind.Relative);
+            }
+            ((ExcelHyperLink)_hyperlink).ToolTip = GetXmlNodeString("xdr:pic/xdr:nvPicPr/xdr:cNvPr/a:hlinkClick/@tooltip");
         }
         internal ExcelPicture(ExcelDrawings drawings, XmlNode node, Image image, Uri hyperlink) :
             base(drawings, node, "xdr:pic/xdr:nvPicPr/xdr:cNvPr/@name")
@@ -150,8 +152,10 @@ namespace OfficeOpenXml.Drawing
             else
             {
                 relID = drawings._hashes[ii.Hash];
-                var rel = _drawings.Part.GetRelationship(relID);
-                UriPic = UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri);
+                if (drawings.Part.TryGetRelationshipById(relID, out var rel))
+                {
+                    UriPic = UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri);
+                }
             }
             ImageHash = ii.Hash;
             _height = Image.Height;
@@ -236,7 +240,6 @@ namespace OfficeOpenXml.Drawing
 #endif
             var ii = _drawings._package.AddImage(img);
             
-
             ImageHash = ii.Hash;
             if (_drawings._hashes.ContainsKey(ii.Hash))
             {

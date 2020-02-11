@@ -138,7 +138,7 @@ namespace OfficeOpenXml.Table.PivotTable
             init();
 
             Part = pck.CreatePart(PivotTableUri, ExcelPackage.schemaPivotTable);
-            PivotTableXml.Save(Part.GetStream());
+            Part.SaveXml(PivotTableXml);
             
             //Worksheet-Pivottable relationship
             Relationship = sheet.Part.CreateRelationship(UriHelper.ResolvePartUri(sheet.WorksheetUri, PivotTableUri), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/pivotTable");

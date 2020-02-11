@@ -346,7 +346,6 @@ namespace OfficeOpenXml.Drawing
             {
                 return new ExcelShape(drawings, node);
             }
-            //}
             else if (node.SelectSingleNode("xdr:pic", drawings.NameSpaceManager) != null)
             {
                 return new ExcelPicture(drawings, node);

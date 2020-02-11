@@ -71,13 +71,13 @@ namespace OfficeOpenXml
             get
             {
                 string relID = GetXmlNodeString(BACKGROUNDPIC_PATH);
-                if (!string.IsNullOrEmpty(relID))
+                if (_workSheet.Part.TryGetRelationshipById(relID, out var rel))
                 {
-                    var rel = _workSheet.Part.GetRelationship(relID);
-                    var imagePart = _workSheet.Part.Package.GetPart(UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri));
-                    return Image.FromStream(imagePart.GetStream());
+                    return null;
                 }
-                return null;
+
+                var imagePart = _workSheet.Part.Package.GetPart(UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri));
+                return Image.FromStream(imagePart.GetStream());
             }
             set
             {

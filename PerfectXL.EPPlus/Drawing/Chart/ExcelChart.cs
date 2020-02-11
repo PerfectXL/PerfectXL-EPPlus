@@ -486,12 +486,7 @@ namespace OfficeOpenXml.Drawing.Chart
 
                // save it to the package
                Part = package.CreatePart(UriChart, "application/vnd.openxmlformats-officedocument.drawingml.chart+xml", _drawings._package.Compression);
-
-               StreamWriter streamChart = new StreamWriter(Part.GetStream(FileMode.Create, FileAccess.Write));
-               ChartXml.Save(streamChart);
-#if !Core
-                streamChart.Close();
-#endif
+               Part.SaveXml(ChartXml);
                package.Flush();
 
                var chartRelation = drawings.Part.CreateRelationship(UriHelper.GetRelativeUri(drawings.UriDrawing, UriChart), Packaging.TargetMode.Internal, ExcelPackage.schemaRelationships + "/chart");
@@ -1700,41 +1695,38 @@ namespace OfficeOpenXml.Drawing.Chart
        internal static ExcelChart GetChart(ExcelDrawings drawings, XmlNode node/*, XmlNode chartTypeNode*/)
        {
            XmlNode chartNode = node.SelectSingleNode("xdr:graphicFrame/a:graphic/a:graphicData/c:chart", drawings.NameSpaceManager);
-           if (chartNode != null)
-           {
-               var drawingRelation = drawings.Part.GetRelationship(chartNode.Attributes["r:id"].Value);
-               var uriChart = UriHelper.ResolvePartUri(drawings.UriDrawing, drawingRelation.TargetUri);
-
-               var part = drawings.Part.Package.GetPart(uriChart);
-               var chartXml = new XmlDocument();
-               LoadXmlSafe(chartXml, part.GetStream()); 
-
-               ExcelChart topChart = null;
-               foreach (XmlElement n in chartXml.SelectSingleNode(rootPath, drawings.NameSpaceManager).ChildNodes)
-                {
-                    if (topChart == null)
-                    {
-                        topChart = GetChart(n, drawings, node, uriChart, part, chartXml, null);
-                        if(topChart!=null)
-                        {
-                            topChart.PlotArea.ChartTypes.Add(topChart);
-                        }
-                    }
-                    else
-                    {
-                        var subChart = GetChart(n, null, null, null, null, null, topChart);
-                        if (subChart != null)
-                        {
-                            topChart.PlotArea.ChartTypes.Add(subChart);
-                        }
-                    }
-                }               
-                return topChart;
-           }
-           else
+           if (chartNode == null || !drawings.Part.TryGetRelationshipById(chartNode.Attributes["r:id"].Value, out var drawingRelation))
            {
                return null;
-           }           
+           }
+           
+           var uriChart = UriHelper.ResolvePartUri(drawings.UriDrawing, drawingRelation.TargetUri);
+           var part = drawings.Part.Package.GetPart(uriChart);
+           var chartXml = new XmlDocument();
+           LoadXmlSafe(chartXml, part.GetStream()); 
+
+           ExcelChart topChart = null;
+           foreach (XmlElement n in chartXml.SelectSingleNode(rootPath, drawings.NameSpaceManager).ChildNodes)
+           {
+               if (topChart == null)
+               {
+                   topChart = GetChart(n, drawings, node, uriChart, part, chartXml, null);
+                   if(topChart!=null)
+                   {
+                       topChart.PlotArea.ChartTypes.Add(topChart);
+                   }
+               }
+               else
+               {
+                   var subChart = GetChart(n, null, null, null, null, null, topChart);
+                   if (subChart != null)
+                   {
+                       topChart.PlotArea.ChartTypes.Add(subChart);
+                   }
+               }
+           }               
+           return topChart;
+
        }
        internal static ExcelChart GetChart(XmlElement chartNode, ExcelDrawings drawings, XmlNode node,  Uri uriChart, Packaging.ZipPackagePart part, XmlDocument chartXml, ExcelChart topChart)
        {

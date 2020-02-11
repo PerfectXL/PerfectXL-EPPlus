@@ -115,6 +115,8 @@ namespace OfficeOpenXml
         }
         internal object NameValue { get; set; }
         internal string NameFormula { get; set; }
+
+        public string RawFormula { get; set; }
         public override string ToString()
         {
             return Name;

@@ -298,10 +298,14 @@ namespace OfficeOpenXml
                                 namedRange = _names.Add(elem.GetAttribute("name"), new ExcelRangeBase(this, ws, fullAddress, false));
                             }
                         }
-                        if (elem.GetAttribute("hidden") == "1" && namedRange != null) namedRange.IsNameHidden = true;
+
+                        if (namedRange == null) continue;
+                        namedRange.RawFormula = elem.InnerText;
+                        if (elem.GetAttribute("hidden") == "1") namedRange.IsNameHidden = true;
                         if (!string.IsNullOrEmpty(elem.GetAttribute("comment"))) namedRange.NameComment = elem.GetAttribute("comment");
+                        
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // Quickfix: Hidden named ranges that references worksheets which do not exist will not be added to all defined names.
                     }
@@ -671,8 +675,7 @@ namespace OfficeOpenXml
 				bookViews.AppendChild(workbookView);
 
 				// save it to the package
-				StreamWriter stream = new StreamWriter(partWorkbook.GetStream(FileMode.Create, FileAccess.Write));
-				_workbookXml.Save(stream);
+                partWorkbook.SaveXml(_workbookXml);
 				//stream.Close();
 				_package.Package.Flush();
 			}
@@ -710,10 +713,7 @@ namespace OfficeOpenXml
                 package.Compression);
 
             //Save it to the package
-            var stream = new StreamWriter(part.GetStream(FileMode.Create, FileAccess.Write));
-
-            stylesXml.Save(stream);
-            //stream.Close();
+            part.SaveXml(stylesXml);
             package.Package.Flush();
 
             // create the relationship between the workbook and the new styles part
@@ -1058,7 +1058,7 @@ namespace OfficeOpenXml
 				}
 				else
 				{
-					elem.InnerText = name.NameFormula;
+					elem.InnerText = name.RawFormula;
 				}
 			}
 			else
@@ -1136,7 +1136,11 @@ namespace OfficeOpenXml
 				foreach (XmlElement elem in nl)
 				{
 					string rID = elem.GetAttribute("r:id");
-					var rel = Part.GetRelationship(rID);
+                    if (!Part.TryGetRelationshipById(rID, out var rel))
+                    {
+                        continue;
+                    }
+
 					var part = _package.Package.GetPart(UriHelper.ResolvePartUri(rel.SourceUri, rel.TargetUri));
 					XmlDocument xmlExtRef = new XmlDocument();
                     LoadXmlSafe(xmlExtRef, part.GetStream()); 
@@ -1145,13 +1149,11 @@ namespace OfficeOpenXml
 					if(book!=null)
 					{
 						string rId_ExtRef = book.GetAttribute("r:id");
-						var rel_extRef = part.GetRelationship(rId_ExtRef);
-						if (rel_extRef != null)
+						if (part.TryGetRelationshipById(rId_ExtRef, out var rel_extRef))
 						{
 							_externalReferences.Add(rel_extRef.TargetUri.OriginalString);
 						}
-
-					}
+                    }
 				}
 			}
 		}

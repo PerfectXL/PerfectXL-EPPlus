@@ -5,7 +5,7 @@
     <RootNamespace>PerfectXL.EPPlus.UnitTests</RootNamespace>    
     <AssemblyName>PerfectXL.EPPlus.UnitTests</AssemblyName>    
     <SignAssembly>false</SignAssembly>    
-    <Version>5.0.7</Version>    
+    <Version>5.0.17</Version>    
     <Description>Package Description</Description>    
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>

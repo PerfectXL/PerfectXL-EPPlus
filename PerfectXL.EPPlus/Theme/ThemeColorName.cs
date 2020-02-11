@@ -2,10 +2,10 @@
 {
     public enum ThemeColorName
     {
-        Dark1,
         Light1,
-        Dark2,
+        Dark1,
         Light2,
+        Dark2,
         Accent1,
         Accent2,
         Accent3,

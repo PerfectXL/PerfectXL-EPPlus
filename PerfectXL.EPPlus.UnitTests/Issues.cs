@@ -2003,7 +2003,7 @@ namespace EPPlusTest
         {
             using (var pck = new ExcelPackage(new FileInfo($@"C:\temp\bug\issue176.xlsx")))
             {
-                Assert.AreEqual(Math.Round(pck.Workbook.Worksheets[1].Cells["A1"].Style.Fill.BackgroundColor.Tint, 5), -0.04999M);
+                Assert.AreEqual(Math.Round(pck.Workbook.Worksheets[1].Cells["A1"].Style.Fill.BackgroundColor.Tint.Value, 5), -0.04999M);
                 pck.SaveAs(new FileInfo($@"C:\temp\bug\issue176-saved.xlsx"));
             }
         }
