@@ -28,10 +28,6 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.FormulaParsing.Utilities
 {
@@ -46,11 +42,20 @@ namespace OfficeOpenXml.FormulaParsing.Utilities
         public const string Decimal = @"^[0-9]+\.[0-9]+$";
         public const string Integer = @"^[0-9]+$";
         public const string DefinedNamePattern = @"^((?<Workheet> .+)!)? (?<Name> [^!\s]+)$";
+        public const string SingleCellRangePattern = @"^" + ColumnPattern + RowPattern + @"$";
         public const string ColumnPattern = @"\$? ([A-Z]{1,2} | [A-W][A-Z]{1,2} | X[A-E][A-Z] | XF[A-D])";
+        public const string ColumnReferencePattern = @"^" + ColumnPattern + ":" + ColumnPattern + @"$";
         public const string RowPattern = @"\$? ([1-9]\d{0,5} | 10[0-3]\d{4} | 104[0-7]\d{3} | 1048[0-4]\d{2} | 10485[0-6]\d | 104857[0-6])";
+        public const string RowReferencePattern = @"^" + RowPattern + ":" + RowPattern + @"$";
         public const string CellRangePattern = @"(" + ColumnPattern + RowPattern + @"(:" + ColumnPattern + RowPattern + @")?)";
         public const string ExternalCellRange = @"^ (\[ (?<ExternalFileNumber> \d+) \] (?<Worksheet> [^\[\]]+) ! (?<Address>" + CellRangePattern + @")) | ('\[ (?<ExternalFileNumber> \d+) \] (?<Worksheet> [^\[\]]+) '! (?<Address>" + CellRangePattern + @"))$";
 
         public const string WorkbookNameSingleQuotes = @"((^[.]) | ([ -]))";
+
+        public const string Name = @"[^\s\[\]]+";
+        public const string ItemSpecifier = @"\#(All | Data | Headers | Totals | This\sRow)";
+        public const string TableReference = @"^" + Name + @"((\[(" + Name + @"|" + ItemSpecifier + @")\]) 
+                                                            | (\[ \s* \[" + Name + @"\]:\[" + Name + @"\] \s* \]) 
+                                                            | (\[ \s* \[" + ItemSpecifier + @"\] \s* , \s* \[" + Name + @"\](:\[" + Name + @"\])? \s* \]))$";
     }
 }

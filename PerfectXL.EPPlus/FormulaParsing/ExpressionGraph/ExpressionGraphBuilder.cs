@@ -101,7 +101,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
                 {
                     break;
                 }
-                else if(token.TokenType == TokenType.WorksheetName)
+                else if(token.TokenType == TokenType.WorksheetQuote)
                 {
                     var sb = new StringBuilder();
                     sb.Append(tokens[_tokenIndex++].Value);

@@ -115,7 +115,7 @@ namespace OfficeOpenXml
             foreach (var token in tokens)
             {
                 //Console.WriteLine($"{token.TokenType} : {token.Value}");
-                if (token.TokenType == TokenType.ExcelAddress || token.TokenType.Equals(TokenType.NameValue) || token.TokenType == TokenType.ExcelAddressR1C1)
+                if (token.TokenType == TokenType.ExcelAddress || token.TokenType == TokenType.ExcelAddressR1C1)
                 {
                     var part = addressTranslator(token.Value, row, col);
                     //Console.Write($"==> " + part);

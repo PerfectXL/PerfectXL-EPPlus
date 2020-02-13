@@ -37,6 +37,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 {
     public enum TokenType
     {
+        Unknown,
         Operator,
         Negator,
         OpeningParenthesis,
@@ -50,8 +51,8 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         SemiColon,
         String,
         StringContent,
+        WorksheetQuote,
         WorksheetName,
-        WorksheetNameContent,
         Integer,
         Boolean,
         Decimal,
@@ -67,6 +68,8 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         ExcelAddressR1C1,
         NewLine,
         WhiteSpace,
-        Colon
+        Colon,
+        ExclamationMark,
+        TableReference
     }
 }
