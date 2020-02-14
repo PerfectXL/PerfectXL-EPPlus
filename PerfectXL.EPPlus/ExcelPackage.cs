@@ -1535,8 +1535,8 @@ namespace OfficeOpenXml
                 inputStream.Seek(0, SeekOrigin.Begin);
             }
 
-            const int bufferLength = 8096;
-            await inputStream.CopyToAsync(outputStream, 81920, cancellationToken);
+            const int bufferLength = 81920;
+            await inputStream.CopyToAsync(outputStream, bufferLength, cancellationToken);
         }
 
         /// <summary>
