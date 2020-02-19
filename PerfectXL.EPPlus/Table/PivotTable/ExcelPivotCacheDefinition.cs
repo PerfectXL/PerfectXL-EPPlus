@@ -173,57 +173,60 @@ namespace OfficeOpenXml.Table.PivotTable
         internal const string _sourceAddressPath = "d:cacheSource/d:worksheetSource/@ref";
         internal ExcelRangeBase _sourceRange = null;
         /// <summary>
-        /// The source data range when the pivottable has a worksheet datasource. 
+        /// The source data range when the pivot table has a worksheet data source. 
         /// The number of columns in the range must be intact if this property is changed.
-        /// The range must be in the same workbook as the pivottable.
+        /// The range must be in the same workbook as the pivot table.
         /// </summary>
         public ExcelRangeBase SourceRange
         {
             get
             {
-                if (_sourceRange == null)
+                if (CacheSource != eSourceType.Worksheet)
                 {
-                    if (CacheSource == eSourceType.Worksheet)
+                    return null;
+                }
+
+                if (_sourceRange != null)
+                {
+                    return _sourceRange;
+                }
+
+                ExcelWorksheet ws = PivotTable.WorkSheet.Workbook.Worksheets[GetXmlNodeString(_sourceWorksheetPath)];
+                if (ws != null)
+                {
+                    _sourceRange = ws.Cells[GetXmlNodeString(_sourceAddressPath)];
+                }
+                else //Not worksheet, check name or table name
+                {
+                    var name = GetXmlNodeString(_sourceNamePath);
+                    foreach (var n in PivotTable.WorkSheet.Workbook.Names)
                     {
-                        var ws = PivotTable.WorkSheet.Workbook.Worksheets[GetXmlNodeString(_sourceWorksheetPath)];
-                        if (ws == null) //Not worksheet, check name or table name
+                        if (name.Equals(n.Name, StringComparison.OrdinalIgnoreCase))
                         {
-                            var name = GetXmlNodeString(_sourceNamePath);
-                            foreach (var n in PivotTable.WorkSheet.Workbook.Names)
-                            {
-                                if(name.Equals(n.Name,StringComparison.OrdinalIgnoreCase))
-                                {
-                                    _sourceRange = n;
-                                    return _sourceRange;
-                                }
-                            }
-                            foreach (var w in PivotTable.WorkSheet.Workbook.Worksheets)
-                            {
-                                if (w.Tables._tableNames.ContainsKey(name))
-                                {
-                                    _sourceRange = w.Cells[w.Tables[name].Address.Address];
-                                    break;
-                                }
-                                foreach (var n in w.Names)
-                                {
-                                    if (name.Equals(n.Name, StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        _sourceRange = n;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            _sourceRange = ws.Cells[GetXmlNodeString(_sourceAddressPath)];
+                            _sourceRange = n;
+                            return _sourceRange;
                         }
                     }
-                    else
+
+                    foreach (var w in PivotTable.WorkSheet.Workbook.Worksheets)
                     {
-                        throw (new ArgumentException("The cachesource is not a worksheet"));
+                        if (w.Tables._tableNames.ContainsKey(name))
+                        {
+                            _sourceRange = w.Cells[w.Tables[name].Address.Address];
+                            break;
+                        }
+
+                        foreach (var n in w.Names)
+                        {
+                            if (name.Equals(n.Name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                _sourceRange = n;
+                                break;
+                            }
+                        }
                     }
                 }
+
                 return _sourceRange;
             }
             set
