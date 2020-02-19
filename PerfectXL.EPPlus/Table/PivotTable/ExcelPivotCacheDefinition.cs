@@ -173,7 +173,7 @@ namespace OfficeOpenXml.Table.PivotTable
         internal const string _sourceAddressPath = "d:cacheSource/d:worksheetSource/@ref";
         internal ExcelRangeBase _sourceRange = null;
         /// <summary>
-        /// The source data range when the pivot table has a worksheet datas ource. 
+        /// The source data range when the pivot table has a worksheet data source. 
         /// The number of columns in the range must be intact if this property is changed.
         /// The range must be in the same workbook as the pivot table.
         /// </summary>
