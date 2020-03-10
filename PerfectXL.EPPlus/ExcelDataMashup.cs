@@ -10,13 +10,21 @@ namespace OfficeOpenXml
     {
         internal ExcelDataMashup(ExcelPackage package, XmlNamespaceManager nameSpaceManager) : base(nameSpaceManager)
         {
-            var item1Uri = new Uri("/customXml/item1.xml", UriKind.Relative);
-            if (!package.Package.PartExists(item1Uri)) return;
-            var item1Xml = new XmlDocument();
-            LoadXmlSafe(item1Xml, package.Package.GetPart(item1Uri).GetStream());
-            TopNode = item1Xml.DocumentElement;
-            byte[] dataMashup = Convert.FromBase64String(TopNode.InnerText);
-            GetSection1M(dataMashup);
+            try
+            {
+                var item1Uri = new Uri("/customXml/item1.xml", UriKind.Relative);
+                if (!package.Package.PartExists(item1Uri)) return;
+                var item1Xml = new XmlDocument();
+                LoadXmlSafe(item1Xml, package.Package.GetPart(item1Uri).GetStream());
+                TopNode = item1Xml.DocumentElement;
+                byte[] dataMashup = Convert.FromBase64String(TopNode.InnerText);
+                GetSection1M(dataMashup);
+            }
+            catch (Exception e)
+            {
+                //customXml/item1.xml most likely not always intended as data mashup
+                PowerQueryFormulas = null;
+            }
         }
 
         private void GetSection1M(byte[] dataMashupBytes)
