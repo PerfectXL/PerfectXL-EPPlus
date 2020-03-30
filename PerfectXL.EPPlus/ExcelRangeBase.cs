@@ -1127,9 +1127,14 @@ namespace OfficeOpenXml
             }
             else
             {
-                return d.ToString(format, nf.Culture);
+                return d.ToString(EscapeCustomDateFormat(format), nf.Culture);
             }
 
+        }
+
+        private static string EscapeCustomDateFormat(string format)
+        {
+            return format.Replace("'", @"\'"); // TODO more replacements are required to convert form Excel date format to .NET
         }
 
         /// <summary>

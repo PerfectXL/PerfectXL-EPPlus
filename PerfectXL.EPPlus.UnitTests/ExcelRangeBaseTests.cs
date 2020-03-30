@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace EPPlusTest
 {
@@ -87,6 +89,25 @@ namespace EPPlusTest
                 Assert.IsNotNull(name.Addresses);
                 name.Address = "Sheet1!C3";
                 Assert.IsNull(name.Addresses);
+            }
+        }
+
+        [TestMethod]
+        public void CustomDateFormattingTest()
+        {
+            using (var package = new ExcelPackage())
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Sheet1");
+                worksheet.Cells[1, 1].Value = new DateTime(2000, 1, 9);
+                worksheet.Cells[1, 1].Style.Numberformat.Format = "\"day\" d \"month\" M \"year\" yyyy";
+                // TODO This test should pass
+                //Assert.AreEqual("day 9 month 1 year 2000", worksheet.Cells[1, 1].Text); 
+
+                worksheet.Cells[1, 1].Style.Numberformat.Format = "d M 'yy";
+                Assert.AreEqual("9 1 '00", worksheet.Cells[1, 1].Text);
+
+                worksheet.Cells[1, 1].Style.Numberformat.Format = "'dd-MM-yyyy'";
+                Assert.AreEqual("'09-01-2000'", worksheet.Cells[1, 1].Text);
             }
         }
     }
