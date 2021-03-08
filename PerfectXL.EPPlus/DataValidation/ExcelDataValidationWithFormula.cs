@@ -95,17 +95,5 @@ namespace OfficeOpenXml.DataValidation
             get;
             protected set;
         }
-
-        public override void Validate()
-        {
-            base.Validate();
-            if (ValidationType != ExcelDataValidationType.List && (Operator == ExcelDataValidationOperator.between || Operator == ExcelDataValidationOperator.notBetween))
-            {
-                if (string.IsNullOrEmpty(Formula2Internal))
-                {
-                    throw new InvalidOperationException("Validation of " + Address.Address + " failed: Formula2 must be set if operator is 'between' or 'notBetween'");
-                }
-            }
-        }
     }
 }
