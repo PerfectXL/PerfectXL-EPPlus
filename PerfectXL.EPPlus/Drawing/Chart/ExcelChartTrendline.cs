@@ -31,8 +31,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Globalization;
 
@@ -43,8 +41,15 @@ namespace OfficeOpenXml.Drawing.Chart
     /// </summary>
     public class ExcelChartTrendlineCollection : IEnumerable<ExcelChartTrendline>
     {
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         List<ExcelChartTrendline> _list = new List<ExcelChartTrendline>();
-        ExcelChartSerie _serie;
+After:
+        private List<ExcelChartTrendline> _list = new List<ExcelChartTrendline>();
+*/
+        private readonly List<ExcelChartTrendline> _list = new List<ExcelChartTrendline>();
+        private readonly ExcelChartSerie _serie;
         internal ExcelChartTrendlineCollection(ExcelChartSerie serie)
         {
             _serie = serie;
@@ -65,7 +70,7 @@ namespace OfficeOpenXml.Drawing.Chart
                 _serie._chartSeries._chart.IsTypeStacked() ||
                 _serie._chartSeries._chart.IsTypePieDoughnut())
             {
-                throw(new ArgumentException("Trendlines don't apply to 3d-charts, stacked charts, pie charts or doughnut charts"));
+                throw (new ArgumentException("Trendlines don't apply to 3d-charts, stacked charts, pie charts or doughnut charts"));
             }
             ExcelChartTrendline tl;
             XmlNode insertAfter;
@@ -85,7 +90,7 @@ namespace OfficeOpenXml.Drawing.Chart
                     }
                 }
             }
-            var node=_serie.TopNode.OwnerDocument.CreateElement("c","trendline", ExcelPackage.schemaChart);
+            var node = _serie.TopNode.OwnerDocument.CreateElement("c", "trendline", ExcelPackage.schemaChart);
             _serie.TopNode.InsertAfter(node, insertAfter);
 
             tl = new ExcelChartTrendline(_serie.NameSpaceManager, node);
@@ -108,37 +113,38 @@ namespace OfficeOpenXml.Drawing.Chart
     public class ExcelChartTrendline : XmlHelper
     {
         internal ExcelChartTrendline(XmlNamespaceManager namespaceManager, XmlNode topNode) :
-            base(namespaceManager,topNode)
+            base(namespaceManager, topNode)
 
         {
-            SchemaNodeOrder = new string[] { "name", "trendlineType","order","period", "forward","backward","intercept", "dispRSqr", "dispEq", "trendlineLbl" };
+            SchemaNodeOrder = new string[] { "name", "trendlineType", "order", "period", "forward", "backward", "intercept", "dispRSqr", "dispEq", "trendlineLbl" };
         }
-        const string TRENDLINEPATH = "c:trendlineType/@val";
+
+        private const string TRENDLINEPATH = "c:trendlineType/@val";
         /// <summary>
         /// Type of Trendline
         /// </summary>
         public eTrendLine Type
         {
-           get
-           {
-               switch (GetXmlNodeString(TRENDLINEPATH).ToLower(CultureInfo.InvariantCulture))
-               {
-                   case "exp":
-                       return eTrendLine.Exponential;
-                   case "log":
+            get
+            {
+                switch (GetXmlNodeString(TRENDLINEPATH).ToLower(CultureInfo.InvariantCulture))
+                {
+                    case "exp":
+                        return eTrendLine.Exponential;
+                    case "log":
                         return eTrendLine.Logarithmic;
-                   case "poly":
-                       return eTrendLine.Polynomial;
-                   case "movingavg":
-                       return eTrendLine.MovingAvgerage;
-                   case "power":
-                       return eTrendLine.Power;
-                   default:
-                       return eTrendLine.Linear;
-               }
-           }
-           set
-           {
+                    case "poly":
+                        return eTrendLine.Polynomial;
+                    case "movingavg":
+                        return eTrendLine.MovingAvgerage;
+                    case "power":
+                        return eTrendLine.Power;
+                    default:
+                        return eTrendLine.Linear;
+                }
+            }
+            set
+            {
                 switch (value)
                 {
                     case eTrendLine.Exponential:
@@ -158,13 +164,14 @@ namespace OfficeOpenXml.Drawing.Chart
                     case eTrendLine.Power:
                         SetXmlNodeString(TRENDLINEPATH, "power");
                         break;
-                    default: 
+                    default:
                         SetXmlNodeString(TRENDLINEPATH, "linear");
                         break;
                 }
-           }
+            }
         }
-        const string NAMEPATH = "c:name";
+
+        private const string NAMEPATH = "c:name";
         /// <summary>
         /// Name in the legend
         /// </summary>
@@ -179,7 +186,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(NAMEPATH, value, true);
             }
         }
-        const string ORDERPATH = "c:order/@val";
+
+        private const string ORDERPATH = "c:order/@val";
         /// <summary>
         /// Order for polynominal trendlines
         /// </summary>
@@ -199,7 +207,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(ORDERPATH, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string PERIODPATH = "c:period/@val";
+
+        private const string PERIODPATH = "c:period/@val";
         /// <summary>
         /// Period for monthly average trendlines
         /// </summary>
@@ -219,7 +228,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(PERIODPATH, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string FORWARDPATH = "c:forward/@val";
+
+        private const string FORWARDPATH = "c:forward/@val";
         /// <summary>
         /// Forcast forward periods
         /// </summary>
@@ -234,7 +244,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(FORWARDPATH, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string BACKWARDPATH = "c:backward/@val";
+
+        private const string BACKWARDPATH = "c:backward/@val";
         /// <summary>
         /// Forcast backwards periods
         /// </summary>
@@ -249,7 +260,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(BACKWARDPATH, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string INTERCEPTPATH = "c:intercept/@val";
+
+        private const string INTERCEPTPATH = "c:intercept/@val";
         /// <summary>
         /// Specify the point where the trendline crosses the vertical axis
         /// </summary>
@@ -264,7 +276,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(INTERCEPTPATH, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string DISPLAYRSQUAREDVALUEPATH = "c:dispRSqr/@val";
+
+        private const string DISPLAYRSQUAREDVALUEPATH = "c:dispRSqr/@val";
         /// <summary>
         /// Display the R-squared value for a trendline
         /// </summary>
@@ -279,7 +292,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeBool(DISPLAYRSQUAREDVALUEPATH, value, true);
             }
         }
-        const string DISPLAYEQUATIONPATH = "c:dispEq/@val";
+
+        private const string DISPLAYEQUATIONPATH = "c:dispEq/@val";
         /// <summary>
         /// Display the trendline equation on the chart
         /// </summary>

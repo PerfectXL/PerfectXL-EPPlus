@@ -30,10 +30,7 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OfficeOpenXml.Style.XmlAccess;
-using System.Globalization;
 
 namespace OfficeOpenXml.Style
 {
@@ -148,7 +145,8 @@ namespace OfficeOpenXml.Style
                 _ChangedEvent(this, new StyleChangeEventArgs(eStyleClass.GradientFill, eStyleProperty.GradientRight, value, _positionID, _address));
             }
         }
-        ExcelColor _gradientColor1 = null;
+
+        private ExcelColor _gradientColor1 = null;
         /// <summary>
         /// Gradient Color 1
         /// </summary>
@@ -164,7 +162,8 @@ namespace OfficeOpenXml.Style
 
             }
         }
-        ExcelColor _gradientColor2 = null;
+
+        private ExcelColor _gradientColor2 = null;
         /// <summary>
         /// Gradient Color 2
         /// </summary>

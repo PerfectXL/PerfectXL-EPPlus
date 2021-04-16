@@ -52,9 +52,8 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Collections;
-using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
+namespace OfficeOpenXml
 {
     /// <summary>
     /// This is the store for all Rows, Columns and Cells.
@@ -69,10 +68,10 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
                 RangeID = cellId;
             }
             internal IndexItem(ulong cellId, int listPointer)
-	        {
+            {
                 RangeID = cellId;
-                ListPointer=listPointer;
-	        }
+                ListPointer = listPointer;
+            }
             internal ulong RangeID;
             internal int ListPointer;
         }
@@ -89,15 +88,16 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
 
             #endregion
         }
-        IndexItem[] _cellIndex;
-        List<IRangeID> _cells;
-        static readonly Compare _comparer=new Compare(); 
+
+        private IndexItem[] _cellIndex;
+        private List<IRangeID> _cells;
+        private static readonly Compare _comparer = new Compare();
         /// <summary>
         /// Creates a new collection
         /// </summary>
         /// <param name="cells">The Cells. This list must be sorted</param>
         internal RangeCollection(List<IRangeID> cells)
-        {   
+        {
             _cells = cells;
             InitSize(_cells);
             for (int i = 0; i < _cells.Count; i++)
@@ -179,7 +179,8 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
         {
             return IndexOf(key) < 0 ? false : true;
         }
-        int _size { get; set; }
+
+        private int _size { get; set; }
         #region "RangeID manipulation methods"
         /// <summary>
         /// Insert a number of rows in the collecion but dont update the cell only the index
@@ -190,7 +191,11 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
         internal int InsertRowsUpdateIndex(ulong rowID, int rows)
         {
             int index = IndexOf(rowID);
-            if (index < 0) index = ~index; //No match found invert to get start cell
+            if (index < 0)
+            {
+                index = ~index; //No match found invert to get start cell
+            }
+
             ulong rowAdd = (((ulong)rows) << 29);
             for (int i = index; i < _cells.Count; i++)
             {
@@ -207,8 +212,12 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
         internal int InsertRows(ulong rowID, int rows)
         {
             int index = IndexOf(rowID);
-            if (index < 0) index = ~index; //No match found invert to get start cell
-            ulong rowAdd=(((ulong)rows) << 29);
+            if (index < 0)
+            {
+                index = ~index; //No match found invert to get start cell
+            }
+
+            ulong rowAdd = (((ulong)rows) << 29);
             for (int i = index; i < _cells.Count; i++)
             {
                 _cellIndex[i].RangeID += rowAdd;
@@ -226,21 +235,34 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
         {
             ulong rowAdd = (((ulong)rows) << 29);
             var index = IndexOf(rowID);
-            if (index < 0) index = ~index; //No match found invert to get start cell
+            if (index < 0)
+            {
+                index = ~index; //No match found invert to get start cell
+            }
 
-            if (index >= _cells.Count || _cellIndex[index] == null) return -1;   //No row above this row
+            if (index >= _cells.Count || _cellIndex[index] == null)
+            {
+                return -1;   //No row above this row
+            }
+
             while (index < _cells.Count && _cellIndex[index].RangeID < rowID + rowAdd)
             {
                 Delete(_cellIndex[index].RangeID);
             }
 
             int updIndex = IndexOf(rowID + rowAdd);
-            if (updIndex < 0) updIndex = ~updIndex; //No match found invert to get start cell
+            if (updIndex < 0)
+            {
+                updIndex = ~updIndex; //No match found invert to get start cell
+            }
 
             for (int i = updIndex; i < _cells.Count; i++)
             {
                 _cellIndex[i].RangeID -= rowAdd;                        //Change the index
-                if (updateCells) _cells[_cellIndex[i].ListPointer].RangeID -= rowAdd;    //Change the cell/row or column object
+                if (updateCells)
+                {
+                    _cells[_cellIndex[i].ListPointer].RangeID -= rowAdd;    //Change the cell/row or column object
+                }
             }
             return index;
         }
@@ -248,7 +270,7 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
         {
             throw (new Exception("Working on it..."));
         }
-        internal void DeleteColumn(ulong ColumnID,int columns)
+        internal void DeleteColumn(ulong ColumnID, int columns)
         {
             throw (new Exception("Working on it..."));
         }
@@ -261,7 +283,11 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
         private void InitSize(List<IRangeID> _cells)
         {
             _size = 128;
-            while (_cells.Count > _size) _size <<= 1;
+            while (_cells.Count > _size)
+            {
+                _size <<= 1;
+            }
+
             _cellIndex = new IndexItem[_size];
         }
         /// <summary>
@@ -303,10 +329,10 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
         #endregion
 
         #region IEnumerator Members
-        int _ix = -1;
+        private int _ix = -1;
         object IEnumerator.Current
         {
-            get 
+            get
             {
                 return _cells[_cellIndex[_ix].ListPointer];
             }
@@ -314,8 +340,8 @@ using OfficeOpenXml.Drawing.Vml;namespace OfficeOpenXml
 
         bool IEnumerator.MoveNext()
         {
-           _ix++;
-           return _ix < _cells.Count;
+            _ix++;
+            return _ix < _cells.Count;
         }
 
         void IEnumerator.Reset()

@@ -28,12 +28,6 @@
  * ******************************************************************************
  * Raziq York   		            Added       		        2014-08-08
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OfficeOpenXml.DataValidation.Formulas.Contracts;
-using OfficeOpenXml.DataValidation.Formulas;
 using System.Xml;
 using OfficeOpenXml.DataValidation.Contracts;
 
@@ -62,7 +56,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="address"></param>
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
-        internal ExcelDataValidationAny(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationAny(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode)
             : base(worksheet, address, validationType, storageType, itemElementNode)
         {
@@ -76,7 +70,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
         /// <param name="namespaceManager"></param>
-        internal ExcelDataValidationAny(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode, 
+        internal ExcelDataValidationAny(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, XmlNode itemElementNode,
             eDataValidationStorageType storageType, XmlNamespaceManager namespaceManager)
             : base(worksheet, address, validationType, storageType, itemElementNode, namespaceManager)
         {

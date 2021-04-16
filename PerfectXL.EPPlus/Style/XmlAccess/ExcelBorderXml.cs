@@ -29,9 +29,6 @@
  * Jan Källman		                Initial Release		        2009-10-01
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 namespace OfficeOpenXml.Style.XmlAccess
 {
@@ -63,8 +60,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 return Left.Id + Right.Id + Top.Id + Bottom.Id + Diagonal.Id + DiagonalUp.ToString() + DiagonalDown.ToString();
             }
         }
-        const string leftPath = "d:left";
-        ExcelBorderItemXml _left = null;
+
+        private const string leftPath = "d:left";
+        private ExcelBorderItemXml _left = null;
         /// <summary>
         /// Left border style properties
         /// </summary>
@@ -79,8 +77,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _left = value;
             }
         }
-        const string rightPath = "d:right";
-        ExcelBorderItemXml _right = null;
+
+        private const string rightPath = "d:right";
+        private ExcelBorderItemXml _right = null;
         /// <summary>
         /// Right border style properties
         /// </summary>
@@ -95,8 +94,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _right = value;
             }
         }
-        const string topPath = "d:top";
-        ExcelBorderItemXml _top = null;
+
+        private const string topPath = "d:top";
+        private ExcelBorderItemXml _top = null;
         /// <summary>
         /// Top border style properties
         /// </summary>
@@ -111,8 +111,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _top = value;
             }
         }
-        const string bottomPath = "d:bottom";
-        ExcelBorderItemXml _bottom = null;
+
+        private const string bottomPath = "d:bottom";
+        private ExcelBorderItemXml _bottom = null;
         /// <summary>
         /// Bottom border style properties
         /// </summary>
@@ -127,8 +128,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _bottom = value;
             }
         }
-        const string diagonalPath = "d:diagonal";
-        ExcelBorderItemXml _diagonal = null;
+
+        private const string diagonalPath = "d:diagonal";
+        private ExcelBorderItemXml _diagonal = null;
         /// <summary>
         /// Diagonal border style properties
         /// </summary>
@@ -143,8 +145,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _diagonal = value;
             }
         }
-        const string diagonalUpPath = "@diagonalUp";
-        bool _diagonalUp = false;
+
+        private const string diagonalUpPath = "@diagonalUp";
+        private bool _diagonalUp = false;
         /// <summary>
         /// Diagonal up border
         /// </summary>
@@ -159,8 +162,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _diagonalUp = value;
             }
         }
-        const string diagonalDownPath = "@diagonalDown";
-        bool _diagonalDown = false;
+
+        private const string diagonalDownPath = "@diagonalDown";
+        private bool _diagonalDown = false;
         /// <summary>
         /// Diagonal down border
         /// </summary>

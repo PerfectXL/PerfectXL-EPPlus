@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-27
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OfficeOpenXml
 {
@@ -47,7 +45,7 @@ namespace OfficeOpenXml
         public ExcelHyperLink(string uriString) :
             base(uriString)
         {
-            OriginalUri = (Uri)this;
+            OriginalUri = this;
         }
 #if !Core
         /// <summary>
@@ -70,7 +68,7 @@ namespace OfficeOpenXml
         public ExcelHyperLink(string uriString, UriKind uriKind) :
             base(uriString, uriKind)
         {
-            OriginalUri = (Uri)this;
+            OriginalUri = this;
         }
         /// <summary>
         /// Sheet internal reference
@@ -83,7 +81,8 @@ namespace OfficeOpenXml
             _referenceAddress = referenceAddress;
             _display = display;
         }
-        string _referenceAddress = null;
+
+        private string _referenceAddress = null;
         /// <summary>
         /// The Excel address for internal links.
         /// </summary>
@@ -98,7 +97,8 @@ namespace OfficeOpenXml
                 _referenceAddress = value;
             }
         }
-        string _display = "";
+
+        private string _display = "";
         /// <summary>
         /// Displayed text
         /// </summary>
@@ -121,7 +121,8 @@ namespace OfficeOpenXml
             get;
             set;
         }
-        int _colSpann = 0;
+
+        private int _colSpann = 0;
         /// <summary>
         /// If the hyperlink spans multiple columns
         /// </summary>
@@ -136,7 +137,8 @@ namespace OfficeOpenXml
                 _colSpann = value;
             }
         }
-        int _rowSpann = 0;
+
+        private int _rowSpann = 0;
         /// <summary>
         /// If the hyperlink spans multiple rows
         /// </summary>

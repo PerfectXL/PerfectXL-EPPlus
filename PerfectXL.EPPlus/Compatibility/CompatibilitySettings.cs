@@ -28,10 +28,6 @@
  * ******************************************************************************
  * Jan Källman		    Added       		        2017-11-02
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
-using OfficeOpenXml;
 
 namespace OfficeOpenXml.Compatibility
 {
@@ -40,7 +36,7 @@ namespace OfficeOpenXml.Compatibility
     /// </summary>
     public class CompatibilitySettings
     {
-        private ExcelPackage excelPackage;
+        private readonly ExcelPackage excelPackage;
 
 
         internal CompatibilitySettings(ExcelPackage excelPackage)
@@ -80,12 +76,12 @@ namespace OfficeOpenXml.Compatibility
         {
             get
             {
-                return excelPackage._worksheetAdd==1;
+                return excelPackage._worksheetAdd == 1;
             }
             set
             {
                 excelPackage._worksheetAdd = value ? 1 : 0;
-                if(excelPackage._workbook!=null && excelPackage._workbook._worksheets!=null)
+                if (excelPackage._workbook != null && excelPackage._workbook._worksheets != null)
                 {
                     excelPackage.Workbook.Worksheets.ReindexWorksheetDictionary();
 

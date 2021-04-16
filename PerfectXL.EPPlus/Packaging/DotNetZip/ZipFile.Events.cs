@@ -25,7 +25,6 @@
 //
 
 using System;
-using System.IO;
 
 namespace OfficeOpenXml.Packaging.Ionic.Zip
 {
@@ -527,7 +526,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                                          bytesXferred, totalBytesToXfer);
                 sp(this, e);
                 if (e.Cancel)
+                {
                     _saveOperationCanceled = true;
+                }
             }
             return _saveOperationCanceled;
         }
@@ -540,7 +541,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 var e = new SaveProgressEventArgs(ArchiveNameForEvent, before, _entries.Count, current, entry);
                 sp(this, e);
                 if (e.Cancel)
+                {
                     _saveOperationCanceled = true;
+                }
             }
         }
 
@@ -552,7 +555,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 var e = new SaveProgressEventArgs(ArchiveNameForEvent, eventFlavor);
                 sp(this, e);
                 if (e.Cancel)
+                {
                     _saveOperationCanceled = true;
+                }
             }
         }
 
@@ -564,7 +569,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 var e = SaveProgressEventArgs.Started(ArchiveNameForEvent);
                 sp(this, e);
                 if (e.Cancel)
+                {
                     _saveOperationCanceled = true;
+                }
             }
         }
         private void OnSaveCompleted()
@@ -644,8 +651,8 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             EventHandler<ReadProgressEventArgs> rp = ReadProgress;
             if (rp != null)
             {
-                    var e = ReadProgressEventArgs.Started(ArchiveNameForEvent);
-                    rp(this, e);
+                var e = ReadProgressEventArgs.Started(ArchiveNameForEvent);
+                rp(this, e);
             }
         }
 
@@ -654,8 +661,8 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             EventHandler<ReadProgressEventArgs> rp = ReadProgress;
             if (rp != null)
             {
-                    var e = ReadProgressEventArgs.Completed(ArchiveNameForEvent);
-                    rp(this, e);
+                var e = ReadProgressEventArgs.Completed(ArchiveNameForEvent);
+                rp(this, e);
             }
         }
 
@@ -664,11 +671,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             EventHandler<ReadProgressEventArgs> rp = ReadProgress;
             if (rp != null)
             {
-                    var e = ReadProgressEventArgs.ByteUpdate(ArchiveNameForEvent,
-                                        entry,
-                                        ReadStream.Position,
-                                        LengthOfReadStream);
-                    rp(this, e);
+                var e = ReadProgressEventArgs.ByteUpdate(ArchiveNameForEvent,
+                                    entry,
+                                    ReadStream.Position,
+                                    LengthOfReadStream);
+                rp(this, e);
             }
         }
 
@@ -863,7 +870,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 var e = new ExtractProgressEventArgs(ArchiveNameForEvent, before, _entries.Count, current, currentEntry, path);
                 ep(this, e);
                 if (e.Cancel)
+                {
                     _extractOperationCanceled = true;
+                }
             }
         }
 
@@ -878,7 +887,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                                             bytesWritten, totalBytesToWrite);
                 ep(this, e);
                 if (e.Cancel)
+                {
                     _extractOperationCanceled = true;
+                }
             }
             return _extractOperationCanceled;
         }
@@ -895,7 +906,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     : ExtractProgressEventArgs.AfterExtractEntry(ArchiveNameForEvent, entry, path);
                 ep(this, e);
                 if (e.Cancel)
+                {
                     _extractOperationCanceled = true;
+                }
             }
             return _extractOperationCanceled;
         }
@@ -908,7 +921,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 var e = ExtractProgressEventArgs.ExtractExisting(ArchiveNameForEvent, entry, path);
                 ep(this, e);
                 if (e.Cancel)
+                {
                     _extractOperationCanceled = true;
+                }
             }
             return _extractOperationCanceled;
         }
@@ -920,7 +935,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             if (ep != null)
             {
                 var e = ExtractProgressEventArgs.ExtractAllCompleted(ArchiveNameForEvent,
-                                                                     path );
+                                                                     path);
                 ep(this, e);
             }
         }
@@ -932,7 +947,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             if (ep != null)
             {
                 var e = ExtractProgressEventArgs.ExtractAllStarted(ArchiveNameForEvent,
-                                                                   path );
+                                                                   path);
                 ep(this, e);
             }
         }
@@ -1031,7 +1046,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 var e = AddProgressEventArgs.Started(ArchiveNameForEvent);
                 ap(this, e);
                 if (e.Cancel) // workitem 13371
+                {
                     _addOperationCanceled = true;
+                }
             }
         }
 
@@ -1053,7 +1070,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 var e = AddProgressEventArgs.AfterEntry(ArchiveNameForEvent, entry, _entries.Count);
                 ap(this, e);
                 if (e.Cancel) // workitem 13371
+                {
                     _addOperationCanceled = true;
+                }
             }
         }
 
@@ -1208,7 +1227,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     var e = ZipErrorEventArgs.Saving(this.Name, entry, exc);
                     ZipError(this, e);
                     if (e.Cancel)
+                    {
                         _saveOperationCanceled = true;
+                    }
                 }
             }
             return _saveOperationCanceled;

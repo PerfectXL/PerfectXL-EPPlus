@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 
 namespace OfficeOpenXml.Table
@@ -42,13 +41,22 @@ namespace OfficeOpenXml.Table
     /// </summary>
     public class ExcelTableColumnCollection : IEnumerable<ExcelTableColumn>
     {
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         List<ExcelTableColumn> _cols = new List<ExcelTableColumn>();
         Dictionary<string, int> _colNames = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+After:
+        private List<ExcelTableColumn> _cols = new List<ExcelTableColumn>();
+        private Dictionary<string, int> _colNames = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+*/
+        private readonly List<ExcelTableColumn> _cols = new List<ExcelTableColumn>();
+        private readonly Dictionary<string, int> _colNames = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         public ExcelTableColumnCollection(ExcelTable table)
         {
             Table = table;
-            foreach(XmlNode node in table.TableXml.SelectNodes("//d:table/d:tableColumns/d:tableColumn",table.NameSpaceManager))
-            {                
+            foreach (XmlNode node in table.TableXml.SelectNodes("//d:table/d:tableColumns/d:tableColumn", table.NameSpaceManager))
+            {
                 _cols.Add(new ExcelTableColumn(table.NameSpaceManager, node, table, _cols.Count));
                 _colNames.Add(_cols[_cols.Count - 1].Name, _cols.Count - 1);
             }
@@ -84,7 +92,7 @@ namespace OfficeOpenXml.Table
                 {
                     throw (new ArgumentOutOfRangeException("Column index out of range"));
                 }
-                return _cols[Index] as ExcelTableColumn;
+                return _cols[Index];
             }
         }
         /// <summary>
@@ -117,14 +125,14 @@ namespace OfficeOpenXml.Table
             return _cols.GetEnumerator();
         }
         internal string GetUniqueName(string name)
-        {            
+        {
             if (_colNames.ContainsKey(name))
             {
                 var newName = name;
                 var i = 2;
                 do
                 {
-                    newName = name+(i++).ToString(CultureInfo.InvariantCulture);
+                    newName = name + (i++).ToString(CultureInfo.InvariantCulture);
                 }
                 while (_colNames.ContainsKey(newName));
                 return newName;

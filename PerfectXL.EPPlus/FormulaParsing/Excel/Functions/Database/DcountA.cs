@@ -22,13 +22,10 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2015-04-06
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
-using OfficeOpenXml.Utils;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Database
 {
@@ -93,7 +90,11 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Database
 
         private bool ShouldCount(object value)
         {
-            if (value == null) return false;
+            if (value == null)
+            {
+                return false;
+            }
+
             return (!string.IsNullOrEmpty(value.ToString()));
         }
     }

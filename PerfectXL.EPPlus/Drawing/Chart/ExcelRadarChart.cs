@@ -30,9 +30,7 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Table.PivotTable;
 
@@ -67,9 +65,9 @@ namespace OfficeOpenXml.Drawing.Chart
             {
                 RadarStyle = eRadarStyle.Filled;
             }
-            else if  (ChartType == eChartType.RadarMarkers)
+            else if (ChartType == eChartType.RadarMarkers)
             {
-                RadarStyle =  eRadarStyle.Marker;
+                RadarStyle = eRadarStyle.Marker;
             }
             else
             {
@@ -77,7 +75,14 @@ namespace OfficeOpenXml.Drawing.Chart
             }
         }
 
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string STYLE_PATH = "c:radarStyle/@val";
+After:
+        private string STYLE_PATH = "c:radarStyle/@val";
+*/
+        private readonly string STYLE_PATH = "c:radarStyle/@val";
         /// <summary>
         /// The type of radarchart
         /// </summary>
@@ -85,7 +90,7 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                var v=_chartXmlHelper.GetXmlNodeString(STYLE_PATH);
+                var v = _chartXmlHelper.GetXmlNodeString(STYLE_PATH);
                 if (string.IsNullOrEmpty(v))
                 {
                     return eRadarStyle.Standard;
@@ -117,7 +122,7 @@ namespace OfficeOpenXml.Drawing.Chart
         //    }
         //}
         //string _chartTopPath = "c:chartSpace/c:chart/c:plotArea/{0}";
-        ExcelChartDataLabel _DataLabel = null;
+        private ExcelChartDataLabel _DataLabel = null;
         /// <summary>
         /// Access to datalabel properties
         /// </summary>

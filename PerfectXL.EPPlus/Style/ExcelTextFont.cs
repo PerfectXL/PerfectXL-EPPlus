@@ -30,11 +30,8 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
-using OfficeOpenXml.Drawing;
 using System.Drawing;
 
 namespace OfficeOpenXml.Style
@@ -46,7 +43,7 @@ namespace OfficeOpenXml.Style
     {
         Dash,
         DashHeavy,
-        DashLong, 
+        DashLong,
         DashLongHeavy,
         Double,
         DotDash,
@@ -77,8 +74,17 @@ namespace OfficeOpenXml.Style
     /// </summary>
     public class ExcelTextFont : XmlHelper
     {
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _path;
         XmlNode _rootNode;
+After:
+        private string _path;
+        private XmlNode _rootNode;
+*/
+        private readonly string _path;
+        private readonly XmlNode _rootNode;
         internal ExcelTextFont(XmlNamespaceManager namespaceManager, XmlNode rootNode, string path, string[] schemaNodeOrder)
             : base(namespaceManager, rootNode)
         {
@@ -94,7 +100,15 @@ namespace OfficeOpenXml.Style
             }
             _path = path;
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _fontLatinPath = "a:latin/@typeface";
+After:
+        private string _fontLatinPath = "a:latin/@typeface";
+*/
+        private readonly string _fontLatinPath = "a:latin/@typeface";
         public string LatinFont
         {
             get
@@ -110,13 +124,21 @@ namespace OfficeOpenXml.Style
 
         protected internal void CreateTopNode()
         {
-            if (_path!="" && TopNode == _rootNode)
+            if (_path != "" && TopNode == _rootNode)
             {
                 CreateNode(_path);
                 TopNode = _rootNode.SelectSingleNode(_path, NameSpaceManager);
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _fontCsPath = "a:cs/@typeface";
+After:
+        private string _fontCsPath = "a:cs/@typeface";
+*/
+        private readonly string _fontCsPath = "a:cs/@typeface";
         public string ComplexFont
         {
             get
@@ -129,7 +151,15 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_fontCsPath, value);
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _boldPath = "@b";
+After:
+        private string _boldPath = "@b";
+*/
+        private readonly string _boldPath = "@b";
         public bool Bold
         {
             get
@@ -142,7 +172,15 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_boldPath, value ? "1" : "0");
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _underLinePath = "@u";
+After:
+        private string _underLinePath = "@u";
+*/
+        private readonly string _underLinePath = "@u";
         public eUnderLineType UnderLine
         {
             get
@@ -155,7 +193,15 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_underLinePath, TranslateUnderlineText(value));
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _underLineColorPath = "a:uFill/a:solidFill/a:srgbClr/@val";
+After:
+        private string _underLineColorPath = "a:uFill/a:solidFill/a:srgbClr/@val";
+*/
+        private readonly string _underLineColorPath = "a:uFill/a:solidFill/a:srgbClr/@val";
         public Color UnderLineColor
         {
             get
@@ -176,7 +222,15 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_underLineColorPath, value.ToArgb().ToString("X").Substring(2, 6));
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _italicPath = "@i";
+After:
+        private string _italicPath = "@i";
+*/
+        private readonly string _italicPath = "@i";
         public bool Italic
         {
             get
@@ -189,7 +243,15 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_italicPath, value ? "1" : "0");
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _strikePath = "@strike";
+After:
+        private string _strikePath = "@strike";
+*/
+        private readonly string _strikePath = "@strike";
         public eStrikeType Strike
         {
             get
@@ -202,7 +264,15 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_strikePath, TranslateStrikeText(value));
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _sizePath = "@sz";
+After:
+        private string _sizePath = "@sz";
+*/
+        private readonly string _sizePath = "@sz";
         public float Size
         {
             get
@@ -215,7 +285,15 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_sizePath, ((int)(value * 100)).ToString());
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _colorPath = "a:solidFill/a:srgbClr/@val";
+After:
+        private string _colorPath = "a:solidFill/a:srgbClr/@val";
+*/
+        private readonly string _colorPath = "a:solidFill/a:srgbClr/@val";
         public Color Color
         {
             get
@@ -298,10 +376,25 @@ namespace OfficeOpenXml.Style
             LatinFont = Font.Name;
             ComplexFont = Font.Name;
             Size = Font.Size;
-            if (Font.Bold) Bold = Font.Bold;
-            if (Font.Italic) Italic = Font.Italic;
-            if (Font.Underline) UnderLine = eUnderLineType.Single;
-            if (Font.Strikeout) Strike = eStrikeType.Single;
+            if (Font.Bold)
+            {
+                Bold = Font.Bold;
+            }
+
+            if (Font.Italic)
+            {
+                Italic = Font.Italic;
+            }
+
+            if (Font.Underline)
+            {
+                UnderLine = eUnderLineType.Single;
+            }
+
+            if (Font.Strikeout)
+            {
+                Strike = eStrikeType.Single;
+            }
         }
     }
 }

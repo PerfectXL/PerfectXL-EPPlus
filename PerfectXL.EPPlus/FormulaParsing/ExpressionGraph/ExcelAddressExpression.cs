@@ -29,13 +29,8 @@
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
-using OfficeOpenXml.FormulaParsing.Exceptions;
-using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using OfficeOpenXml.FormulaParsing.Utilities;
 
 namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
@@ -92,7 +87,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
             //}
             var cache = _parsingContext.AddressCache;
             var cacheId = cache.GetNewId();
-            if(!cache.Add(cacheId, ExpressionString))
+            if (!cache.Add(cacheId, ExpressionString))
             {
                 throw new InvalidOperationException("Catastropic error occurred, address caching failed");
             }
@@ -123,7 +118,10 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
         {
             var cell = result.FirstOrDefault();
             if (cell == null)
+            {
                 return CompileResult.Empty;
+            }
+
             var factory = new CompileResultFactory();
             var compileResult = factory.Create(cell.Value);
             if (_negate && compileResult.IsNumeric)

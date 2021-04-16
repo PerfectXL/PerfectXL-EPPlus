@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading;
 using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using EPPlusTest.FormulaParsing.TestHelpers;
@@ -404,7 +402,7 @@ namespace EPPlusTest.Excel.Functions
             var func = new AverageA();
             var args = FunctionsHelper.CreateArgs(FunctionsHelper.CreateArgs(1d, 2d, 3d, "ABC"));
             var result = func.Execute(args, _parsingContext);
-            Assert.AreEqual(1.5d,result.Result);
+            Assert.AreEqual(1.5d, result.Result);
         }
 
         [TestMethod]
@@ -485,7 +483,7 @@ namespace EPPlusTest.Excel.Functions
             var func = new Rand();
             var args = new FunctionArgument[0];
             var result1 = func.Execute(args, _parsingContext);
-            Assert.IsTrue(((double)result1.Result) > 0 && ((double) result1.Result) < 1);
+            Assert.IsTrue(((double)result1.Result) > 0 && ((double)result1.Result) < 1);
             var result2 = func.Execute(args, _parsingContext);
             Assert.AreNotEqual(result1.Result, result2.Result, "The two numbers were the same");
             Assert.IsTrue(((double)result2.Result) > 0 && ((double)result2.Result) < 1);
@@ -750,7 +748,7 @@ namespace EPPlusTest.Excel.Functions
             var func = new Atan();
             var args = FunctionsHelper.CreateArgs(10);
             var result = func.Execute(args, _parsingContext);
-            var roundedResult = Math.Round((double) result.Result, 9);
+            var roundedResult = Math.Round((double)result.Result, 9);
             Assert.AreEqual(1.471127674d, roundedResult);
         }
 
@@ -758,7 +756,7 @@ namespace EPPlusTest.Excel.Functions
         public void Atan2ShouldReturnCorrectResult()
         {
             var func = new Atan2();
-            var args = FunctionsHelper.CreateArgs(1,2);
+            var args = FunctionsHelper.CreateArgs(1, 2);
             var result = func.Execute(args, _parsingContext);
             var roundedResult = Math.Round((double)result.Result, 9);
             Assert.AreEqual(1.107148718d, roundedResult);
@@ -931,7 +929,7 @@ namespace EPPlusTest.Excel.Functions
             Assert.AreEqual(120d, result.Result);
         }
 
-        [TestMethod, ExpectedException(typeof (ExcelErrorValueException))]
+        [TestMethod, ExpectedException(typeof(ExcelErrorValueException))]
         public void FactShouldThrowWhenNegativeNumber()
         {
             var func = new Fact();
@@ -1120,4 +1118,4 @@ namespace EPPlusTest.Excel.Functions
             }
         }
     }
-    }
+}

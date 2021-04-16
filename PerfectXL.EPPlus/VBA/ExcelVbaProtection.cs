@@ -29,8 +29,6 @@
  * Jan Källman		Added		12-APR-2012
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 
@@ -41,7 +39,7 @@ namespace OfficeOpenXml.VBA
     /// </summary>
     public class ExcelVbaProtection
     {
-        ExcelVbaProject _project;
+        private readonly ExcelVbaProject _project;
         internal ExcelVbaProtection(ExcelVbaProject project)
         {
             _project = project;

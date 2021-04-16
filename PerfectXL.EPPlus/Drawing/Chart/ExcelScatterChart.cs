@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Table.PivotTable;
 
@@ -61,22 +59,29 @@ namespace OfficeOpenXml.Drawing.Chart
         }
         private void SetTypeProperties()
         {
-           /***** ScatterStyle *****/
-           if(ChartType == eChartType.XYScatter ||
-              ChartType == eChartType.XYScatterLines ||
-              ChartType == eChartType.XYScatterLinesNoMarkers)
-           {
-               ScatterStyle = eScatterStyle.LineMarker;
-          }
-           else if (
-              ChartType == eChartType.XYScatterSmooth ||
-              ChartType == eChartType.XYScatterSmoothNoMarkers) 
-           {
-               ScatterStyle = eScatterStyle.SmoothMarker;
-           }
+            /***** ScatterStyle *****/
+            if (ChartType == eChartType.XYScatter ||
+               ChartType == eChartType.XYScatterLines ||
+               ChartType == eChartType.XYScatterLinesNoMarkers)
+            {
+                ScatterStyle = eScatterStyle.LineMarker;
+            }
+            else if (
+               ChartType == eChartType.XYScatterSmooth ||
+               ChartType == eChartType.XYScatterSmoothNoMarkers)
+            {
+                ScatterStyle = eScatterStyle.SmoothMarker;
+            }
         }
         #region "Grouping Enum Translation"
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _scatterTypePath = "c:scatterStyle/@val";
+After:
+        private string _scatterTypePath = "c:scatterStyle/@val";
+*/
+        private readonly string _scatterTypePath = "c:scatterStyle/@val";
         private eScatterStyle GetScatterEnum(string text)
         {
             switch (text)
@@ -114,7 +119,15 @@ namespace OfficeOpenXml.Drawing.Chart
                 _chartXmlHelper.SetXmlNodeString(_scatterTypePath, GetScatterText(value));
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string MARKER_PATH = "c:marker/@val";
+After:
+        private string MARKER_PATH = "c:marker/@val";
+*/
+        private readonly string MARKER_PATH = "c:marker/@val";
         /// <summary>
         /// If the series has markers
         /// </summary>
@@ -133,7 +146,7 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             if (name == "scatterChart")
             {
-                if (ScatterStyle==eScatterStyle.LineMarker)
+                if (ScatterStyle == eScatterStyle.LineMarker)
                 {
                     if (((ExcelScatterChartSerie)Series[0]).Marker == eMarkerStyle.None)
                     {
@@ -141,7 +154,7 @@ namespace OfficeOpenXml.Drawing.Chart
                     }
                     else
                     {
-                        if(ExistNode("c:ser/c:spPr/a:ln/noFill"))
+                        if (ExistNode("c:ser/c:spPr/a:ln/noFill"))
                         {
                             return eChartType.XYScatter;
                         }

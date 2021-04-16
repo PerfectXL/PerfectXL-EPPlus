@@ -35,7 +35,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 {
     public class TokenSeparatorProvider : ITokenSeparatorProvider
     {
-       private static readonly Dictionary<string, Token> _tokens;
+        private static readonly Dictionary<string, Token> _tokens;
 
         static TokenSeparatorProvider()
         {
@@ -76,8 +76,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 
         public bool IsOperator(string item)
         {
-            Token token;
-            if (_tokens.TryGetValue(item, out token))
+            if (_tokens.TryGetValue(item, out var token))
             {
                 if (token.TokenType == TokenType.Operator)
                 {

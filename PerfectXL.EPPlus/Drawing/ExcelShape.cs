@@ -30,12 +30,9 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using OfficeOpenXml.Style.XmlAccess;
-using OfficeOpenXml.Drawing;
 using OfficeOpenXml.Style;
 /// <summary>
 /// Shape style
@@ -284,7 +281,7 @@ namespace OfficeOpenXml.Drawing
             SchemaNodeOrder = new string[] { "prstGeom", "ln", "pPr", "defRPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" };
         }
         #region "public methods"
-        const string ShapeStylePath = "xdr:sp/xdr:spPr/a:prstGeom/@prst";
+        private const string ShapeStylePath = "xdr:sp/xdr:spPr/a:prstGeom/@prst";
         /// <summary>
         /// Shape style
         /// </summary>
@@ -309,7 +306,8 @@ namespace OfficeOpenXml.Drawing
                 SetXmlNodeString(ShapeStylePath, v);
             }
         }
-        ExcelDrawingFill _fill = null;
+
+        private ExcelDrawingFill _fill = null;
         /// <summary>
         /// Fill
         /// </summary>
@@ -324,11 +322,12 @@ namespace OfficeOpenXml.Drawing
                 return _fill;
             }
         }
-        ExcelDrawingBorder _border = null;
+
+        private ExcelDrawingBorder _border = null;
         /// <summary>
         /// Border
         /// </summary>
-        public ExcelDrawingBorder Border        
+        public ExcelDrawingBorder Border
         {
             get
             {
@@ -339,7 +338,8 @@ namespace OfficeOpenXml.Drawing
                 return _border;
             }
         }
-        ExcelDrawingLineEnd _ends = null;
+
+        private ExcelDrawingLineEnd _ends = null;
         /// <summary>
         /// Line Ends
         /// </summary>
@@ -354,9 +354,10 @@ namespace OfficeOpenXml.Drawing
                 return _ends;
             }
         }
-        string[] paragraphNodeOrder = new string[] { "pPr", "defRPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" };
-        const string PARAGRAPH_PATH = "xdr:sp/xdr:txBody/a:p";
-        ExcelTextFont _font=null;
+
+        private readonly string[] paragraphNodeOrder = new string[] { "pPr", "defRPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" };
+        private const string PARAGRAPH_PATH = "xdr:sp/xdr:txBody/a:p";
+        private ExcelTextFont _font = null;
         public ExcelTextFont Font
         {
             get
@@ -364,9 +365,9 @@ namespace OfficeOpenXml.Drawing
                 if (_font == null)
                 {
                     XmlNode node = TopNode.SelectSingleNode(PARAGRAPH_PATH, NameSpaceManager);
-                    if(node==null)
+                    if (node == null)
                     {
-                        Text="";    //Creates the node p element
+                        Text = "";    //Creates the node p element
                         node = TopNode.SelectSingleNode(PARAGRAPH_PATH, NameSpaceManager);
                     }
                     _font = new ExcelTextFont(NameSpaceManager, TopNode, "xdr:sp/xdr:txBody/a:p/a:pPr/a:defRPr", paragraphNodeOrder);
@@ -374,7 +375,8 @@ namespace OfficeOpenXml.Drawing
                 return _font;
             }
         }
-        const string TextPath = "xdr:sp/xdr:txBody/a:p/a:r/a:t";
+
+        private const string TextPath = "xdr:sp/xdr:txBody/a:p/a:r/a:t";
         /// <summary>
         /// Text inside the shape
         /// </summary>
@@ -390,7 +392,15 @@ namespace OfficeOpenXml.Drawing
             }
 
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string lockTextPath = "xdr:sp/@fLocksText";
+After:
+        private string lockTextPath = "xdr:sp/@fLocksText";
+*/
+        private readonly string lockTextPath = "xdr:sp/@fLocksText";
         /// <summary>
         /// Lock drawing
         /// </summary>
@@ -405,7 +415,8 @@ namespace OfficeOpenXml.Drawing
                 SetXmlNodeBool(lockTextPath, value);
             }
         }
-        ExcelParagraphCollection _richText = null;
+
+        private ExcelParagraphCollection _richText = null;
         /// <summary>
         /// Richtext collection. Used to format specific parts of the text
         /// </summary>
@@ -420,12 +431,13 @@ namespace OfficeOpenXml.Drawing
                     //{
                     //    CreateNode(PARAGRAPH_PATH);
                     //}
-                        _richText = new ExcelParagraphCollection(NameSpaceManager, TopNode, PARAGRAPH_PATH, paragraphNodeOrder);
+                    _richText = new ExcelParagraphCollection(NameSpaceManager, TopNode, PARAGRAPH_PATH, paragraphNodeOrder);
                 }
                 return _richText;
             }
         }
-        const string TextAnchoringPath = "xdr:sp/xdr:txBody/a:bodyPr/@anchor";
+
+        private const string TextAnchoringPath = "xdr:sp/xdr:txBody/a:bodyPr/@anchor";
         /// <summary>
         /// Text Anchoring
         /// </summary>
@@ -440,7 +452,8 @@ namespace OfficeOpenXml.Drawing
                 SetXmlNodeString(TextAnchoringPath, GetTextAchoringText(value));
             }
         }
-        const string TextAnchoringCtlPath = "xdr:sp/xdr:txBody/a:bodyPr/@anchorCtr";
+
+        private const string TextAnchoringCtlPath = "xdr:sp/xdr:txBody/a:bodyPr/@anchorCtr";
         /// <summary>
         /// Specifies the centering of the text box.
         /// </summary>
@@ -462,7 +475,8 @@ namespace OfficeOpenXml.Drawing
                 }
             }
         }
-        const string TEXT_ALIGN_PATH = "xdr:sp/xdr:txBody/a:p/a:pPr/@algn";
+
+        private const string TEXT_ALIGN_PATH = "xdr:sp/xdr:txBody/a:p/a:pPr/@algn";
         /// <summary>
         /// How the text is aligned
         /// </summary>
@@ -470,23 +484,23 @@ namespace OfficeOpenXml.Drawing
         {
             get
             {
-               switch(GetXmlNodeString(TEXT_ALIGN_PATH))
-               {
-                   case "ctr":
-                       return eTextAlignment.Center;
-                   case "r":
-                       return eTextAlignment.Right;
-                   case "dist":
-                       return eTextAlignment.Distributed;
-                   case "just":
-                       return eTextAlignment.Justified;
-                   case "justLow":
-                       return eTextAlignment.JustifiedLow;
-                   case "thaiDist":
-                       return eTextAlignment.ThaiDistributed;
-                   default: 
-                       return eTextAlignment.Left;
-               }
+                switch (GetXmlNodeString(TEXT_ALIGN_PATH))
+                {
+                    case "ctr":
+                        return eTextAlignment.Center;
+                    case "r":
+                        return eTextAlignment.Right;
+                    case "dist":
+                        return eTextAlignment.Distributed;
+                    case "just":
+                        return eTextAlignment.Justified;
+                    case "justLow":
+                        return eTextAlignment.JustifiedLow;
+                    case "thaiDist":
+                        return eTextAlignment.ThaiDistributed;
+                    default:
+                        return eTextAlignment.Left;
+                }
             }
             set
             {
@@ -513,10 +527,11 @@ namespace OfficeOpenXml.Drawing
                     default:
                         DeleteNode(TEXT_ALIGN_PATH);
                         break;
-                }                
+                }
             }
         }
-        const string INDENT_ALIGN_PATH = "xdr:sp/xdr:txBody/a:p/a:pPr/@lvl";
+
+        private const string INDENT_ALIGN_PATH = "xdr:sp/xdr:txBody/a:p/a:pPr/@lvl";
         /// <summary>
         /// Indentation
         /// </summary>
@@ -530,12 +545,13 @@ namespace OfficeOpenXml.Drawing
             {
                 if (value < 0 || value > 8)
                 {
-                    throw(new ArgumentOutOfRangeException("Indent level must be between 0 and 8"));
+                    throw (new ArgumentOutOfRangeException("Indent level must be between 0 and 8"));
                 }
                 SetXmlNodeString(INDENT_ALIGN_PATH, value.ToString());
             }
         }
-        const string TextVerticalPath = "xdr:sp/xdr:txBody/a:bodyPr/@vert";
+
+        private const string TextVerticalPath = "xdr:sp/xdr:txBody/a:bodyPr/@vert";
         /// <summary>
         /// Vertical text
         /// </summary>

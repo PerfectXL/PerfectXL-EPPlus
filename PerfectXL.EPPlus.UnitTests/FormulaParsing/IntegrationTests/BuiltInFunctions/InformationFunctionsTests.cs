@@ -1,12 +1,7 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using FakeItEasy;
 using OfficeOpenXml.FormulaParsing;
-using OfficeOpenXml.FormulaParsing.Exceptions;
 
 namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
 {
@@ -46,7 +41,7 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
         [TestMethod]
         public void IsTextShouldReturnTrueWhenReferencedCellContainsText()
         {
-            using(var pck = new ExcelPackage())
+            using (var pck = new ExcelPackage())
             {
                 var sheet = pck.Workbook.Worksheets.Add("Test");
                 sheet.Cells["A1"].Value = "Abc";

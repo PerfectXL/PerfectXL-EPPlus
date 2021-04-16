@@ -63,14 +63,13 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         private void Handle()
         {
             var c = _context.FormulaChars[_tokenIndex];
-            Token tokenSeparator;
-            if (CharIsTokenSeparator(c, out tokenSeparator))
+            if (CharIsTokenSeparator(c, out var tokenSeparator))
             {
                 if (TokenSeparatorHandler.Handle(c, tokenSeparator, _context, this))
                 {
                     return;
                 }
-                                              
+
                 if (_context.CurrentTokenHasValue)
                 {
                     if (Regex.IsMatch(_context.CurrentToken, "^\"*$"))
@@ -111,7 +110,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             return result;
         }
 
-        
+
 
         private static bool TokenIsNegator(TokenizerContext context)
         {

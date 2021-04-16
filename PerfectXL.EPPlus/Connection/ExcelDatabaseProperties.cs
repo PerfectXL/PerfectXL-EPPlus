@@ -35,7 +35,7 @@ namespace OfficeOpenXml.Connection
         /// Attribute: command
         /// ECMA Description: The string containing the database command to pass to the data provider that will interact with the external source in order to retrieve data.
         /// </summary>
-        public string CommandString { get; } 
+        public string CommandString { get; }
         /// <summary>
         /// Attribute: serverCommand
         /// ECMA Description: Specifies a second command text string that is persisted when PivotTable server-based page fields are in use.
@@ -52,7 +52,7 @@ namespace OfficeOpenXml.Connection
         {
             CommandString = dbPrElement.GetAttribute("command");
             string commandTypeAttribute = dbPrElement.GetAttribute("commandType");
-            CommandType = commandTypeAttribute == "" ? CommandType .Unidentified : (CommandType)Enum.Parse(typeof(CommandType), commandTypeAttribute, false);
+            CommandType = commandTypeAttribute == "" ? CommandType.Unidentified : (CommandType)Enum.Parse(typeof(CommandType), commandTypeAttribute, false);
             ConnectionString = dbPrElement.GetAttribute("connection");
             ServerCommand = dbPrElement.GetAttribute("serverCommand");
         }

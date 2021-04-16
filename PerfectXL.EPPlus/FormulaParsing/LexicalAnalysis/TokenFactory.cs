@@ -33,20 +33,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.Excel.Functions;
-using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using OfficeOpenXml.FormulaParsing.Utilities;
-using OfficeOpenXml;
 
 namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 {
     public class TokenFactory : ITokenFactory
     {
-        private static readonly TokenType[] ReferenceTokens = {TokenType.ExclamationMark, TokenType.Colon};
-        public TokenFactory(IFunctionNameProvider functionRepository, INameValueProvider nameValueProvider, bool r1c1=false)
+        private static readonly TokenType[] ReferenceTokens = { TokenType.ExclamationMark, TokenType.Colon };
+        public TokenFactory(IFunctionNameProvider functionRepository, INameValueProvider nameValueProvider, bool r1c1 = false)
             : this(new TokenSeparatorProvider(), nameValueProvider, functionRepository, r1c1)
         {
 
@@ -63,7 +59,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         private readonly ITokenSeparatorProvider _tokenSeparatorProvider;
         private readonly IFunctionNameProvider _functionNameProvider;
         private readonly INameValueProvider _nameValueProvider;
-        private bool _r1c1;
+        private readonly bool _r1c1;
         public Token Create(IEnumerable<Token> tokens, string token)
         {
             return Create(tokens, token, null);
@@ -134,10 +130,10 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                 return new Token(token, TokenType.Enumerable);
             }
             var at = ExcelAddressBase.IsValid(token, _r1c1);
-            if (at==ExcelAddressBase.AddressType.CellAddress)
+            if (at == ExcelAddressBase.AddressType.CellAddress)
             {
                 return new Token(token, TokenType.ExcelAddress);
-            } 
+            }
             if (at == ExcelAddressBase.AddressType.R1C1)
             {
                 return new Token(token.ToUpper(CultureInfo.InvariantCulture), TokenType.ExcelAddressR1C1);

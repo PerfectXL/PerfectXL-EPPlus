@@ -29,19 +29,14 @@
  * Jan Källman		Added		25-Oct-2012
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Ionic.Zip;
-using System.IO;
 using System.Xml;
-using OfficeOpenXml.Packaging.Ionic.Zlib;
 namespace OfficeOpenXml.Packaging
 {
     public abstract class ZipPackageRelationshipBase
     {
         protected ZipPackageRelationshipCollection _rels = new ZipPackageRelationshipCollection();
-        protected internal 
+        protected internal
         int maxRId = 1;
         internal void DeleteRelationship(string id)
         {
@@ -52,8 +47,7 @@ namespace OfficeOpenXml.Packaging
         {
             if (id.StartsWith("rId"))
             {
-                int num;
-                if (int.TryParse(id.Substring(3), out num))
+                if (int.TryParse(id.Substring(3), out var num))
                 {
                     if (num == maxRId - 1)
                     {
@@ -103,7 +97,7 @@ namespace OfficeOpenXml.Packaging
                 var rel = new ZipPackageRelationship();
                 rel.Id = c.GetAttribute("Id");
                 rel.RelationshipType = c.GetAttribute("Type");
-                rel.TargetMode = c.GetAttribute("TargetMode").Equals("external",StringComparison.OrdinalIgnoreCase) ? TargetMode.External : TargetMode.Internal;
+                rel.TargetMode = c.GetAttribute("TargetMode").Equals("external", StringComparison.OrdinalIgnoreCase) ? TargetMode.External : TargetMode.Internal;
                 try
                 {
                     rel.TargetUri = new Uri(c.GetAttribute("Target"), UriKind.RelativeOrAbsolute);
@@ -111,7 +105,7 @@ namespace OfficeOpenXml.Packaging
                 catch
                 {
                     //The URI is not a valid URI. Encode it to make i valid.
-                    rel.TargetUri = new Uri(Uri.EscapeUriString("Invalid:URI "+c.GetAttribute("Target")), UriKind.RelativeOrAbsolute);
+                    rel.TargetUri = new Uri(Uri.EscapeUriString("Invalid:URI " + c.GetAttribute("Target")), UriKind.RelativeOrAbsolute);
                 }
                 if (!string.IsNullOrEmpty(source))
                 {
@@ -119,8 +113,7 @@ namespace OfficeOpenXml.Packaging
                 }
                 if (rel.Id.StartsWith("rid", StringComparison.OrdinalIgnoreCase))
                 {
-                    int id;
-                    if (int.TryParse(rel.Id.Substring(3), out id))
+                    if (int.TryParse(rel.Id.Substring(3), out var id))
                     {
                         if (id >= maxRId && id < int.MaxValue - 10000) //Not likly to have this high id's but make sure we have space to avoid overflow.
                         {

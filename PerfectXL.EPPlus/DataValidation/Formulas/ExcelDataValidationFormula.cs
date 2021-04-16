@@ -30,12 +30,8 @@
  * Jan Källman		    License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Utils;
-using OfficeOpenXml.DataValidation.Formulas.Contracts;
 
 namespace OfficeOpenXml.DataValidation.Formulas
 {

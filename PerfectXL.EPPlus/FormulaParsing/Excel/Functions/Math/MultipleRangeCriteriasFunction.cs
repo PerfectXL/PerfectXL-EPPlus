@@ -22,10 +22,7 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2015-01-15
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using OfficeOpenXml.FormulaParsing.Utilities;
 using OfficeOpenXml.Utils;
@@ -40,9 +37,9 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
         private readonly ExpressionEvaluator _expressionEvaluator;
 
         protected MultipleRangeCriteriasFunction()
-            :this(new ExpressionEvaluator())
+            : this(new ExpressionEvaluator())
         {
-            
+
         }
 
         protected MultipleRangeCriteriasFunction(ExpressionEvaluator evaluator)

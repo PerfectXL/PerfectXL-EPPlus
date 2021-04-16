@@ -30,8 +30,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.Exceptions;
 
 namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
@@ -39,17 +37,17 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
     public class FormulaDependency
     {
         public FormulaDependency(ParsingScope scope)
-	    {   
+        {
             ScopeId = scope.ScopeId;
             Address = scope.Address;
-	    }
+        }
         public Guid ScopeId { get; private set; }
 
         public RangeAddress Address { get; private set; }
 
-        private List<RangeAddress> _referencedBy = new List<RangeAddress>();
+        private readonly List<RangeAddress> _referencedBy = new List<RangeAddress>();
 
-        private List<RangeAddress> _references = new List<RangeAddress>();
+        private readonly List<RangeAddress> _references = new List<RangeAddress>();
 
         public virtual void AddReferenceFrom(RangeAddress rangeAddress)
         {

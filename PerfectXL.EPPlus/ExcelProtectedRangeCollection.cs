@@ -1,9 +1,6 @@
 ﻿using OfficeOpenXml.Utils;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace OfficeOpenXml
@@ -17,12 +14,15 @@ namespace OfficeOpenXml
             foreach (XmlNode protectedRangeNode in topNode.SelectNodes("d:protectedRanges/d:protectedRange", nsm))
             {
                 if (!(protectedRangeNode is XmlElement))
+                {
                     continue;
+                }
+
                 _baseList.Add(new ExcelProtectedRange(protectedRangeNode.Attributes["name"].Value, new ExcelAddress(SqRefUtility.FromSqRefAddress(protectedRangeNode.Attributes["sqref"].Value)), nsm, topNode));
             }
         }
 
-        private List<ExcelProtectedRange> _baseList = new List<ExcelProtectedRange>();
+        private readonly List<ExcelProtectedRange> _baseList = new List<ExcelProtectedRange>();
 
         public ExcelProtectedRange Add(string name, ExcelAddress address)
         {
@@ -30,15 +30,15 @@ namespace OfficeOpenXml
             {
                 CreateNode("d:protectedRanges");
             }
-            foreach(var pr in _baseList)
+            foreach (var pr in _baseList)
             {
-                if(name.Equals(pr.Name,StringComparison.CurrentCultureIgnoreCase))
+                if (name.Equals(pr.Name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     throw (new InvalidOperationException($"A protected range with the namn {name} already exists"));
                 }
             }
             var newNode = TopNode.OwnerDocument.CreateElement("protectedRange", ExcelPackage.schemaMain);
-            TopNode.SelectSingleNode("d:protectedRanges",NameSpaceManager).AppendChild(newNode);
+            TopNode.SelectSingleNode("d:protectedRanges", NameSpaceManager).AppendChild(newNode);
             var item = new ExcelProtectedRange(name, address, base.NameSpaceManager, newNode);
             _baseList.Add(item);
             return item;
@@ -69,7 +69,10 @@ namespace OfficeOpenXml
         {
             DeleteAllNode("d:protectedRanges/d:protectedRange[@name='" + item.Name + "' and @sqref='" + item.Address.Address + "']");
             if (_baseList.Count == 0)
+            {
                 DeleteNode("d:protectedRanges");
+            }
+
             return _baseList.Remove(item);
         }
 

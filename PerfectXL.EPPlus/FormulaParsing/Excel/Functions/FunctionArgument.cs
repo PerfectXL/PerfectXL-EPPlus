@@ -23,9 +23,6 @@
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions
@@ -39,7 +36,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
         }
 
         public FunctionArgument(object val, DataType dataType)
-            :this(val)
+            : this(val)
         {
             DataType = dataType;
         }
@@ -95,7 +92,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
                     Value = ((ExcelDataProvider.INameInfo)Value).Value;
                 }
                 var v = Value as ExcelDataProvider.IRangeInfo;
-                if (v==null)
+                if (v == null)
                 {
                     return Value;
                 }

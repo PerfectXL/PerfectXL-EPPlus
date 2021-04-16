@@ -31,12 +31,10 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Xml;
 using OfficeOpenXml.Utils;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
-using System.Text.RegularExpressions;
 using System.Collections;
 
 namespace OfficeOpenXml.DataValidation.Formulas
@@ -46,7 +44,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
         #region class DataValidationList
         private class DataValidationList : IList<string>, ICollection
         {
-            private IList<string> _items = new List<string>();
+            private readonly IList<string> _items = new List<string>();
             private EventHandler<EventArgs> _listChanged;
 
             public event EventHandler<EventArgs> ListChanged
@@ -177,7 +175,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
             SetInitialValues();
         }
 
-        private string _formulaPath;
+        private readonly string _formulaPath;
 
         private void SetInitialValues()
         {
@@ -187,7 +185,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
                 if (@value.StartsWith("\"") && @value.EndsWith("\""))
                 {
                     @value = @value.TrimStart('"').TrimEnd('"');
-                    var items = @value.Split(new char[]{','}, StringSplitOptions.RemoveEmptyEntries);
+                    var items = @value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var item in items)
                     {
                         Values.Add(item);
@@ -200,7 +198,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
             }
         }
 
-        void values_ListChanged(object sender, EventArgs e)
+        private void values_ListChanged(object sender, EventArgs e)
         {
             if (Values.Count > 0)
             {
@@ -220,7 +218,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
             private set;
         }
 
-        protected override string  GetValueAsString()
+        protected override string GetValueAsString()
         {
             var sb = new StringBuilder();
             foreach (var val in Values)

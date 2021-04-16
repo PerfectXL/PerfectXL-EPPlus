@@ -30,16 +30,14 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 namespace OfficeOpenXml.Style.XmlAccess
 {
     /// <summary>
     /// Xml access class for fills
     /// </summary>
-    internal class ExcelFillXml : StyleXmlHelper 
+    internal class ExcelFillXml : StyleXmlHelper
     {
         internal ExcelFillXml(XmlNamespaceManager nameSpaceManager)
             : base(nameSpaceManager)
@@ -48,7 +46,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             _backgroundColor = new ExcelColorXml(NameSpaceManager);
             _patternColor = new ExcelColorXml(NameSpaceManager);
         }
-        internal ExcelFillXml(XmlNamespaceManager nsm, XmlNode topNode):
+        internal ExcelFillXml(XmlNamespaceManager nsm, XmlNode topNode) :
             base(nsm, topNode)
         {
             PatternType = GetPatternType(GetXmlNodeString(fillPatternTypePath));
@@ -58,7 +56,11 @@ namespace OfficeOpenXml.Style.XmlAccess
 
         private ExcelFillStyle GetPatternType(string patternType)
         {
-            if (patternType == "") return ExcelFillStyle.None;
+            if (patternType == "")
+            {
+                return ExcelFillStyle.None;
+            }
+
             patternType = patternType.Substring(0, 1).ToUpper(CultureInfo.InvariantCulture) + patternType.Substring(1, patternType.Length - 1);
             try
             {
@@ -77,7 +79,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
         }
         #region Public Properties
-        const string fillPatternTypePath = "d:patternFill/@patternType";
+        private const string fillPatternTypePath = "d:patternFill/@patternType";
         protected ExcelFillStyle _fillPatternType;
         /// <summary>
         /// Cell fill pattern style
@@ -90,11 +92,11 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             set
             {
-                _fillPatternType=value;
+                _fillPatternType = value;
             }
         }
         protected ExcelColorXml _patternColor = null;
-        const string _patternColorPath = "d:patternFill/d:bgColor";
+        private const string _patternColorPath = "d:patternFill/d:bgColor";
         /// <summary>
         /// Pattern color
         /// </summary>
@@ -110,7 +112,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
         }
         protected ExcelColorXml _backgroundColor = null;
-        const string _backgroundColorPath = "d:patternFill/d:fgColor";
+        private const string _backgroundColorPath = "d:patternFill/d:fgColor";
         /// <summary>
         /// Cell background color 
         /// </summary>
@@ -122,7 +124,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             internal set
             {
-                _backgroundColor=value;
+                _backgroundColor = value;
             }
         }
         #endregion

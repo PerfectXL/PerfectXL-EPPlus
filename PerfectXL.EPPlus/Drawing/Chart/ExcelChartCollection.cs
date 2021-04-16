@@ -31,8 +31,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 
 namespace OfficeOpenXml.Drawing.Chart
 {
@@ -41,8 +39,15 @@ namespace OfficeOpenXml.Drawing.Chart
     /// </summary>
     public class ExcelChartCollection : IEnumerable<ExcelChart>
     {
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         List<ExcelChart> _list = new List<ExcelChart>();
-        ExcelChart _topChart;
+After:
+        private List<ExcelChart> _list = new List<ExcelChart>();
+*/
+        private readonly List<ExcelChart> _list = new List<ExcelChart>();
+        private readonly ExcelChart _topChart;
         internal ExcelChartCollection(ExcelChart chart)
         {
             _topChart = chart;
@@ -65,7 +70,7 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             else if (ExcelChart.IsType3D(chartType) || _list[0].IsType3D())
             {
-                throw(new InvalidOperationException("3D charts can not be combined with other charttypes"));
+                throw (new InvalidOperationException("3D charts can not be combined with other charttypes"));
             }
 
             var prependingChartNode = _list[_list.Count - 1].TopNode;
@@ -104,5 +109,5 @@ namespace OfficeOpenXml.Drawing.Chart
         }
 
 
-}
+    }
 }

@@ -28,11 +28,8 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OfficeOpenXml.FormulaParsing.Excel.Operators;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph.CompileStrategy;
 
 namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
@@ -40,13 +37,13 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
     public class ExpressionCompiler : IExpressionCompiler
     {
         private IEnumerable<Expression> _expressions;
-        private IExpressionConverter _expressionConverter;
-        private ICompileStrategyFactory _compileStrategyFactory;
+        private readonly IExpressionConverter _expressionConverter;
+        private readonly ICompileStrategyFactory _compileStrategyFactory;
 
         public ExpressionCompiler()
             : this(new ExpressionConverter(), new CompileStrategyFactory())
         {
- 
+
         }
 
         public ExpressionCompiler(IExpressionConverter expressionConverter, ICompileStrategyFactory compileStrategyFactory)
@@ -66,10 +63,10 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
             return PerformCompilation(worksheet, row, column);
         }
 
-        private CompileResult PerformCompilation(string worksheet="", int row=-1, int column=-1)
+        private CompileResult PerformCompilation(string worksheet = "", int row = -1, int column = -1)
         {
             var compiledExpressions = HandleGroupedExpressions();
-            while(compiledExpressions.Any(x => x.Operator != null))
+            while (compiledExpressions.Any(x => x.Operator != null))
             {
                 var prec = FindLowestPrecedence();
                 compiledExpressions = HandlePrecedenceLevel(prec);
@@ -83,13 +80,21 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
 
         private IEnumerable<Expression> HandleGroupedExpressions()
         {
-            if (!_expressions.Any()) return Enumerable.Empty<Expression>();
+            if (!_expressions.Any())
+            {
+                return Enumerable.Empty<Expression>();
+            }
+
             var first = _expressions.First();
             var groupedExpressions = _expressions.Where(x => x.IsGroupedExpression);
-            foreach(var groupedExpression in groupedExpressions)
+            foreach (var groupedExpression in groupedExpressions)
             {
                 var result = groupedExpression.Compile();
-                if (result == CompileResult.Empty) continue;
+                if (result == CompileResult.Empty)
+                {
+                    continue;
+                }
+
                 var newExp = _expressionConverter.FromCompileResult(result);
                 newExp.Operator = groupedExpression.Operator;
                 newExp.Prev = groupedExpression.Prev;
@@ -120,7 +125,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
             {
                 var strategy = _compileStrategyFactory.Create(expression);
                 var compiledExpression = strategy.Compile();
-                if(compiledExpression is ExcelErrorExpression)
+                if (compiledExpression is ExcelErrorExpression)
                 {
                     return RefreshList(compiledExpression);
                 }

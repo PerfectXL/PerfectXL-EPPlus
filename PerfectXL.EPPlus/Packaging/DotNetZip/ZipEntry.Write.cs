@@ -29,7 +29,6 @@
 using OfficeOpenXml.Packaging.Ionic.Zlib;
 using System;
 using System.IO;
-using RE = System.Text.RegularExpressions;
 
 namespace OfficeOpenXml.Packaging.Ionic.Zip
 {
@@ -40,9 +39,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             byte[] bytes = new byte[4096];
             int i = 0;
             // signature
-            bytes[i++] = (byte)(ZipConstants.ZipDirEntrySignature & 0x000000FF);
-            bytes[i++] = (byte)((ZipConstants.ZipDirEntrySignature & 0x0000FF00) >> 8);
-            bytes[i++] = (byte)((ZipConstants.ZipDirEntrySignature & 0x00FF0000) >> 16);
+            bytes[i++] = ZipConstants.ZipDirEntrySignature & 0x000000FF;
+            bytes[i++] = (ZipConstants.ZipDirEntrySignature & 0x0000FF00) >> 8;
+            bytes[i++] = (ZipConstants.ZipDirEntrySignature & 0x00FF0000) >> 16;
             bytes[i++] = (byte)((ZipConstants.ZipDirEntrySignature & 0xFF000000) >> 24);
 
             // Version Made By
@@ -76,7 +75,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // the same as the local entry or MS .NET System.IO.Zip fails read.
             Int16 vNeeded = (Int16)(VersionNeeded != 0 ? VersionNeeded : 20);
             // workitem 12964
-            if (_OutputUsesZip64==null)
+            if (_OutputUsesZip64 == null)
             {
                 // a zipentry in a zipoutputstream, with zero bytes written
                 _OutputUsesZip64 = new Nullable<bool>(_container.Zip64 == Zip64Option.Always);
@@ -121,7 +120,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             {
                 // CompressedSize (Int32) and UncompressedSize - all 0xFF
                 for (j = 0; j < 8; j++)
+                {
                     bytes[i++] = 0xFF;
+                }
             }
             else
             {
@@ -185,7 +186,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             int commentLength = (_CommentBytes == null) ? 0 : _CommentBytes.Length;
 
             // the size of our buffer defines the max length of the comment we can write
-            if (commentLength + i > bytes.Length) commentLength = bytes.Length - i;
+            if (commentLength + i > bytes.Length)
+            {
+                commentLength = bytes.Length - i;
+            }
+
             bytes[i++] = (byte)(commentLength & 0x00FF);
             bytes[i++] = (byte)((commentLength & 0xFF00) >> 8);
 
@@ -459,7 +464,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             if (_ntfsTimesAreSet && _emitUnixTimes)
             {
                 int len = 5 + 4;
-                if (!forCentralDirectory) len += 8;
+                if (!forCentralDirectory)
+                {
+                    len += 8;
+                }
 
                 block = new byte[len];
                 // local form:
@@ -517,7 +525,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 int totalLength = 0;
                 int i, current = 0;
                 for (i = 0; i < listOfBlocks.Count; i++)
+                {
                     totalLength += listOfBlocks[i].Length;
+                }
+
                 aggregateBlock = new byte[totalLength];
                 for (i = 0; i < listOfBlocks.Count; i++)
                 {
@@ -574,7 +585,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             {
                 int n = SlashFixed.IndexOf('/', 2);
                 if (n == -1)
+                {
                     throw new ArgumentException("The path for that entry appears to be badly formatted");
+                }
+
                 s1 = SlashFixed.Substring(n + 1);
             }
             else if ((FileName.Length >= 3)
@@ -609,17 +623,23 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // workitem 6513
             var s1 = NormalizeFileName();
 
-            switch(AlternateEncodingUsage)
+            switch (AlternateEncodingUsage)
             {
                 case ZipOption.Always:
                     if (!(_Comment == null || _Comment.Length == 0))
+                    {
                         _CommentBytes = AlternateEncoding.GetBytes(_Comment);
+                    }
+
                     _actualEncoding = AlternateEncoding;
                     return AlternateEncoding.GetBytes(s1);
 
                 case ZipOption.Never:
                     if (!(_Comment == null || _Comment.Length == 0))
+                    {
                         _CommentBytes = ibm437.GetBytes(_Comment);
+                    }
+
                     _actualEncoding = ibm437;
                     return ibm437.GetBytes(s1);
             }
@@ -642,7 +662,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 // no checking of round trips here.
                 result = AlternateEncoding.GetBytes(s1);
                 if (_Comment != null && _Comment.Length != 0)
+                {
                     _CommentBytes = AlternateEncoding.GetBytes(_Comment);
+                }
+
                 _actualEncoding = AlternateEncoding;
                 return result;
             }
@@ -654,11 +677,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
             // if there is no comment, use ibm437.
             if (_Comment == null || _Comment.Length == 0)
+            {
                 return result;
+            }
 
             // there is a comment. Get the encoded form.
             byte[] cbytes = ibm437.GetBytes(_Comment);
-            string c2 = ibm437.GetString(cbytes,0,cbytes.Length);
+            string c2 = ibm437.GetString(cbytes, 0, cbytes.Length);
 
             // Check for round-trip.
             if (c2 != Comment)
@@ -681,18 +706,39 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
         private bool WantReadAgain()
         {
-            if (_UncompressedSize < 0x10) return false;
-            if (_CompressionMethod == 0x00) return false;
-            if (CompressionLevel == OfficeOpenXml.Packaging.Ionic.Zlib.CompressionLevel.None) return false;
-            if (_CompressedSize < _UncompressedSize) return false;
+            if (_UncompressedSize < 0x10)
+            {
+                return false;
+            }
 
-            if (this._Source == ZipEntrySource.Stream && !this._sourceStream.CanSeek) return false;
+            if (_CompressionMethod == 0x00)
+            {
+                return false;
+            }
+
+            if (CompressionLevel == OfficeOpenXml.Packaging.Ionic.Zlib.CompressionLevel.None)
+            {
+                return false;
+            }
+
+            if (_CompressedSize < _UncompressedSize)
+            {
+                return false;
+            }
+
+            if (this._Source == ZipEntrySource.Stream && !this._sourceStream.CanSeek)
+            {
+                return false;
+            }
 
 #if AESCRYPTO
             if (_aesCrypto_forWrite != null && (CompressedSize - _aesCrypto_forWrite.SizeOfEncryptionMetadata) <= UncompressedSize + 0x10) return false;
 #endif
 
-            if (_zipCrypto_forWrite != null && (CompressedSize - 12) <= UncompressedSize) return false;
+            if (_zipCrypto_forWrite != null && (CompressedSize - 12) <= UncompressedSize)
+            {
+                return false;
+            }
 
             return true;
         }
@@ -751,12 +797,16 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // that case we check the callback to see if the app wants
             // to tell us whether to compress or not.
             if (SetCompression != null)
+            {
                 CompressionLevel = SetCompression(LocalFileName, _FileNameInArchive);
+            }
 
             // finally, set CompressionMethod to None if CompressionLevel is None
             if (CompressionLevel == (short)Ionic.Zlib.CompressionLevel.None &&
                 CompressionMethod == Ionic.Zip.CompressionMethod.Deflate)
+            {
                 _CompressionMethod = 0x00;
+            }
 
             return;
         }
@@ -820,9 +870,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             byte[] block = new byte[30];
 
             // signature
-            block[i++] = (byte)(ZipConstants.ZipEntrySignature & 0x000000FF);
-            block[i++] = (byte)((ZipConstants.ZipEntrySignature & 0x0000FF00) >> 8);
-            block[i++] = (byte)((ZipConstants.ZipEntrySignature & 0x00FF0000) >> 16);
+            block[i++] = ZipConstants.ZipEntrySignature & 0x000000FF;
+            block[i++] = (ZipConstants.ZipEntrySignature & 0x0000FF00) >> 8;
+            block[i++] = (ZipConstants.ZipEntrySignature & 0x00FF0000) >> 16;
             block[i++] = (byte)((ZipConstants.ZipEntrySignature & 0xFF000000) >> 24);
 
             // Design notes for ZIP64:
@@ -912,9 +962,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // _BitField may already be set, as with a ZipEntry added into ZipOutputStream, which
             // has bit 3 always set. We only want to set one bit
             if (_Encryption == EncryptionAlgorithm.None)
+            {
                 _BitField &= ~1;  // encryption bit OFF
+            }
             else
+            {
                 _BitField |= 1;   // encryption bit ON
+            }
 
 
             // workitem 7941: WinZip does not the "strong encryption" bit  when using AES.
@@ -968,7 +1022,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 Password = null;
             }
             else if (!s.CanSeek)
+            {
                 _BitField |= 0x0008;
+            }
 
 #if DONT_GO_THERE
             else if (this.Encryption == EncryptionAlgorithm.PkzipWeak  &&
@@ -1063,7 +1119,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             {
                 // (i==18) CompressedSize (Int32) and UncompressedSize - all 0xFF for now
                 for (j = 0; j < 8; j++)
+                {
                     block[i++] = 0xFF;
+                }
             }
             else
             {
@@ -1127,16 +1185,22 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 zss.ContiguousWrite = true;
                 UInt32 requiredSegment = zss.ComputeSegment(i);
                 if (requiredSegment != zss.CurrentSegment)
+                {
                     _future_ROLH = 0; // rollover!
+                }
                 else
+                {
                     _future_ROLH = zss.Position;
+                }
 
                 _diskNumber = requiredSegment;
             }
 
             // validate the ZIP64 usage
             if (_container.Zip64 == Zip64Option.Never && (uint)_RelativeOffsetOfLocalHeader >= 0xFFFFFFFF)
+            {
                 throw new ZipException("Offset within the zip archive exceeds 0xFFFFFFFF. Consider setting the UseZip64WhenSaving property on the ZipFile instance.");
+            }
 
 
             // finally, write the header to the stream
@@ -1144,7 +1208,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
             // now that the header is written, we can turn off the contiguous write restriction.
             if (zss != null)
+            {
                 zss.ContiguousWrite = false;
+            }
 
             // Preserve this header data, we'll use it again later.
             // ..when seeking backward, to write again, after we have the Crc, compressed
@@ -1184,7 +1250,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     {
                         // allow the application to open the stream
                         if (this._sourceStream == null)
+                        {
                             _sourceStream = this._OpenDelegate(this.FileName);
+                        }
+
                         PrepSourceStream();
                         input = this._sourceStream;
                     }
@@ -1239,7 +1308,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         private void PrepSourceStream()
         {
             if (_sourceStream == null)
+            {
                 throw new ZipException(String.Format("The input stream is null for entry '{0}'.", FileName));
+            }
 
             if (this._sourceStreamOriginalPosition != null)
             {
@@ -1284,7 +1355,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 // what we know.
 
                 if (this._Source != ZipEntrySource.ZipFile && ((this._BitField & 0x0008) != 0x0008))
+                {
                     throw new ZipException("It is not possible to use PKZIP encryption on a non-seekable input stream");
+                }
             }
         }
 
@@ -1317,7 +1390,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         private void OnWriteBlock(Int64 bytesXferred, Int64 totalBytesToXfer)
         {
             if (_container.ZipFile != null)
+            {
                 _ioOperationCanceled = _container.ZipFile.OnSaveBlock(this, bytesXferred, totalBytesToXfer);
+            }
         }
 
 
@@ -1405,7 +1480,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                         output.Write(buffer, 0, n);
                         OnWriteBlock(output.TotalBytesSlurped, fileLength);
                         if (_ioOperationCanceled)
+                        {
                             break;
+                        }
                     }
                 }
 
@@ -1417,7 +1494,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 {
                     // allow the application to close the stream
                     if (this._CloseDelegate != null)
+                    {
                         this._CloseDelegate(this.FileName, input);
+                    }
                 }
                 else if ((input as FileStream) != null)
                 {
@@ -1430,7 +1509,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             }
 
             if (_ioOperationCanceled)
+            {
                 return;
+            }
 
             // set FDP now, to allow for re-streaming
             this.__FileDataPosition = fdp;
@@ -1469,7 +1550,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             else if (this._Source == ZipEntrySource.JitStream)
             {
                 // allow the application to open the stream
-                if (this._sourceStream == null) _sourceStream = this._OpenDelegate(this.FileName);
+                if (this._sourceStream == null)
+                {
+                    _sourceStream = this._OpenDelegate(this.FileName);
+                }
+
                 PrepSourceStream();
                 input = this._sourceStream;
                 try { fileLength = this._sourceStream.Length; }
@@ -1499,7 +1584,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                          Stream compressor,
                                          Ionic.Crc.CrcCalculatorStream output)
         {
-            if (output == null) return;
+            if (output == null)
+            {
+                return;
+            }
 
             output.Close();
             output.Dispose();
@@ -1563,13 +1651,18 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // and omit all the crypto stuff - the GP bitfield, and the crypto header.
             if (_UncompressedSize == 0 && _CompressedSize == 0)
             {
-                if (this._Source == ZipEntrySource.ZipOutputStream) return;  // nothing to do...
+                if (this._Source == ZipEntrySource.ZipOutputStream)
+                {
+                    return;  // nothing to do...
+                }
 
                 if (_Password != null)
                 {
                     int headerBytesToRetract = 0;
                     if (Encryption == EncryptionAlgorithm.PkzipWeak)
+                    {
                         headerBytesToRetract = 12;
+                    }
 #if AESCRYPTO
                     else if (Encryption == EncryptionAlgorithm.WinZipAes128 ||
                              Encryption == EncryptionAlgorithm.WinZipAes256)
@@ -1578,7 +1671,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     }
 #endif
                     if (this._Source == ZipEntrySource.ZipOutputStream && !s.CanSeek)
+                    {
                         throw new ZipException("Zero bytes written, encryption in use, and non-seekable output.");
+                    }
 
                     if (Encryption != EncryptionAlgorithm.None)
                     {
@@ -1590,7 +1685,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
                         // workitem 11131
                         // adjust the count on the CountingStream as necessary
-                        if (s1 != null) s1.Adjust(headerBytesToRetract);
+                        if (s1 != null)
+                        {
+                            s1.Adjust(headerBytesToRetract);
+                        }
 
                         // subtract the size of the security header from the _LengthOfHeader
                         _LengthOfHeader -= headerBytesToRetract;
@@ -1671,7 +1769,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             if (_OutputUsesZip64.Value)
             {
                 // VersionNeededToExtract - set to 45 to indicate zip64
-                _EntryHeader[4] = (byte)(45 & 0x00FF);
+                _EntryHeader[4] = 45 & 0x00FF;
                 _EntryHeader[5] = 0x00;
 
                 // workitem 7924 - don't need bit 3
@@ -1682,7 +1780,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
                 // CompressedSize and UncompressedSize - 0xFF
                 for (int j = 0; j < 8; j++)
+                {
                     _EntryHeader[i++] = 0xff;
+                }
 
                 // At this point we need to find the "Extra field" that follows the
                 // filename.  We had already emitted it, but the data (uncomp, comp,
@@ -1702,7 +1802,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             else
             {
                 // VersionNeededToExtract - reset to 20 since no zip64
-                _EntryHeader[4] = (byte)(20 & 0x00FF);
+                _EntryHeader[4] = 20 & 0x00FF;
                 _EntryHeader[5] = 0x00;
 
                 // CompressedSize - the correct value now
@@ -1813,7 +1913,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     s.Write(_EntryHeader, 0, _EntryHeader.Length);
 
                     // adjust the count on the CountingStream as necessary
-                    if (s1 != null) s1.Adjust(_EntryHeader.Length);
+                    if (s1 != null)
+                    {
+                        s1.Adjust(_EntryHeader.Length);
+                    }
 
                     // seek in the raw output stream, to the end of the file data
                     // for this entry
@@ -1878,7 +1981,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
             // validate the ZIP64 usage
             if (_container.Zip64 == Zip64Option.Never && _entryRequiresZip64.Value)
+            {
                 throw new ZipException("Compressed or Uncompressed size, or offset exceeds the maximum value. Consider setting the UseZip64WhenSaving property on the ZipFile instance.");
+            }
 
             _OutputUsesZip64 = new Nullable<bool>(_container.Zip64 == Zip64Option.Always || _entryRequiresZip64.Value);
         }
@@ -1980,10 +2085,15 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                                                        true);
                         // can set the codec buffer size only before the first call to Write().
                         if (_container.CodecBufferSize > 0)
+                        {
                             _container.ParallelDeflater.BufferSize = _container.CodecBufferSize;
+                        }
+
                         if (_container.ParallelDeflateMaxBufferPairs > 0)
+                        {
                             _container.ParallelDeflater.MaxBufferPairs =
                                 _container.ParallelDeflateMaxBufferPairs;
+                        }
                     }
                     // reset it with the new stream
                     Ionic.Zlib.ParallelDeflateOutputStream o1 = _container.ParallelDeflater;
@@ -1995,7 +2105,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                                      CompressionLevel,
                                                      true);
                 if (_container.CodecBufferSize > 0)
+                {
                     o.BufferSize = _container.CodecBufferSize;
+                }
+
                 o.Strategy = _container.Strategy;
                 return o;
             }
@@ -2051,7 +2164,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         private void OnZipErrorWhileSaving(Exception e)
         {
             if (_container.ZipFile != null)
+            {
                 _ioOperationCanceled = _container.ZipFile.OnZipErrorSaving(this, e);
+            }
         }
 
 
@@ -2106,7 +2221,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                         _OutputUsesZip64 = new Nullable<bool>(_container.Zip64 == Zip64Option.Always || _entryRequiresZip64.Value);
                         // handle case for split archives
                         if (zss1 != null)
+                        {
                             _diskNumber = zss1.CurrentSegment;
+                        }
 
                         return;
                     }
@@ -2144,9 +2261,18 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                         // The file data has now been written to the stream, and
                         // the file pointer is positioned directly after file data.
 
-                        if (nCycles > 1) readAgain = false;
-                        else if (!s.CanSeek) readAgain = false;
-                        else readAgain = WantReadAgain();
+                        if (nCycles > 1)
+                        {
+                            readAgain = false;
+                        }
+                        else if (!s.CanSeek)
+                        {
+                            readAgain = false;
+                        }
+                        else
+                        {
+                            readAgain = WantReadAgain();
+                        }
 
                         if (readAgain)
                         {
@@ -2161,8 +2287,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                 zss1.TruncateBackward(_diskNumber, _RelativeOffsetOfLocalHeader);
                             }
                             else
+                            {
                                 // workitem 8098: ok (output).
                                 s.Seek(_RelativeOffsetOfLocalHeader, SeekOrigin.Begin);
+                            }
 
                             // If the last entry expands, we read again; but here, we must
                             // truncate the stream to prevent garbage data after the
@@ -2172,7 +2300,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                             s.SetLength(s.Position);
 
                             // Adjust the count on the CountingStream as necessary.
-                            if (cs1 != null) cs1.Adjust(_TotalEntrySize);
+                            if (cs1 != null)
+                            {
+                                cs1.Adjust(_TotalEntrySize);
+                            }
                         }
                     }
                     while (readAgain);
@@ -2186,7 +2317,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     do
                     {
                         if (ZipErrorAction == ZipErrorAction.Throw)
+                        {
                             throw;
+                        }
 
                         if (ZipErrorAction == ZipErrorAction.Skip ||
                             ZipErrorAction == ZipErrorAction.Retry)
@@ -2202,7 +2335,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                 s.Seek(delta, SeekOrigin.Current); // may throw
                                 long p2 = s.Position;
                                 s.SetLength(s.Position);  // to prevent garbage if this is the last entry
-                                if (cs1 != null) cs1.Adjust(p1 - p2);
+                                if (cs1 != null)
+                                {
+                                    cs1.Adjust(p1 - p2);
+                                }
                             }
                             if (ZipErrorAction == ZipErrorAction.Skip)
                             {
@@ -2212,11 +2348,17 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                 done = true;
                             }
                             else
+                            {
                                 this.ZipErrorAction = orig;
+                            }
+
                             break;
                         }
 
-                        if (loop > 0) throw;
+                        if (loop > 0)
+                        {
+                            throw;
+                        }
 
                         if (ZipErrorAction == ZipErrorAction.InvokeErrorEvent)
                         {
@@ -2265,7 +2407,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         internal void WriteSecurityMetadata(Stream outstream)
         {
             if (Encryption == EncryptionAlgorithm.None)
+            {
                 return;
+            }
 
             string pwd = this._Password;
 
@@ -2280,7 +2424,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // with that password, if the entry password is null.
 
             if (this._Source == ZipEntrySource.ZipFile && pwd == null)
+            {
                 pwd = this._container.Password;
+            }
 
             if (pwd == null)
             {
@@ -2379,7 +2525,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // option has changed, we can re-stream the entry data but must recompute the
             // metadata.
             if (this.LengthOfHeader == 0)
+            {
                 throw new BadStateException("Bad header length.");
+            }
 
             // is it necessary to re-constitute new metadata for this entry?
             bool needRecompute = _metadataChanged ||
@@ -2389,9 +2537,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 (!_InputUsesZip64 && _container.UseZip64WhenSaving == Zip64Option.Always);
 
             if (needRecompute)
+            {
                 CopyThroughWithRecompute(outStream);
+            }
             else
+            {
                 CopyThroughWithNoChange(outStream);
+            }
 
             // zip64 housekeeping
             _entryRequiresZip64 = new Nullable<bool>
@@ -2450,14 +2602,20 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     remaining -= n;
                     OnWriteBlock(input.BytesRead, this._CompressedSize);
                     if (_ioOperationCanceled)
+                    {
                         break;
+                    }
                 }
 
                 // bit 3 descriptor
                 if ((this._BitField & 0x0008) == 0x0008)
                 {
                     int size = 16;
-                    if (_InputUsesZip64) size += 8;
+                    if (_InputUsesZip64)
+                    {
+                        size += 8;
+                    }
+
                     byte[] Descriptor = new byte[size];
                     input.Read(Descriptor, 0, size);
 
@@ -2470,12 +2628,18 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
                         // Compressed
                         if (_CompressedSize > 0xFFFFFFFF)
+                        {
                             throw new InvalidOperationException("ZIP64 is required");
+                        }
+
                         outstream.Write(Descriptor, 8, 4);
 
                         // UnCompressed
                         if (_UncompressedSize > 0xFFFFFFFF)
+                        {
                             throw new InvalidOperationException("ZIP64 is required");
+                        }
+
                         outstream.Write(Descriptor, 16, 4);
                         _LengthOfTrailer -= 8;
                     }
@@ -2560,7 +2724,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 remaining -= n;
                 OnWriteBlock(input.BytesRead, this._TotalEntrySize);
                 if (_ioOperationCanceled)
+                {
                     break;
+                }
             }
         }
 

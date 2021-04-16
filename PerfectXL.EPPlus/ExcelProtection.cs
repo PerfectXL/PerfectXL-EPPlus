@@ -29,11 +29,7 @@
  * Jan Källman		    Added		10-AUG-2010
  * Jan Källman		    License changed GPL-->LGPL 2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
-using OfficeOpenXml.Utils;
 using OfficeOpenXml.Encryption;
 namespace OfficeOpenXml
 {
@@ -49,14 +45,15 @@ namespace OfficeOpenXml
         {
             SchemaNodeOrder = wb.SchemaNodeOrder;
         }
-        const string workbookPasswordPath = "d:workbookProtection/@workbookPassword";
+
+        private const string workbookPasswordPath = "d:workbookProtection/@workbookPassword";
         /// <summary>
         /// Sets a password for the workbook. This does not encrypt the workbook. 
         /// </summary>
         /// <param name="Password">The password. </param>
         public void SetPassword(string Password)
         {
-            if(string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(Password))
             {
                 DeleteNode(workbookPasswordPath);
             }
@@ -65,7 +62,8 @@ namespace OfficeOpenXml
                 SetXmlNodeString(workbookPasswordPath, ((int)EncryptedPackageHandler.CalculatePasswordHash(Password)).ToString("x"));
             }
         }
-        const string lockStructurePath = "d:workbookProtection/@lockStructure";
+
+        private const string lockStructurePath = "d:workbookProtection/@lockStructure";
         /// <summary>
         /// Locks the structure,which prevents users from adding or deleting worksheets or from displaying hidden worksheets.
         /// </summary>
@@ -77,10 +75,11 @@ namespace OfficeOpenXml
             }
             set
             {
-                SetXmlNodeBool(lockStructurePath, value,  false);
+                SetXmlNodeBool(lockStructurePath, value, false);
             }
         }
-        const string lockWindowsPath = "d:workbookProtection/@lockWindows";
+
+        private const string lockWindowsPath = "d:workbookProtection/@lockWindows";
         /// <summary>
         /// Locks the position of the workbook window.
         /// </summary>
@@ -95,7 +94,8 @@ namespace OfficeOpenXml
                 SetXmlNodeBool(lockWindowsPath, value, false);
             }
         }
-        const string lockRevisionPath = "d:workbookProtection/@lockRevision";
+
+        private const string lockRevisionPath = "d:workbookProtection/@lockRevision";
 
         /// <summary>
         /// Lock the workbook for revision

@@ -30,10 +30,7 @@
  * Jan Källman      Added compression support 27-03-2012
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.Utils
 {
@@ -143,7 +140,10 @@ namespace OfficeOpenXml.Utils
                     {
                         comprBuffer[cPos++] = buffer[dPos++];
                     }
-                    if (dPos >= dEnd) break;
+                    if (dPos >= dEnd)
+                    {
+                        break;
+                    }
                 }
                 comprBuffer[flagPos] = tokenFlags;
                 flagPos = cPos++;
@@ -184,10 +184,10 @@ namespace OfficeOpenXml.Utils
             ushort header = BitConverter.ToUInt16(compBuffer, pos);
             int decomprPos = 0;
             byte[] buffer = new byte[4198]; //Add an extra 100 byte. Some workbooks have overflowing worksheets.
-            int size = (int)(header & 0xFFF) + 3;
+            int size = (header & 0xFFF) + 3;
             int endPos = pos + size;
-            int a = (int)(header & 0x7000) >> 12;
-            int b = (int)(header & 0x8000) >> 15;
+            int a = (header & 0x7000) >> 12;
+            int b = (header & 0x8000) >> 15;
             pos += 2;
             if (b == 1) //Compressed chunk
             {
@@ -196,7 +196,10 @@ namespace OfficeOpenXml.Utils
                     //Decompress token
                     byte token = compBuffer[pos++];
                     if (pos >= endPos)
+                    {
                         break;
+                    }
+
                     for (int i = 0; i < 8; i++)
                     {
                         //Literal token
@@ -240,7 +243,9 @@ namespace OfficeOpenXml.Utils
 
                         }
                         if (pos >= endPos)
+                        {
                             break;
+                        }
                     }
                 }
                 return;

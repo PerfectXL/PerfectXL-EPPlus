@@ -29,12 +29,9 @@
  * Jan Källman		                Initial Release		        2009-10-01
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using OfficeOpenXml.Drawing;
-using System.Drawing;
 
 namespace OfficeOpenXml.Style
 {
@@ -43,8 +40,17 @@ namespace OfficeOpenXml.Style
     /// </summary>
     public class ExcelParagraphCollection : XmlHelper, IEnumerable<ExcelParagraph>
     {
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         List<ExcelParagraph> _list = new List<ExcelParagraph>();
         string _path;
+After:
+        private List<ExcelParagraph> _list = new List<ExcelParagraph>();
+        private string _path;
+*/
+        private readonly List<ExcelParagraph> _list = new List<ExcelParagraph>();
+        private readonly string _path;
         internal ExcelParagraphCollection(XmlNamespaceManager ns, XmlNode topNode, string path, string[] schemaNodeOrder) :
             base(ns, topNode)
         {
@@ -54,7 +60,7 @@ namespace OfficeOpenXml.Style
             {
                 foreach (XmlNode n in nl)
                 {
-                    _list.Add(new ExcelParagraph(ns, n, "",schemaNodeOrder));
+                    _list.Add(new ExcelParagraph(ns, n, "", schemaNodeOrder));
                 }
             }
             _path = path;
@@ -89,20 +95,20 @@ namespace OfficeOpenXml.Style
             {
                 doc = TopNode.OwnerDocument;
             }
-            XmlNode parentNode=TopNode.SelectSingleNode(_path, NameSpaceManager);
+            XmlNode parentNode = TopNode.SelectSingleNode(_path, NameSpaceManager);
             if (parentNode == null)
             {
                 CreateNode(_path);
                 parentNode = TopNode.SelectSingleNode(_path, NameSpaceManager);
             }
-            
+
             var node = doc.CreateElement("a", "r", ExcelPackage.schemaDrawings);
             parentNode.AppendChild(node);
             var childNode = doc.CreateElement("a", "rPr", ExcelPackage.schemaDrawings);
             node.AppendChild(childNode);
             var rt = new ExcelParagraph(NameSpaceManager, node, "", SchemaNodeOrder);
             rt.ComplexFont = "Calibri";
-            rt.LatinFont = "Calibri"; 
+            rt.LatinFont = "Calibri";
             rt.Size = 11;
 
             rt.Text = Text;
@@ -149,7 +155,7 @@ namespace OfficeOpenXml.Style
                 {
                     this[0].Text = value;
                     int count = Count;
-                    for (int ix = Count-1; ix > 0; ix--)
+                    for (int ix = Count - 1; ix > 0; ix--)
                     {
                         RemoveAt(ix);
                     }

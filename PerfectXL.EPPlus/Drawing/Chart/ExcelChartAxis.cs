@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Style;
 using System.Globalization;
@@ -111,15 +109,15 @@ namespace OfficeOpenXml.Drawing.Chart
         /// <summary>
         /// Specifies the tick marks shall cross the axis. 
         /// </summary>
-        Cross,   
+        Cross,
         /// <summary>
         /// Specifies the tick marks shall be inside the plot area. 
         /// </summary>
-        In,     
+        In,
         /// <summary>
         /// Specifies there shall be no tick marks.
         /// </summary>
-        None,    
+        None,
         /// <summary>
         /// Specifies the tick marks shall be outside the plot area.
         /// </summary>
@@ -176,7 +174,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return GetXmlNodeString("c:axId/@val");
             }
         }
-        const string _majorTickMark = "c:majorTickMark/@val";
+
+        private const string _majorTickMark = "c:majorTickMark/@val";
         /// <summary>
         /// majorTickMark 
         /// This element specifies the major tick marks for the axis. 
@@ -185,8 +184,8 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                var v=GetXmlNodeString(_majorTickMark);
-                if(string.IsNullOrEmpty(v))
+                var v = GetXmlNodeString(_majorTickMark);
+                if (string.IsNullOrEmpty(v))
                 {
                     return eAxisTickMark.Cross;
                 }
@@ -194,7 +193,7 @@ namespace OfficeOpenXml.Drawing.Chart
                 {
                     try
                     {
-                        return (eAxisTickMark)Enum.Parse( typeof( eAxisTickMark ), v );
+                        return (eAxisTickMark)Enum.Parse(typeof(eAxisTickMark), v);
                     }
                     catch
                     {
@@ -204,11 +203,11 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                SetXmlNodeString( _majorTickMark, value.ToString().ToLower(CultureInfo.InvariantCulture) );
+                SetXmlNodeString(_majorTickMark, value.ToString().ToLower(CultureInfo.InvariantCulture));
             }
         }
 
-        const string _minorTickMark = "c:minorTickMark/@val";
+        private const string _minorTickMark = "c:minorTickMark/@val";
         /// <summary>
         /// minorTickMark 
         /// This element specifies the minor tick marks for the axis. 
@@ -217,8 +216,8 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                var v=GetXmlNodeString(_minorTickMark);
-                if(string.IsNullOrEmpty(v))
+                var v = GetXmlNodeString(_minorTickMark);
+                if (string.IsNullOrEmpty(v))
                 {
                     return eAxisTickMark.Cross;
                 }
@@ -226,7 +225,7 @@ namespace OfficeOpenXml.Drawing.Chart
                 {
                     try
                     {
-                        return (eAxisTickMark)Enum.Parse(typeof(eAxisTickMark), v );
+                        return (eAxisTickMark)Enum.Parse(typeof(eAxisTickMark), v);
                     }
                     catch
                     {
@@ -239,7 +238,7 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(_minorTickMark, value.ToString().ToLower(CultureInfo.InvariantCulture));
             }
         }
-         /// <summary>
+        /// <summary>
         /// Type of axis
         /// </summary>
         internal eAxisType AxisType
@@ -248,7 +247,7 @@ namespace OfficeOpenXml.Drawing.Chart
             {
                 try
                 {
-                    return (eAxisType)Enum.Parse(typeof(eAxisType), TopNode.LocalName.Substring(0,3), true);
+                    return (eAxisType)Enum.Parse(typeof(eAxisType), TopNode.LocalName.Substring(0, 3), true);
                 }
                 catch
                 {
@@ -256,15 +255,15 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        private string AXIS_POSITION_PATH = "c:axPos/@val";
+        private readonly string AXIS_POSITION_PATH = "c:axPos/@val";
         /// <summary>
         /// Where the axis is located
         /// </summary>
         public eAxisPosition AxisPosition
         {
             get
-            {                
-                switch(GetXmlNodeString(AXIS_POSITION_PATH))
+            {
+                switch (GetXmlNodeString(AXIS_POSITION_PATH))
                 {
                     case "b":
                         return eAxisPosition.Bottom;
@@ -272,16 +271,17 @@ namespace OfficeOpenXml.Drawing.Chart
                         return eAxisPosition.Right;
                     case "t":
                         return eAxisPosition.Top;
-                    default: 
+                    default:
                         return eAxisPosition.Left;
                 }
             }
             internal set
             {
-                SetXmlNodeString(AXIS_POSITION_PATH, value.ToString().ToLower(CultureInfo.InvariantCulture).Substring(0,1));
+                SetXmlNodeString(AXIS_POSITION_PATH, value.ToString().ToLower(CultureInfo.InvariantCulture).Substring(0, 1));
             }
         }
-        const string _crossesPath = "c:crosses/@val";
+
+        private const string _crossesPath = "c:crosses/@val";
         /// <summary>
         /// Where the axis cross
         /// </summary>
@@ -289,7 +289,7 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                var v=GetXmlNodeString(_crossesPath);
+                var v = GetXmlNodeString(_crossesPath);
                 if (string.IsNullOrEmpty(v))
                 {
                     return eCrosses.AutoZero;
@@ -314,7 +314,8 @@ namespace OfficeOpenXml.Drawing.Chart
             }
 
         }
-        const string _crossBetweenPath = "c:crossBetween/@val";
+
+        private const string _crossBetweenPath = "c:crossBetween/@val";
         /// <summary>
         /// How the axis are crossed
         /// </summary>
@@ -322,8 +323,8 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                var v=GetXmlNodeString(_crossBetweenPath);
-                if(string.IsNullOrEmpty(v))
+                var v = GetXmlNodeString(_crossBetweenPath);
+                if (string.IsNullOrEmpty(v))
                 {
                     return eCrossBetween.Between;
                 }
@@ -346,7 +347,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(_crossBetweenPath, v);
             }
         }
-        const string _crossesAtPath = "c:crossesAt/@val";
+
+        private const string _crossesAtPath = "c:crossesAt/@val";
         /// <summary>
         /// The value where the axis cross. 
         /// Null is automatic
@@ -369,11 +371,12 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _formatPath = "c:numFmt/@formatCode";
+
+        private const string _formatPath = "c:numFmt/@formatCode";
         /// <summary>
         /// Numberformat
         /// </summary>
-        public string Format 
+        public string Format
         {
             get
             {
@@ -381,8 +384,8 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                SetXmlNodeString(_formatPath,value);
-                if(string.IsNullOrEmpty(value))
+                SetXmlNodeString(_formatPath, value);
+                if (string.IsNullOrEmpty(value))
                 {
                     SourceLinked = true;
                 }
@@ -392,7 +395,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _sourceLinkedPath = "c:numFmt/@sourceLinked";
+
+        private const string _sourceLinkedPath = "c:numFmt/@sourceLinked";
         public bool SourceLinked
         {
             get
@@ -404,7 +408,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeBool(_sourceLinkedPath, value);
             }
         }
-        const string _lblPos = "c:tickLblPos/@val";
+
+        private const string _lblPos = "c:tickLblPos/@val";
         /// <summary>
         /// Position of the labels
         /// </summary>
@@ -412,7 +417,7 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                var v=GetXmlNodeString(_lblPos);
+                var v = GetXmlNodeString(_lblPos);
                 if (string.IsNullOrEmpty(v))
                 {
                     return eTickLabelPosition.NextTo;
@@ -435,7 +440,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(_lblPos, lp.Substring(0, 1).ToLower(CultureInfo.InvariantCulture) + lp.Substring(1, lp.Length - 1));
             }
         }
-        ExcelDrawingFill _fill = null;
+
+        private ExcelDrawingFill _fill = null;
         /// <summary>
         /// Access to fill properties
         /// </summary>
@@ -450,7 +456,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _fill;
             }
         }
-        ExcelDrawingBorder _border = null;
+
+        private ExcelDrawingBorder _border = null;
         /// <summary>
         /// Access to border properties
         /// </summary>
@@ -465,7 +472,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _border;
             }
         }
-        ExcelTextFont _font = null;
+
+        private ExcelTextFont _font = null;
         /// <summary>
         /// Access to font properties
         /// </summary>
@@ -488,7 +496,7 @@ namespace OfficeOpenXml.Drawing.Chart
         /// <summary>
         /// If the axis is deleted
         /// </summary>
-        public bool Deleted 
+        public bool Deleted
         {
             get
             {
@@ -499,11 +507,12 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeBool("c:delete/@val", value);
             }
         }
-        const string _ticLblPos_Path = "c:tickLblPos/@val";
+
+        private const string _ticLblPos_Path = "c:tickLblPos/@val";
         /// <summary>
         /// Position of the Lables
         /// </summary>
-        public eTickLabelPosition TickLabelPosition 
+        public eTickLabelPosition TickLabelPosition
         {
             get
             {
@@ -520,12 +529,13 @@ namespace OfficeOpenXml.Drawing.Chart
             set
             {
                 string v = value.ToString();
-                v=v.Substring(0, 1).ToLower(CultureInfo.InvariantCulture) + v.Substring(1, v.Length - 1);
-                SetXmlNodeString(_ticLblPos_Path,v);
+                v = v.Substring(0, 1).ToLower(CultureInfo.InvariantCulture) + v.Substring(1, v.Length - 1);
+                SetXmlNodeString(_ticLblPos_Path, v);
             }
         }
-        const string _displayUnitPath = "c:dispUnits/c:builtInUnit/@val";
-        const string _custUnitPath = "c:dispUnits/c:custUnit/@val";
+
+        private const string _displayUnitPath = "c:dispUnits/c:builtInUnit/@val";
+        private const string _custUnitPath = "c:dispUnits/c:custUnit/@val";
         public double DisplayUnit
         {
             get
@@ -547,7 +557,7 @@ namespace OfficeOpenXml.Drawing.Chart
                 {
                     try
                     {
-                        return (double)(long)Enum.Parse(typeof(eBuildInUnits), v, true);
+                        return (long)Enum.Parse(typeof(eBuildInUnits), v, true);
                     }
                     catch
                     {
@@ -557,11 +567,11 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                if (AxisType == eAxisType.Val && value>=0)
+                if (AxisType == eAxisType.Val && value >= 0)
                 {
-                    foreach(var v in Enum.GetValues(typeof(eBuildInUnits)))
+                    foreach (var v in Enum.GetValues(typeof(eBuildInUnits)))
                     {
-                        if((double)(long)v==value)
+                        if ((long)v == value)
                         {
                             DeleteNode(_custUnitPath);
                             SetXmlNodeString(_displayUnitPath, ((eBuildInUnits)value).ToString());
@@ -569,14 +579,15 @@ namespace OfficeOpenXml.Drawing.Chart
                         }
                     }
                     DeleteNode(_displayUnitPath);
-                    if(value!=0)
+                    if (value != 0)
                     {
                         SetXmlNodeString(_custUnitPath, value.ToString(CultureInfo.InvariantCulture));
                     }
                 }
             }
-        }        
-        ExcelChartTitle _title = null;
+        }
+
+        private ExcelChartTitle _title = null;
         /// <summary>
         /// Chart axis title
         /// </summary>
@@ -596,10 +607,10 @@ namespace OfficeOpenXml.Drawing.Chart
                     _title = new ExcelChartTitle(NameSpaceManager, TopNode);
                 }
                 return _title;
-            }            
+            }
         }
         #region "Scaling"
-        const string _minValuePath = "c:scaling/c:min/@val";
+        private const string _minValuePath = "c:scaling/c:min/@val";
         /// <summary>
         /// Minimum value for the axis.
         /// Null is automatic
@@ -622,7 +633,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _maxValuePath = "c:scaling/c:max/@val";
+
+        private const string _maxValuePath = "c:scaling/c:max/@val";
         /// <summary>
         /// Max value for the axis.
         /// Null is automatic
@@ -645,8 +657,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _majorUnitPath = "c:majorUnit/@val";
-        const string _majorUnitCatPath = "c:tickLblSkip/@val";
+
+        private const string _majorUnitPath = "c:majorUnit/@val";
+        private const string _majorUnitCatPath = "c:tickLblSkip/@val";
         /// <summary>
         /// Major unit for the axis.
         /// Null is automatic
@@ -684,7 +697,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _majorTimeUnitPath = "c:majorTimeUnit/@val";
+
+        private const string _majorTimeUnitPath = "c:majorTimeUnit/@val";
         /// <summary>
         /// Major time unit for the axis.
         /// Null is automatic
@@ -693,7 +707,7 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                switch(GetXmlNodeString(_majorTimeUnitPath))
+                switch (GetXmlNodeString(_majorTimeUnitPath))
                 {
                     case "years":
                         return eTimeUnit.Years;
@@ -701,7 +715,7 @@ namespace OfficeOpenXml.Drawing.Chart
                         return eTimeUnit.Months;
                     case "days":
                         return eTimeUnit.Days;
-                    default: 
+                    default:
                         return null;
                 }
             }
@@ -717,8 +731,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _minorUnitPath = "c:minorUnit/@val";
-        const string _minorUnitCatPath = "c:tickMarkSkip/@val";
+
+        private const string _minorUnitPath = "c:minorUnit/@val";
+        private const string _minorUnitCatPath = "c:tickMarkSkip/@val";
         /// <summary>
         /// Minor unit for the axis.
         /// Null is automatic
@@ -756,7 +771,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _minorTimeUnitPath = "c:minorTimeUnit/@val";
+
+        private const string _minorTimeUnitPath = "c:minorTimeUnit/@val";
         /// <summary>
         /// Minor time unit for the axis.
         /// Null is automatic
@@ -765,7 +781,7 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                switch(GetXmlNodeString(_minorTimeUnitPath))
+                switch (GetXmlNodeString(_minorTimeUnitPath))
                 {
                     case "years":
                         return eTimeUnit.Years;
@@ -773,7 +789,7 @@ namespace OfficeOpenXml.Drawing.Chart
                         return eTimeUnit.Months;
                     case "days":
                         return eTimeUnit.Days;
-                    default: 
+                    default:
                         return null;
                 }
             }
@@ -789,7 +805,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
-        const string _logbasePath = "c:scaling/c:logBase/@val";
+
+        private const string _logbasePath = "c:scaling/c:logBase/@val";
         /// <summary>
         /// The base for a logaritmic scale
         /// Null for a normal scale
@@ -811,13 +828,14 @@ namespace OfficeOpenXml.Drawing.Chart
                     double v = ((double)value);
                     if (v < 2 || v > 1000)
                     {
-                        throw(new ArgumentOutOfRangeException("Value must be between 2 and 1000"));
+                        throw (new ArgumentOutOfRangeException("Value must be between 2 and 1000"));
                     }
                     SetXmlNodeString(_logbasePath, v.ToString("0.0", CultureInfo.InvariantCulture));
                 }
             }
         }
-        const string _orientationPath = "c:scaling/c:orientation/@val";
+
+        private const string _orientationPath = "c:scaling/c:orientation/@val";
         /// <summary>
         /// Axis orientation
         /// </summary>
@@ -837,8 +855,8 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                string s=value.ToString();
-                s=s.Substring(0,1).ToLower(CultureInfo.InvariantCulture) + s.Substring(1,s.Length-1);
+                string s = value.ToString();
+                s = s.Substring(0, 1).ToLower(CultureInfo.InvariantCulture) + s.Substring(1, s.Length - 1);
                 SetXmlNodeString(_orientationPath, s);
             }
         }
@@ -846,75 +864,79 @@ namespace OfficeOpenXml.Drawing.Chart
 
         #region GridLines 
         //Pull request from aesalazar
-        const string _majorGridlinesPath = "c:majorGridlines"; 
-        ExcelDrawingBorder _majorGridlines = null; 
-  
-        /// <summary> 
-        /// Major Gridlines for the Axis 
-        /// </summary> 
-        public ExcelDrawingBorder MajorGridlines 
-        { 
-        get 
-            { 
-                if (_majorGridlines == null) 
-                { 
-                    var node = TopNode.SelectSingleNode(_majorGridlinesPath, NameSpaceManager); 
-                    if (node == null) 
-                        CreateNode(_majorGridlinesPath); 
-  
-                    _majorGridlines = new ExcelDrawingBorder(NameSpaceManager, TopNode,$"{_majorGridlinesPath}/c:spPr/a:ln"); 
-                } 
-                return _majorGridlines; 
-            } 
-        } 
-  
-        const string _minorGridlinesPath = "c:minorGridlines"; 
-        ExcelDrawingBorder _minorGridlines = null; 
-  
-        /// <summary> 
-        /// Minor Gridlines for the Axis 
-        /// </summary> 
-        public ExcelDrawingBorder MinorGridlines
-        { 
-            get 
-            { 
-                if (_minorGridlines == null) 
-                { 
-                    var node = TopNode.SelectSingleNode(_minorGridlinesPath, NameSpaceManager); 
-                    if (node == null) 
-                        CreateNode(_minorGridlinesPath); 
-  
-                    _minorGridlines = new ExcelDrawingBorder(NameSpaceManager, TopNode,$"{_minorGridlinesPath}/c:spPr/a:ln"); 
-                } 
-                return _minorGridlines; 
-            } 
-        } 
-        /// <summary> 
-        /// Removes Major and Minor gridlines from the Axis 
-        /// </summary> 
-        public void RemoveGridlines()
-        { 
-            RemoveGridlines(true,true); 
-        }
+        private const string _majorGridlinesPath = "c:majorGridlines";
+        private ExcelDrawingBorder _majorGridlines = null;
+
+        /// <summary> 
+                /// Major Gridlines for the Axis 
+                /// </summary> 
+        public ExcelDrawingBorder MajorGridlines
+        {
+            get
+            {
+                if (_majorGridlines == null)
+                {
+                    var node = TopNode.SelectSingleNode(_majorGridlinesPath, NameSpaceManager);
+                    if (node == null)
+                    {
+                        CreateNode(_majorGridlinesPath);
+                    }
+
+                    _majorGridlines = new ExcelDrawingBorder(NameSpaceManager, TopNode, $"{_majorGridlinesPath}/c:spPr/a:ln");
+                }
+                return _majorGridlines;
+            }
+        }
+
+        private const string _minorGridlinesPath = "c:minorGridlines";
+        private ExcelDrawingBorder _minorGridlines = null;
+
+        /// <summary> 
+                /// Minor Gridlines for the Axis 
+                /// </summary> 
+        public ExcelDrawingBorder MinorGridlines
+        {
+            get
+            {
+                if (_minorGridlines == null)
+                {
+                    var node = TopNode.SelectSingleNode(_minorGridlinesPath, NameSpaceManager);
+                    if (node == null)
+                    {
+                        CreateNode(_minorGridlinesPath);
+                    }
+
+                    _minorGridlines = new ExcelDrawingBorder(NameSpaceManager, TopNode, $"{_minorGridlinesPath}/c:spPr/a:ln");
+                }
+                return _minorGridlines;
+            }
+        }
+        /// <summary> 
+                /// Removes Major and Minor gridlines from the Axis 
+                /// </summary> 
+        public void RemoveGridlines()
+        {
+            RemoveGridlines(true, true);
+        }
         /// <summary>
         ///  Removes gridlines from the Axis
         /// </summary>
         /// <param name="removeMajor">Indicates if the Major gridlines should be removed</param>
         /// <param name="removeMinor">Indicates if the Minor gridlines should be removed</param>
         public void RemoveGridlines(bool removeMajor, bool removeMinor)
-        { 
-            if (removeMajor) 
-            { 
-                DeleteNode(_majorGridlinesPath); 
-                _majorGridlines = null; 
-            } 
-  
-            if (removeMinor) 
-            { 
-                DeleteNode(_minorGridlinesPath); 
-                _minorGridlines = null; 
-            } 
-        } 
-        #endregion 
+        {
+            if (removeMajor)
+            {
+                DeleteNode(_majorGridlinesPath);
+                _majorGridlines = null;
+            }
+
+            if (removeMinor)
+            {
+                DeleteNode(_minorGridlinesPath);
+                _minorGridlines = null;
+            }
+        }
+        #endregion
     }
 }

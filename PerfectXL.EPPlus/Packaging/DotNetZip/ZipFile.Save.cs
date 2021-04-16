@@ -53,7 +53,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         {
             bool done = false;
             int nRetries = 3;
-            for (int i=0; i < nRetries && !done; i++)
+            for (int i = 0; i < nRetries && !done; i++)
             {
                 try
                 {
@@ -63,7 +63,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 catch (System.UnauthorizedAccessException)
                 {
                     Console.WriteLine("************************************************** Retry delete.");
-                    System.Threading.Thread.Sleep(200+i*200);
+                    System.Threading.Thread.Sleep(200 + i * 200);
                 }
             }
         }
@@ -136,26 +136,39 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 OnSaveStarted();
 
                 if (WriteStream == null)
+                {
                     throw new BadStateException("You haven't specified where to save the zip.");
+                }
 
                 if (_name != null && _name.EndsWith(".exe") && !_SavingSfx)
+                {
                     throw new BadStateException("You specified an EXE for a plain zip file.");
+                }
 
                 // check if modified, before saving.
                 if (!_contentsChanged)
                 {
                     OnSaveCompleted();
-                    if (Verbose) StatusMessageTextWriter.WriteLine("No save is necessary....");
+                    if (Verbose)
+                    {
+                        StatusMessageTextWriter.WriteLine("No save is necessary....");
+                    }
+
                     return;
                 }
 
                 Reset(true);
 
-                if (Verbose) StatusMessageTextWriter.WriteLine("saving....");
+                if (Verbose)
+                {
+                    StatusMessageTextWriter.WriteLine("saving....");
+                }
 
                 // validate the number of entries
                 if (_entries.Count >= 0xFFFF && _zip64 == Zip64Option.Never)
+                {
                     throw new ZipException("The number of entries is 65535 or greater. Consider setting the UseZip64WhenSaving property on the ZipFile instance.");
+                }
 
 
                 // write an entry in the zip for each file
@@ -167,26 +180,34 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     OnSaveEntry(n, e, true);
                     e.Write(WriteStream);
                     if (_saveOperationCanceled)
+                    {
                         break;
+                    }
 
                     n++;
                     OnSaveEntry(n, e, false);
                     if (_saveOperationCanceled)
+                    {
                         break;
+                    }
 
                     // Some entries can be skipped during the save.
                     if (e.IncludedInMostRecentSave)
+                    {
                         thisSaveUsedZip64 |= e.OutputUsedZip64.Value;
+                    }
                 }
 
 
 
                 if (_saveOperationCanceled)
+                {
                     return;
+                }
 
                 var zss = WriteStream as ZipSegmentedStream;
 
-                _numberOfSegmentsForMostRecentSave = (zss!=null)
+                _numberOfSegmentsForMostRecentSave = (zss != null)
                     ? zss.CurrentSegment
                     : 1;
 
@@ -210,7 +231,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
                 // do the rename as necessary
                 if (_name != null &&
-                    (_temporaryFileName!=null || zss != null))
+                    (_temporaryFileName != null || zss != null))
                 {
                     // _temporaryFileName may remain null if we are writing to a stream.
                     // only close the stream if there is a file behind it.
@@ -220,7 +241,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     WriteStream.Dispose();
 #endif
                     if (_saveOperationCanceled)
+                    {
                         return;
+                    }
 
                     if (_fileAlreadyExists && this._readstream != null)
                     {
@@ -287,7 +310,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                         tmpName = _name + "." + Path.GetRandomFileName();
 #endif
                         if (File.Exists(tmpName))
+                        {
                             DeleteFileWithRetry(tmpName);
+                        }
+
                         File.Move(_name, tmpName);
                     }
 
@@ -303,7 +329,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                         {
                             // not critical
                             if (File.Exists(tmpName))
+                            {
                                 File.Delete(tmpName);
+                            }
                         }
                         catch
                         {
@@ -332,7 +360,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
         private static void NotifyEntriesSaveComplete(ICollection<ZipEntry> c)
         {
-            foreach (ZipEntry e in  c)
+            foreach (ZipEntry e in c)
             {
                 e.NotifySaveComplete();
             }
@@ -351,7 +379,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             catch (IOException ex1)
             {
                 if (Verbose)
+                {
                     StatusMessageTextWriter.WriteLine("ZipFile::Save: could not delete temp file: {0}.", ex1.Message);
+                }
             }
         }
 
@@ -465,13 +495,20 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // which insures that we'll cons up a new WriteStream (with a filesystem
             // file backing it) in the Save() method.
             if (_name == null)
+            {
                 _writestream = null;
-
-            else _readName = _name; // workitem 13915
+            }
+            else
+            {
+                _readName = _name; // workitem 13915
+            }
 
             _name = fileName;
             if (Directory.Exists(_name))
+            {
                 throw new ZipException("Bad Directory", new System.ArgumentException("That name specifies an existing directory. Please specify a filename.", "fileName"));
+            }
+
             _contentsChanged = true;
             _fileAlreadyExists = File.Exists(_name);
             Save();
@@ -570,9 +607,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public void Save(Stream outputStream)
         {
             if (outputStream == null)
+            {
                 throw new ArgumentNullException("outputStream");
+            }
+
             if (!outputStream.CanWrite)
+            {
                 throw new ArgumentException("Must be a writable stream.", "outputStream");
+            }
 
             // if we had a filename to save to, we are now obliterating it.
             _name = null;
@@ -600,7 +642,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         {
             var zss = s as ZipSegmentedStream;
             if (zss != null)
+            {
                 zss.ContiguousWrite = true;
+            }
 
             // write to a memory stream in order to keep the
             // CDR contiguous
@@ -668,9 +712,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 #else
                     System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
                     if (sf.GetMethod().DeclaringType == typeof(ZipFile))
+                    {
                         throw new ZipException("The archive requires a ZIP64 Central Directory. Consider setting the ZipFile.UseZip64WhenSaving property.");
+                    }
                     else
+                    {
                         throw new ZipException("The archive requires a ZIP64 Central Directory. Consider setting the ZipOutputStream.EnableZip64 property.");
+                    }
 #endif
 
                 }
@@ -702,7 +750,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 s.Write(a, 0, a.Length);
             }
             else
+            {
                 a2 = GenCentralDirectoryFooter(Start, Finish, zip64, countOfEntries, comment, container);
+            }
 
 
             // now, the regular footer
@@ -711,7 +761,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 // The assumption is the central directory is never split across
                 // segment boundaries.
 
-                UInt16 thisSegment = (UInt16) zss.ComputeSegment(a2.Length);
+                UInt16 thisSegment = (UInt16)zss.ComputeSegment(a2.Length);
                 int i = 4;
                 // number of this disk
                 Array.Copy(BitConverter.GetBytes(thisSegment), 0, a2, i, 2);
@@ -726,7 +776,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
             // reset the contiguous write property if necessary
             if (zss != null)
+            {
                 zss.ContiguousWrite = false;
+            }
 
             return needZip64CentralDirectory;
         }
@@ -744,11 +796,18 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
             // AsNecessary is in force
             var e = container.DefaultEncoding;
-            if (t == null) return e;
+            if (t == null)
+            {
+                return e;
+            }
 
             var bytes = e.GetBytes(t);
-            var t2 = e.GetString(bytes,0,bytes.Length);
-            if (t2.Equals(t)) return e;
+            var t2 = e.GetString(bytes, 0, bytes.Length);
+            if (t2.Equals(t))
+            {
+                return e;
+            }
+
             return container.AlternateEncoding;
         }
 
@@ -778,7 +837,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // signature
             byte[] sig = BitConverter.GetBytes(ZipConstants.EndOfCentralDirectorySignature);
             Array.Copy(sig, 0, bytes, i, 4);
-            i+=4;
+            i += 4;
 
             // number of this disk
             // (this number may change later)
@@ -795,7 +854,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             {
                 // the ZIP64 version.
                 for (j = 0; j < 4; j++)
+                {
                     bytes[i++] = 0xFF;
+                }
             }
             else
             {
@@ -816,7 +877,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             {
                 // The actual data is in the ZIP64 central directory structure
                 for (j = 0; j < 8; j++)
+                {
                     bytes[i++] = 0xFF;
+                }
             }
             else
             {
@@ -838,13 +901,17 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             if ((comment == null) || (comment.Length == 0))
             {
                 // no comment!
-                bytes[i++] = (byte)0;
-                bytes[i++] = (byte)0;
+                bytes[i++] = 0;
+                bytes[i++] = 0;
             }
             else
             {
                 // the size of our buffer defines the max length of the comment we can write
-                if (commentLength + i + 2 > bytes.Length) commentLength = (Int16)(bytes.Length - i - 2);
+                if (commentLength + i + 2 > bytes.Length)
+                {
+                    commentLength = (Int16)(bytes.Length - i - 2);
+                }
+
                 bytes[i++] = (byte)(commentLength & 0x00FF);
                 bytes[i++] = (byte)((commentLength & 0xFF00) >> 8);
 
@@ -878,7 +945,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // signature
             byte[] sig = BitConverter.GetBytes(ZipConstants.Zip64EndOfCentralDirectoryRecordSignature);
             Array.Copy(sig, 0, bytes, i, 4);
-            i+=4;
+            i += 4;
 
             // There is a possibility to include "Extensible" data in the zip64
             // end-of-central-dir record.  I cannot figure out what it might be used to
@@ -901,7 +968,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // number of the disk, and the disk with the start of the central dir.
             // (this may change later)
             for (int j = 0; j < 8; j++)
+            {
                 bytes[i++] = 0x00;
+            }
 
             // offset 24
             long numberOfEntries = entryCount;
@@ -922,14 +991,21 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // signature
             sig = BitConverter.GetBytes(ZipConstants.Zip64EndOfCentralDirectoryLocatorSignature);
             Array.Copy(sig, 0, bytes, i, 4);
-            i+=4;
+            i += 4;
 
             // offset 60
             // number of the disk with the start of the zip64 eocd
             // (this will change later)  (it will?)
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
             uint x2 = (numSegments==0)?0:(uint)(numSegments-1);
+After:
+            uint x2 = (numSegments==0)?0: (uint)(numSegments-1);
+*/
+            uint x2 = (numSegments == 0) ? 0 : numSegments - 1;
             Array.Copy(BitConverter.GetBytes(x2), 0, bytes, i, 4);
-            i+=4;
+            i += 4;
 
             // offset 64
             // relative offset of the zip64 eocd
@@ -940,7 +1016,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // total number of disks
             // (this will change later)
             Array.Copy(BitConverter.GetBytes(numSegments), 0, bytes, i, 4);
-            i+=4;
+            i += 4;
 
             return bytes;
         }
@@ -953,7 +1029,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // may have been skipped.
             int count = 0;
             foreach (var entry in _entries)
-                if (entry.IncludedInMostRecentSave) count++;
+            {
+                if (entry.IncludedInMostRecentSave)
+                {
+                    count++;
+                }
+            }
+
             return count;
         }
 

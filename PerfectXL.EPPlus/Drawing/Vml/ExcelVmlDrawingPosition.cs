@@ -30,9 +30,7 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 namespace OfficeOpenXml.Drawing.Vml
 {
@@ -41,8 +39,8 @@ namespace OfficeOpenXml.Drawing.Vml
     /// </summary>
     public class ExcelVmlDrawingPosition : XmlHelper
     {
-        int _startPos;
-        internal ExcelVmlDrawingPosition(XmlNamespaceManager ns, XmlNode topNode, int startPos) : 
+        private readonly int _startPos;
+        internal ExcelVmlDrawingPosition(XmlNamespaceManager ns, XmlNode topNode, int startPos) :
             base(ns, topNode)
         {
             _startPos = startPos;
@@ -59,7 +57,7 @@ namespace OfficeOpenXml.Drawing.Vml
             set
             {
                 SetNumber(2, value);
-            } 
+            }
         }
         /// <summary>
         /// Row offset in pixels. Zero based
@@ -115,7 +113,7 @@ namespace OfficeOpenXml.Drawing.Vml
             {
                 throw (new Exception("Anchor element is invalid in vmlDrawing"));
             }
-            SetXmlNodeString("x:Anchor", string.Join(",",numbers));
+            SetXmlNodeString("x:Anchor", string.Join(",", numbers));
         }
 
         private int GetNumber(int pos)
@@ -124,13 +122,12 @@ namespace OfficeOpenXml.Drawing.Vml
             string[] numbers = anchor.Split(',');
             if (numbers.Length == 8)
             {
-                int ret;
-                if (int.TryParse(numbers[_startPos + pos], System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out ret))
+                if (int.TryParse(numbers[_startPos + pos], System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var ret))
                 {
                     return ret;
                 }
             }
-            throw(new Exception("Anchor element is invalid in vmlDrawing"));
+            throw (new Exception("Anchor element is invalid in vmlDrawing"));
         }
     }
 }

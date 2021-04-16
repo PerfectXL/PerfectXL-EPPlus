@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Globalization;
 using OfficeOpenXml.Table.PivotTable;
@@ -77,7 +75,14 @@ namespace OfficeOpenXml.Drawing.Chart
         //    _holeSizePath = string.Format(_holeSizePath, chartNodeText);
         //}
         //string _firstSliceAngPath = "c:chartSpace/c:chart/c:plotArea/{0}/c:firstSliceAng/@val";
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _firstSliceAngPath = "c:firstSliceAng/@val";
+After:
+        private string _firstSliceAngPath = "c:firstSliceAng/@val";
+*/
+        private readonly string _firstSliceAngPath = "c:firstSliceAng/@val";
         /// <summary>
         /// Angle of the first slize
         /// </summary>
@@ -92,8 +97,16 @@ namespace OfficeOpenXml.Drawing.Chart
                 _chartXmlHelper.SetXmlNodeString(_firstSliceAngPath, value.ToString(CultureInfo.InvariantCulture));
             }
         }
+
         //string _holeSizePath = "c:chartSpace/c:chart/c:plotArea/{0}/c:holeSize/@val";
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string _holeSizePath = "c:holeSize/@val";
+After:
+        private string _holeSizePath = "c:holeSize/@val";
+*/
+        private readonly string _holeSizePath = "c:holeSize/@val";
         /// <summary>
         /// Size of the doubnut hole
         /// </summary>

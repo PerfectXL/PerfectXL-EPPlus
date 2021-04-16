@@ -22,10 +22,7 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
@@ -47,7 +44,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
         {
             if (high > 0 && low < 0)
             {
-                return high + low * - 1;
+                return high + low * -1;
             }
             else if (high < 0 && low < 0)
             {

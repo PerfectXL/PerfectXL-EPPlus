@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using OfficeOpenXml.Style.XmlAccess;
 
 namespace OfficeOpenXml.Style
@@ -41,14 +39,14 @@ namespace OfficeOpenXml.Style
     /// </summary>
     public sealed class ExcelBorderItem : StyleBase
     {
-        eStyleClass _cls;
-        StyleBase _parent;
-        internal ExcelBorderItem (ExcelStyles styles, OfficeOpenXml.XmlHelper.ChangedEventHandler ChangedEvent, int worksheetID, string address, eStyleClass cls, StyleBase parent) : 
+        private readonly eStyleClass _cls;
+        private readonly StyleBase _parent;
+        internal ExcelBorderItem(ExcelStyles styles, OfficeOpenXml.XmlHelper.ChangedEventHandler ChangedEvent, int worksheetID, string address, eStyleClass cls, StyleBase parent) :
             base(styles, ChangedEvent, worksheetID, address)
-	    {
-            _cls=cls;
+        {
+            _cls = cls;
             _parent = parent;
-	    }
+        }
         /// <summary>
         /// The line style of the border
         /// </summary>
@@ -63,7 +61,8 @@ namespace OfficeOpenXml.Style
                 _ChangedEvent(this, new StyleChangeEventArgs(_cls, eStyleProperty.Style, value, _positionID, _address));
             }
         }
-        ExcelColor _color=null;
+
+        private ExcelColor _color = null;
         /// <summary>
         /// The color of the border
         /// </summary>
@@ -88,7 +87,7 @@ namespace OfficeOpenXml.Style
         {
             int ix = _parent.Index < 0 ? 0 : _parent.Index;
 
-            switch(_cls)
+            switch (_cls)
             {
                 case eStyleClass.BorderTop:
                     return _styles.Borders[ix].Top;

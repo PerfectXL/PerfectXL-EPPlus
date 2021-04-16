@@ -22,17 +22,13 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2015-04-19
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OfficeOpenXml.FormulaParsing.Excel.Operators;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Database
 {
     public class ExcelDatabaseRow
     {
-        private Dictionary<int, string> _fieldIndexes = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> _fieldIndexes = new Dictionary<int, string>();
         private readonly Dictionary<string, object> _items = new Dictionary<string, object>();
         private int _colIndex = 1;
         public object this[string field]
@@ -54,7 +50,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Database
                 return _items[field];
             }
         }
-        
-        
+
+
     }
 }

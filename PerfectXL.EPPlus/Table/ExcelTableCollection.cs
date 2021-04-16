@@ -31,8 +31,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 namespace OfficeOpenXml.Table
@@ -42,14 +40,21 @@ namespace OfficeOpenXml.Table
     /// </summary>
     public class ExcelTableCollection : IEnumerable<ExcelTable>
     {
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         List<ExcelTable> _tables = new List<ExcelTable>();
+After:
+        private List<ExcelTable> _tables = new List<ExcelTable>();
+*/
+        private readonly List<ExcelTable> _tables = new List<ExcelTable>();
         internal Dictionary<string, int> _tableNames = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        ExcelWorksheet _ws;        
+        private readonly ExcelWorksheet _ws;
         internal ExcelTableCollection(ExcelWorksheet ws)
         {
             var pck = ws._package.Package;
             _ws = ws;
-            foreach(XmlElement node in ws.WorksheetXml.SelectNodes("//d:tableParts/d:tablePart", ws.NameSpaceManager))
+            foreach (XmlElement node in ws.WorksheetXml.SelectNodes("//d:tableParts/d:tablePart", ws.NameSpaceManager))
             {
                 if (!ws.Part.TryGetRelationshipById(node.GetAttribute("id", ExcelPackage.schemaRelationships), out var rel))
                 {
@@ -162,7 +167,10 @@ namespace OfficeOpenXml.Table
                 {
                     foreach (var table in sheet.Tables)
                     {
-                        if (table.Id > Table.Id) table.Id--;
+                        if (table.Id > Table.Id)
+                        {
+                            table.Id--;
+                        }
                     }
                     Table.WorkSheet.Workbook._nextTableID--;
                 }

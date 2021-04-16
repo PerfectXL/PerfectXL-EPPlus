@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using OfficeOpenXml.FormulaParsing.Exceptions;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
@@ -41,10 +38,13 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
                 case 0:
                     var d360Result = System.Math.Abs(func.Execute(functionArguments, context).ResultNumeric);
                     // reproducing excels behaviour
-                    if (date1.Month == 2 && date2.Day==31)
+                    if (date1.Month == 2 && date2.Day == 31)
                     {
                         var daysInFeb = calendar.IsLeapYear(date1.Year) ? 29 : 28;
-                        if (date1.Day == daysInFeb) d360Result++;  
+                        if (date1.Day == daysInFeb)
+                        {
+                            d360Result++;
+                        }
                     }
                     return CreateResult(d360Result / 360d, DataType.Decimal);
                 case 1:
@@ -77,13 +77,26 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
                 nYears = 1;
                 perYear = 365;
                 if (calendar.IsLeapYear(dt1.Year) && dt1.Month <= 2)
+                {
                     perYear = 366;
+                }
                 else if (calendar.IsLeapYear(dt2.Year) && dt2.Month > 2)
+                {
                     perYear = 366;
+                }
                 else if (dt2.Month == 2 && dt2.Day == 29)
+                {
                     perYear = 366;
+                }
             }
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
             return perYear/(double) nYears;  
+After:
+            return perYear/ (double)nYears;  
+*/
+            return perYear / nYears;
         }
     }
 }

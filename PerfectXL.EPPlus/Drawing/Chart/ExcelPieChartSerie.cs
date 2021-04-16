@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace OfficeOpenXml.Drawing.Chart
@@ -53,7 +51,8 @@ namespace OfficeOpenXml.Drawing.Chart
         {
 
         }
-        const string explosionPath = "c:explosion/@val";
+
+        private const string explosionPath = "c:explosion/@val";
         /// <summary>
         /// Explosion for Piecharts
         /// </summary>
@@ -67,12 +66,13 @@ namespace OfficeOpenXml.Drawing.Chart
             {
                 if (value < 0 || value > 400)
                 {
-                    throw(new ArgumentOutOfRangeException("Explosion range is 0-400"));
+                    throw (new ArgumentOutOfRangeException("Explosion range is 0-400"));
                 }
                 SetXmlNodeString(explosionPath, value.ToString());
             }
         }
-        ExcelChartSerieDataLabel _DataLabel = null;
+
+        private ExcelChartSerieDataLabel _DataLabel = null;
         /// <summary>
         /// DataLabels
         /// </summary>
@@ -87,6 +87,6 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _DataLabel;
             }
         }
-       
+
     }
 }

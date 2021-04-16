@@ -30,9 +30,7 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Drawing;
 namespace OfficeOpenXml.Style.XmlAccess
@@ -42,7 +40,7 @@ namespace OfficeOpenXml.Style.XmlAccess
     /// </summary>
     internal sealed class ExcelXfs : StyleXmlHelper
     {
-        ExcelStyles _styles;
+        private readonly ExcelStyles _styles;
         internal ExcelXfs(XmlNamespaceManager nameSpaceManager, ExcelStyles styles) : base(nameSpaceManager)
         {
             _styles = styles;
@@ -53,27 +51,31 @@ namespace OfficeOpenXml.Style.XmlAccess
         {
             _styles = styles;
             _xfID = GetXmlNodeInt("@xfId");
-            if (_xfID == 0) isBuildIn = true; //Normal taggen
+            if (_xfID == 0)
+            {
+                isBuildIn = true; //Normal taggen
+            }
+
             _numFmtId = GetXmlNodeInt("@numFmtId");
             _fontId = GetXmlNodeInt("@fontId");
             _fillId = GetXmlNodeInt("@fillId");
             _borderId = GetXmlNodeInt("@borderId");
             _readingOrder = GetReadingOrder(GetXmlNodeString(readingOrderPath));
             _indent = GetXmlNodeInt(indentPath);
-            _shrinkToFit = GetXmlNodeString(shrinkToFitPath) == "1" ? true : false; 
+            _shrinkToFit = GetXmlNodeString(shrinkToFitPath) == "1" ? true : false;
             _verticalAlignment = GetVerticalAlign(GetXmlNodeString(verticalAlignPath));
             _horizontalAlignment = GetHorizontalAlign(GetXmlNodeString(horizontalAlignPath));
             _wrapText = GetXmlNodeBool(wrapTextPath);
             _textRotation = GetXmlNodeInt(textRotationPath);
             _hidden = GetXmlNodeBool(hiddenPath);
-            _locked = GetXmlNodeBool(lockedPath,true);
+            _locked = GetXmlNodeBool(lockedPath, true);
             _quotePrefix = GetXmlNodeBool(quotePrefixPath);
             Index = index;
         }
 
         private ExcelReadingOrder GetReadingOrder(string value)
         {
-            switch(value)
+            switch (value)
             {
                 case "1":
                     return ExcelReadingOrder.LeftToRight;
@@ -86,7 +88,11 @@ namespace OfficeOpenXml.Style.XmlAccess
 
         private ExcelHorizontalAlignment GetHorizontalAlign(string align)
         {
-            if (align == "") return ExcelHorizontalAlignment.General;
+            if (align == "")
+            {
+                return ExcelHorizontalAlignment.General;
+            }
+
             align = align.Substring(0, 1).ToUpper(CultureInfo.InvariantCulture) + align.Substring(1, align.Length - 1);
             try
             {
@@ -100,7 +106,11 @@ namespace OfficeOpenXml.Style.XmlAccess
 
         private ExcelVerticalAlignment GetVerticalAlign(string align)
         {
-            if (align == "") return ExcelVerticalAlignment.Bottom;
+            if (align == "")
+            {
+                return ExcelVerticalAlignment.Bottom;
+            }
+
             align = align.Substring(0, 1).ToUpper(CultureInfo.InvariantCulture) + align.Substring(1, align.Length - 1);
             try
             {
@@ -126,7 +136,7 @@ namespace OfficeOpenXml.Style.XmlAccess
 
         public int Index { get; }
 
-        int _xfID;
+        private int _xfID;
         /// <summary>
         /// Style index
         /// </summary>
@@ -142,7 +152,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
         }
         #region Public Properties
-        int _numFmtId;
+        private int _numFmtId;
         public int NumberFormatId
         {
             get
@@ -152,10 +162,11 @@ namespace OfficeOpenXml.Style.XmlAccess
             internal set
             {
                 _numFmtId = value;
-                ApplyNumberFormat = (value>0);
+                ApplyNumberFormat = (value > 0);
             }
         }
-        int _fontId;
+
+        private int _fontId;
         public int FontId
         {
             get
@@ -167,7 +178,8 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _fontId = value;
             }
         }
-        int _fillId;
+
+        private int _fillId;
         public int FillId
         {
             get
@@ -179,7 +191,8 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _fillId = value;
             }
         }
-        int _borderId;
+
+        private int _borderId;
         public int BorderId
         {
             get
@@ -231,7 +244,7 @@ namespace OfficeOpenXml.Style.XmlAccess
         /// <summary>
         /// Numberformat properties
         /// </summary>
-        public ExcelNumberFormatXml Numberformat 
+        public ExcelNumberFormatXml Numberformat
         {
             get
             {
@@ -241,12 +254,12 @@ namespace OfficeOpenXml.Style.XmlAccess
         /// <summary>
         /// Font properties
         /// </summary>
-        public ExcelFontXml Font 
-        { 
-           get
-           {
-               return _styles.Fonts[_fontId < 0 ? 0 : _fontId];
-           }
+        public ExcelFontXml Font
+        {
+            get
+            {
+                return _styles.Fonts[_fontId < 0 ? 0 : _fontId];
+            }
         }
         /// <summary>
         /// Fill properties
@@ -257,7 +270,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             {
                 return _styles.Fills[_fillId < 0 ? 0 : _fillId];
             }
-        }        
+        }
         /// <summary>
         /// Border style properties
         /// </summary>
@@ -268,8 +281,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 return _styles.Borders[_borderId < 0 ? 0 : _borderId];
             }
         }
-        const string horizontalAlignPath = "d:alignment/@horizontal";
-        ExcelHorizontalAlignment _horizontalAlignment = ExcelHorizontalAlignment.General;
+
+        private const string horizontalAlignPath = "d:alignment/@horizontal";
+        private ExcelHorizontalAlignment _horizontalAlignment = ExcelHorizontalAlignment.General;
         /// <summary>
         /// Horizontal alignment
         /// </summary>
@@ -284,8 +298,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _horizontalAlignment = value;
             }
         }
-        const string verticalAlignPath = "d:alignment/@vertical";
-        ExcelVerticalAlignment _verticalAlignment=ExcelVerticalAlignment.Bottom;
+
+        private const string verticalAlignPath = "d:alignment/@vertical";
+        private ExcelVerticalAlignment _verticalAlignment = ExcelVerticalAlignment.Bottom;
         /// <summary>
         /// Vertical alignment
         /// </summary>
@@ -300,8 +315,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _verticalAlignment = value;
             }
         }
-        const string wrapTextPath = "d:alignment/@wrapText";
-        bool _wrapText=false;
+
+        private const string wrapTextPath = "d:alignment/@wrapText";
+        private bool _wrapText = false;
         /// <summary>
         /// Wraped text
         /// </summary>
@@ -316,8 +332,16 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _wrapText = value;
             }
         }
+
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
         string textRotationPath = "d:alignment/@textRotation";
-        int _textRotation = 0;
+After:
+        private string textRotationPath = "d:alignment/@textRotation";
+*/
+        private readonly string textRotationPath = "d:alignment/@textRotation";
+        private int _textRotation = 0;
         /// <summary>
         /// Text rotation angle
         /// </summary>
@@ -332,8 +356,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _textRotation = value;
             }
         }
-        const string lockedPath = "d:protection/@locked";
-        bool _locked = true;
+
+        private const string lockedPath = "d:protection/@locked";
+        private bool _locked = true;
         /// <summary>
         /// Locked when sheet is protected
         /// </summary>
@@ -348,8 +373,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _locked = value;
             }
         }
-        const string hiddenPath = "d:protection/@hidden";
-        bool _hidden = false;
+
+        private const string hiddenPath = "d:protection/@hidden";
+        private bool _hidden = false;
         /// <summary>
         /// Hide formulas when sheet is protected
         /// </summary>
@@ -364,8 +390,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _hidden = value;
             }
         }
-        const string quotePrefixPath = "@quotePrefix";
-        bool _quotePrefix = false;
+
+        private const string quotePrefixPath = "@quotePrefix";
+        private bool _quotePrefix = false;
         /// <summary>
         /// Prefix the formula with a quote.
         /// </summary>
@@ -380,8 +407,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _quotePrefix = value;
             }
         }
-        const string readingOrderPath = "d:alignment/@readingOrder";
-        ExcelReadingOrder _readingOrder = ExcelReadingOrder.ContextDependent;
+
+        private const string readingOrderPath = "d:alignment/@readingOrder";
+        private ExcelReadingOrder _readingOrder = ExcelReadingOrder.ContextDependent;
         /// <summary>
         /// Readingorder
         /// </summary>
@@ -396,8 +424,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _readingOrder = value;
             }
         }
-        const string shrinkToFitPath = "d:alignment/@shrinkToFit";
-        bool _shrinkToFit = false;
+
+        private const string shrinkToFitPath = "d:alignment/@shrinkToFit";
+        private bool _shrinkToFit = false;
         /// <summary>
         /// Shrink to fit
         /// </summary>
@@ -412,8 +441,9 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _shrinkToFit = value;
             }
         }
-        const string indentPath = "d:alignment/@indent";
-        int _indent = 0;
+
+        private const string indentPath = "d:alignment/@indent";
+        private int _indent = 0;
         /// <summary>
         /// Indentation
         /// </summary>
@@ -425,7 +455,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             }
             set
             {
-                _indent=value;
+                _indent = value;
             }
         }
         #endregion
@@ -438,14 +468,14 @@ namespace OfficeOpenXml.Style.XmlAccess
 
             get
             {
-                return XfId + "|" + NumberFormatId.ToString() + "|" + FontId.ToString() + "|" + FillId.ToString() + "|" + BorderId.ToString() + VerticalAlignment.ToString() + "|" + HorizontalAlignment.ToString() + "|" + WrapText.ToString() + "|" + ReadingOrder.ToString() + "|" + isBuildIn.ToString() + TextRotation.ToString() + Locked.ToString() + Hidden.ToString() + ShrinkToFit.ToString() + Indent.ToString() + QuotePrefix.ToString(); 
+                return XfId + "|" + NumberFormatId.ToString() + "|" + FontId.ToString() + "|" + FillId.ToString() + "|" + BorderId.ToString() + VerticalAlignment.ToString() + "|" + HorizontalAlignment.ToString() + "|" + WrapText.ToString() + "|" + ReadingOrder.ToString() + "|" + isBuildIn.ToString() + TextRotation.ToString() + Locked.ToString() + Hidden.ToString() + ShrinkToFit.ToString() + Indent.ToString() + QuotePrefix.ToString();
                 //return Numberformat.Id + "|" + Font.Id + "|" + Fill.Id + "|" + Border.Id + VerticalAlignment.ToString() + "|" + HorizontalAlignment.ToString() + "|" + WrapText.ToString() + "|" + ReadingOrder.ToString(); 
             }
         }
         internal ExcelXfs Copy()
         {
             return Copy(_styles);
-        }        
+        }
         internal ExcelXfs Copy(ExcelStyles styles)
         {
             ExcelXfs newXF = new ExcelXfs(NameSpaceManager, styles);
@@ -470,18 +500,18 @@ namespace OfficeOpenXml.Style.XmlAccess
         internal int GetNewID(ExcelStyleCollection<ExcelXfs> xfsCol, StyleBase styleObject, eStyleClass styleClass, eStyleProperty styleProperty, object value)
         {
             ExcelXfs newXfs = this.Copy();
-            switch(styleClass)
+            switch (styleClass)
             {
                 case eStyleClass.Numberformat:
                     newXfs.NumberFormatId = GetIdNumberFormat(styleProperty, value);
                     styleObject.Index = newXfs.NumberFormatId;
                     break;
                 case eStyleClass.Font:
-                {
-                    newXfs.FontId = GetIdFont(styleProperty, value);
-                    styleObject.Index = newXfs.FontId;
-                    break;
-                }
+                    {
+                        newXfs.FontId = GetIdFont(styleProperty, value);
+                        styleObject.Index = newXfs.FontId;
+                        break;
+                    }
                 case eStyleClass.Fill:
                 case eStyleClass.FillBackgroundColor:
                 case eStyleClass.FillPatternColor:
@@ -504,13 +534,13 @@ namespace OfficeOpenXml.Style.XmlAccess
                     styleObject.Index = newXfs.BorderId;
                     break;
                 case eStyleClass.Style:
-                    switch(styleProperty)
+                    switch (styleProperty)
                     {
                         case eStyleProperty.XfId:
                             newXfs.XfId = (int)value;
                             break;
                         case eStyleProperty.HorizontalAlign:
-                            newXfs.HorizontalAlignment=(ExcelHorizontalAlignment)value;
+                            newXfs.HorizontalAlignment = (ExcelHorizontalAlignment)value;
                             break;
                         case eStyleProperty.VerticalAlign:
                             newXfs.VerticalAlignment = (ExcelVerticalAlignment)value;
@@ -522,7 +552,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                             newXfs.ReadingOrder = (ExcelReadingOrder)value;
                             break;
                         case eStyleProperty.ShrinkToFit:
-                            newXfs.ShrinkToFit=(bool)value;
+                            newXfs.ShrinkToFit = (bool)value;
                             break;
                         case eStyleProperty.Indent:
                             newXfs.Indent = (int)value;
@@ -605,15 +635,15 @@ namespace OfficeOpenXml.Style.XmlAccess
 
         private void SetBorderItem(ExcelBorderItemXml excelBorderItem, eStyleProperty styleProperty, object value)
         {
-            if(styleProperty==eStyleProperty.Style)
+            if (styleProperty == eStyleProperty.Style)
             {
                 excelBorderItem.Style = (ExcelBorderStyle)value;
             }
-            else if (styleProperty == eStyleProperty.Color || styleProperty== eStyleProperty.Tint || styleProperty==eStyleProperty.IndexedColor)
+            else if (styleProperty == eStyleProperty.Color || styleProperty == eStyleProperty.Tint || styleProperty == eStyleProperty.IndexedColor)
             {
                 if (excelBorderItem.Style == ExcelBorderStyle.None)
                 {
-                    throw(new Exception("Can't set bordercolor when style is not set."));
+                    throw (new Exception("Can't set bordercolor when style is not set."));
                 }
                 excelBorderItem.Color.Rgb = value.ToString();
             }
@@ -645,7 +675,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                         throw (new ArgumentException("Can't set color when patterntype is not set."));
                     }
                     ExcelColorXml destColor;
-                    if (styleClass==eStyleClass.FillPatternColor)
+                    if (styleClass == eStyleClass.FillPatternColor)
                     {
                         destColor = fill.PatternColor;
                     }
@@ -687,7 +717,7 @@ namespace OfficeOpenXml.Style.XmlAccess
         private int GetIdGradientFill(eStyleClass styleClass, eStyleProperty styleProperty, object value)
         {
             ExcelGradientFillXml fill;
-            if(Fill is ExcelGradientFillXml)
+            if (Fill is ExcelGradientFillXml)
             {
                 fill = (ExcelGradientFillXml)Fill.Copy();
             }
@@ -695,9 +725,9 @@ namespace OfficeOpenXml.Style.XmlAccess
             {
                 fill = new ExcelGradientFillXml(Fill.NameSpaceManager);
                 fill.GradientColor1.SetColor(Color.White);
-                fill.GradientColor2.SetColor(Color.FromArgb(79,129,189));
-                fill.Type=ExcelFillGradientType.Linear;
-                fill.Degree=90;
+                fill.GradientColor2.SetColor(Color.FromArgb(79, 129, 189));
+                fill.Type = ExcelFillGradientType.Linear;
+                fill.Degree = 90;
                 fill.Top = double.NaN;
                 fill.Bottom = double.NaN;
                 fill.Left = double.NaN;
@@ -715,7 +745,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                 case eStyleProperty.GradientTop:
                     fill.Top = (double)value;
                     break;
-                case eStyleProperty.GradientBottom: 
+                case eStyleProperty.GradientBottom:
                     fill.Bottom = (double)value;
                     break;
                 case eStyleProperty.GradientLeft:
@@ -738,7 +768,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                     {
                         destColor = fill.GradientColor2;
                     }
-                    
+
                     if (styleProperty == eStyleProperty.Color)
                     {
                         destColor.Rgb = value.ToString();
@@ -773,7 +803,7 @@ namespace OfficeOpenXml.Style.XmlAccess
         {
             if (styleProperty == eStyleProperty.Format)
             {
-                ExcelNumberFormatXml item=null;
+                ExcelNumberFormatXml item = null;
                 if (!_styles.NumberFormats.FindById(value.ToString(), ref item))
                 {
                     item = new ExcelNumberFormatXml(NameSpaceManager) { Format = value.ToString(), NumFmtId = _styles.NumberFormats.NextId++ };
@@ -814,7 +844,7 @@ namespace OfficeOpenXml.Style.XmlAccess
                     fnt.UnderLineType = (ExcelUnderLineType)value;
                     break;
                 case eStyleProperty.Color:
-                    fnt.Color.Rgb=value.ToString();
+                    fnt.Color.Rgb = value.ToString();
                     break;
                 case eStyleProperty.Tint:
                     fnt.Color.Tint = (decimal)value;
@@ -836,7 +866,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             subId = _styles.Fonts.FindIndexById(id);
             if (subId == int.MinValue)
             {
-                return _styles.Fonts.Add(id,fnt);
+                return _styles.Fonts.Add(id, fnt);
             }
             return subId;
         }
@@ -851,39 +881,90 @@ namespace OfficeOpenXml.Style.XmlAccess
             if (_numFmtId >= 0)
             {
                 SetXmlNodeString("@numFmtId", _numFmtId.ToString());
-                if(doSetXfId) SetXmlNodeString("@applyNumberFormat", "1");
+                if (doSetXfId)
+                {
+                    SetXmlNodeString("@applyNumberFormat", "1");
+                }
             }
             if (_fontId >= 0)
             {
                 SetXmlNodeString("@fontId", _styles.Fonts[_fontId].newID.ToString());
-                if (doSetXfId) SetXmlNodeString("@applyFont", "1");
+                if (doSetXfId)
+                {
+                    SetXmlNodeString("@applyFont", "1");
+                }
             }
             if (_fillId >= 0)
             {
                 SetXmlNodeString("@fillId", _styles.Fills[_fillId].newID.ToString());
-                if (doSetXfId) SetXmlNodeString("@applyFill", "1");
+                if (doSetXfId)
+                {
+                    SetXmlNodeString("@applyFill", "1");
+                }
             }
             if (_borderId >= 0)
             {
                 SetXmlNodeString("@borderId", _styles.Borders[_borderId].newID.ToString());
-                if (doSetXfId) SetXmlNodeString("@applyBorder", "1");
+                if (doSetXfId)
+                {
+                    SetXmlNodeString("@applyBorder", "1");
+                }
             }
-            if(_horizontalAlignment != ExcelHorizontalAlignment.General) this.SetXmlNodeString(horizontalAlignPath, SetAlignString(_horizontalAlignment));
+            if (_horizontalAlignment != ExcelHorizontalAlignment.General)
+            {
+                this.SetXmlNodeString(horizontalAlignPath, SetAlignString(_horizontalAlignment));
+            }
+
             if (doSetXfId)
             {
                 SetXmlNodeString("@xfId", _styles.CellStyleXfs[_xfID].newID.ToString());
             }
-            if (_verticalAlignment != ExcelVerticalAlignment.Bottom) this.SetXmlNodeString(verticalAlignPath, SetAlignString(_verticalAlignment));
-            if(_wrapText) this.SetXmlNodeString(wrapTextPath, "1");
-            if(_readingOrder!=ExcelReadingOrder.ContextDependent) this.SetXmlNodeString(readingOrderPath, ((int)_readingOrder).ToString());
-            if (_shrinkToFit) this.SetXmlNodeString(shrinkToFitPath, "1");
-            if (_indent > 0) SetXmlNodeString(indentPath, _indent.ToString());
-            if (_textRotation > 0) this.SetXmlNodeString(textRotationPath, _textRotation.ToString());
-            if (!_locked) this.SetXmlNodeString(lockedPath, "0");
-            if (_hidden) this.SetXmlNodeString(hiddenPath, "1");
-            if (_quotePrefix) this.SetXmlNodeString(quotePrefixPath, "1");
+            if (_verticalAlignment != ExcelVerticalAlignment.Bottom)
+            {
+                this.SetXmlNodeString(verticalAlignPath, SetAlignString(_verticalAlignment));
+            }
 
-            if((_locked || _hidden) && doSetXfId)
+            if (_wrapText)
+            {
+                this.SetXmlNodeString(wrapTextPath, "1");
+            }
+
+            if (_readingOrder != ExcelReadingOrder.ContextDependent)
+            {
+                this.SetXmlNodeString(readingOrderPath, ((int)_readingOrder).ToString());
+            }
+
+            if (_shrinkToFit)
+            {
+                this.SetXmlNodeString(shrinkToFitPath, "1");
+            }
+
+            if (_indent > 0)
+            {
+                SetXmlNodeString(indentPath, _indent.ToString());
+            }
+
+            if (_textRotation > 0)
+            {
+                this.SetXmlNodeString(textRotationPath, _textRotation.ToString());
+            }
+
+            if (!_locked)
+            {
+                this.SetXmlNodeString(lockedPath, "0");
+            }
+
+            if (_hidden)
+            {
+                this.SetXmlNodeString(hiddenPath, "1");
+            }
+
+            if (_quotePrefix)
+            {
+                this.SetXmlNodeString(quotePrefixPath, "1");
+            }
+
+            if ((_locked || _hidden) && doSetXfId)
             {
                 SetXmlNodeString("@applyProtection", "1");
             }

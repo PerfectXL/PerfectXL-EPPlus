@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using OfficeOpenXml.FormulaParsing.Exceptions;
 using OfficeOpenXml.FormulaParsing.Utilities;
 
@@ -12,7 +9,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
         private readonly FunctionArgument[] _arrayData;
         private int _index = 0;
         private object _currentValue;
- 
+
         public ArrayLookupNavigator(LookupDirection direction, LookupArguments arguments, ParsingContext parsingContext)
             : base(direction, arguments, parsingContext)
         {
@@ -56,7 +53,11 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
 
         public override bool MoveNext()
         {
-            if (!HasNext()) return false;
+            if (!HasNext())
+            {
+                return false;
+            }
+
             if (Direction == LookupDirection.Vertical)
             {
                 _index++;

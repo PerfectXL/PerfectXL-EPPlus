@@ -32,9 +32,13 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
         private static bool IsSubTotal(ExcelDataProvider.ICellInfo c)
         {
             var tokens = c.Tokens;
-            if (tokens == null) return false;
-            return c.Tokens.Any(token => 
-                token.TokenType == LexicalAnalysis.TokenType.Function 
+            if (tokens == null)
+            {
+                return false;
+            }
+
+            return c.Tokens.Any(token =>
+                token.TokenType == LexicalAnalysis.TokenType.Function
                 && token.Value.Equals("SUBTOTAL", StringComparison.OrdinalIgnoreCase)
                 );
         }

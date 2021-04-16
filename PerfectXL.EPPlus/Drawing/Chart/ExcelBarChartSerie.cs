@@ -29,9 +29,6 @@
  * Jan Källman		Initial Release		        2009-10-01
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace OfficeOpenXml.Drawing.Chart
@@ -52,7 +49,8 @@ namespace OfficeOpenXml.Drawing.Chart
             base(chartSeries, ns, node, isPivot)
         {
         }
-        ExcelChartSerieDataLabel _DataLabel = null;
+
+        private ExcelChartSerieDataLabel _DataLabel = null;
         /// <summary>
         /// Datalabel
         /// </summary>
@@ -67,7 +65,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _DataLabel;
             }
         }
-        const string INVERTIFNEGATIVE_PATH = "c:invertIfNegative/@val";
+
+        private const string INVERTIFNEGATIVE_PATH = "c:invertIfNegative/@val";
         internal bool InvertIfNegative
         {
             get

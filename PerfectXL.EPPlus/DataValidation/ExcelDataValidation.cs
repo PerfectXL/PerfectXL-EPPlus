@@ -30,14 +30,10 @@
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.Utils;
 using System.Xml;
 using System.Text.RegularExpressions;
-using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using OfficeOpenXml.DataValidation.Contracts;
 
 namespace OfficeOpenXml.DataValidation
@@ -80,7 +76,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="itemElementNode">Xml top node (dataValidations)</param>
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
-        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode)
             : this(worksheet, address, validationType, storageType, itemElementNode, null)
         {
@@ -95,7 +91,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
         /// <param name="namespaceManager">Xml Namespace manager</param>
-        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode, XmlNamespaceManager namespaceManager)
             : base(namespaceManager != null ? namespaceManager : worksheet.NameSpaceManager)
         {
@@ -121,7 +117,7 @@ namespace OfficeOpenXml.DataValidation
         private void Init()
         {
             // set schema node order
-            if(ValidationType == ExcelDataValidationType.List)
+            if (ValidationType == ExcelDataValidationType.List)
             {
                 SchemaNodeOrder = new string[]{
                     "type",
@@ -155,7 +151,7 @@ namespace OfficeOpenXml.DataValidation
                     "formula2"
                 };
             }
-            
+
         }
 
         private string CheckAndFixRangeAddress(string address)
@@ -432,7 +428,7 @@ namespace OfficeOpenXml.DataValidation
         {
             var dvAddress = AddressUtility.ParseEntireColumnSelections(address);
             SetXmlNodeString(_sqrefPath, dvAddress);
-            
+
         }
     }
 }

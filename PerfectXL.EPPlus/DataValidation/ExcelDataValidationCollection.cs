@@ -34,8 +34,6 @@
 *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections;
 using System.Globalization;
 using OfficeOpenXml.Utils;
@@ -70,8 +68,8 @@ namespace OfficeOpenXml.DataValidation
     /// </summary>
     public class ExcelDataValidationCollection : XmlHelper, IEnumerable<IExcelDataValidation>
     {
-        private List<IExcelDataValidation> _validations = new List<IExcelDataValidation>();
-        private ExcelWorksheet _worksheet = null;
+        private readonly List<IExcelDataValidation> _validations = new List<IExcelDataValidation>();
+        private readonly ExcelWorksheet _worksheet = null;
 
         private const string DataValidationPath = "//d:dataValidations";
         private readonly string DataValidationItemsPath = string.Format("{0}/d:dataValidation", DataValidationPath);
@@ -95,7 +93,10 @@ namespace OfficeOpenXml.DataValidation
             {
                 foreach (XmlNode node in dataValidationNodes)
                 {
-                    if (node.Attributes["sqref"] == null) continue;
+                    if (node.Attributes["sqref"] == null)
+                    {
+                        continue;
+                    }
 
                     var addr = node.Attributes["sqref"].Value;
 
@@ -116,7 +117,10 @@ namespace OfficeOpenXml.DataValidation
                 foreach (XmlNode node in x14DataValidationNodes)
                 {
                     var sqrefNode = node.SelectSingleNode("./xm:sqref", worksheet.NameSpaceManager);
-                    if (sqrefNode == null) continue;
+                    if (sqrefNode == null)
+                    {
+                        continue;
+                    }
 
                     var addr = sqrefNode.InnerText;
                     var typeSchema = node.Attributes["type"] != null ? node.Attributes["type"].Value : "";
@@ -180,8 +184,11 @@ namespace OfficeOpenXml.DataValidation
         private void ValidateAddress(string address, IExcelDataValidation validatingValidation)
         {
             Require.Argument(address).IsNotNullOrEmpty("address");
-            
-            if (!InternalValidationEnabled) return;
+
+            if (!InternalValidationEnabled)
+            {
+                return;
+            }
 
             // ensure that the new address does not collide with an existing validation.
             var newAddress = new ExcelAddress(address);
@@ -196,7 +203,7 @@ namespace OfficeOpenXml.DataValidation
                     var result = validation.Address.Collide(newAddress);
                     if (result != ExcelAddressBase.eAddressCollition.No)
                     {
-                         throw new InvalidOperationException(string.Format("The address ({0}) collides with an existing validation ({1})", address, validation.Address.Address));
+                        throw new InvalidOperationException(string.Format("The address ({0}) collides with an existing validation ({1})", address, validation.Address.Address));
                     }
                 }
             }
@@ -212,7 +219,10 @@ namespace OfficeOpenXml.DataValidation
         /// </summary>
         internal void ValidateAll()
         {
-            if (!InternalValidationEnabled) return;
+            if (!InternalValidationEnabled)
+            {
+                return;
+            }
 
             foreach (var validation in _validations)
             {
@@ -354,7 +364,11 @@ namespace OfficeOpenXml.DataValidation
             var dvNode = _worksheet.WorksheetXml.DocumentElement.SelectSingleNode(DataValidationPath.TrimStart('/'), NameSpaceManager);
             dvNode?.RemoveChild(((ExcelDataValidation)item).TopNode);
             var retVal = _validations.Remove(item);
-            if (retVal) OnValidationCountChanged();
+            if (retVal)
+            {
+                OnValidationCountChanged();
+            }
+
             return retVal;
         }
 

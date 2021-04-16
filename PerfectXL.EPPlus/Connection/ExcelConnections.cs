@@ -25,8 +25,11 @@ namespace OfficeOpenXml.Connection
             _connections = new Dictionary<int, ExcelConnection>();
 
             Uri connectionsUri = package.Workbook.ConnectionsUri;
-            
-            if (!package.Package.PartExists(connectionsUri)) return;
+
+            if (!package.Package.PartExists(connectionsUri))
+            {
+                return;
+            }
 
             XmlDocument connectionsXml = new XmlDocument();
 

@@ -30,11 +30,7 @@
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
-using OfficeOpenXml.DataValidation;
 using System.Xml;
 using System.Globalization;
 
@@ -48,8 +44,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
             var value = GetXmlNodeString(formulaPath);
             if (!string.IsNullOrEmpty(value))
             {
-                decimal time = default(decimal);
-                if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out time))
+                if (decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var time))
                 {
                     Value = new ExcelTime(time);
                 }
@@ -66,7 +61,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
             Value.TimeChanged += new EventHandler(Value_TimeChanged);
         }
 
-        void Value_TimeChanged(object sender, EventArgs e)
+        private void Value_TimeChanged(object sender, EventArgs e)
         {
             SetXmlNodeString(FormulaPath, Value.ToExcelString());
         }

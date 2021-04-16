@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.DataValidation;
 using System.IO;
@@ -102,8 +99,11 @@ namespace EPPlusTest.DataValidation.IntegrationTests
         public void RemoveDataValidation()
         {
             var fileInfo = new FileInfo(@"c:\Temp\DvTest.xlsx");
-            if(File.Exists(fileInfo.FullName))
+            if (File.Exists(fileInfo.FullName))
+            {
                 File.Delete(fileInfo.FullName);
+            }
+
             using (var package = new ExcelPackage())
             {
                 var sheet = package.Workbook.Worksheets.Add("test");
@@ -127,7 +127,10 @@ namespace EPPlusTest.DataValidation.IntegrationTests
                 var dv = sheet.DataValidations.First();
                 sheet.DataValidations.Remove(dv);
                 if (File.Exists(fileInfo.FullName))
+                {
                     File.Delete(fileInfo.FullName);
+                }
+
                 pck.SaveAs(fileInfo);
             }
         }

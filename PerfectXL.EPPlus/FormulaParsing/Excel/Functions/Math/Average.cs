@@ -22,11 +22,7 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 using OfficeOpenXml.Utils;
 
@@ -62,9 +58,17 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
             {
                 foreach (var c in arg.ValueAsRangeInfo)
                 {
-                    if (ShouldIgnore(c, context)) continue;
+                    if (ShouldIgnore(c, context))
+                    {
+                        continue;
+                    }
+
                     CheckForAndHandleExcelError(c);
-                    if (!IsNumeric(c.Value) || c.Value is bool) continue;
+                    if (!IsNumeric(c.Value) || c.Value is bool)
+                    {
+                        continue;
+                    }
+
                     nValues++;
                     retVal += c.ValueDouble;
                 }
@@ -72,15 +76,15 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
             else
             {
                 var numericValue = GetNumericValue(arg.Value, isInArray);
-				if (numericValue.HasValue)
-				{
-					nValues++;
-					retVal += numericValue.Value;
-				}
-				else if (arg.Value is string && !isInArray)
-				{
-					ThrowExcelErrorValueException(eErrorType.Value);
-				}
+                if (numericValue.HasValue)
+                {
+                    nValues++;
+                    retVal += numericValue.Value;
+                }
+                else if (arg.Value is string && !isInArray)
+                {
+                    ThrowExcelErrorValueException(eErrorType.Value);
+                }
             }
             CheckForAndHandleExcelError(arg);
         }
@@ -91,23 +95,28 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
             {
                 return ConvertUtil.GetValueDouble(obj);
             }
-			if (!isInArray)
-			{
-				double number;
-				System.DateTime date;
-				if (obj is bool)
-				{
-					return ConvertUtil.GetValueDouble(obj);
-				}
-				else if (ConvertUtil.TryParseNumericString(obj, out number))
-				{
-					return number;
-				}
+            if (!isInArray)
+            {
+                if (obj is bool)
+                {
+                    return ConvertUtil.GetValueDouble(obj);
+                }
+                else if (ConvertUtil.TryParseNumericString(obj, out var number))
+                {
+                    return number;
+                }
+
+/* Unmerged change from project 'PerfectXL.EPPlus (net462)'
+Before:
 				else if (ConvertUtil.TryParseDateString(obj, out date))
-				{
-					return date.ToOADate();
-				}
-			}
+After:
+				else if (ConvertUtil.TryParseDateString(obj, out System.DateTime date))
+*/
+                else if (ConvertUtil.TryParseDateString(obj, out var date))
+                {
+                    return date.ToOADate();
+                }
+            }
             return default(double?);
         }
     }

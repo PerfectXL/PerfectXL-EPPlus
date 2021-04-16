@@ -29,9 +29,6 @@
  * Jan Källman		                Initial Release		        2009-10-01
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Globalization;
 namespace OfficeOpenXml.Style.XmlAccess
@@ -51,16 +48,17 @@ namespace OfficeOpenXml.Style.XmlAccess
             base(nsm, topNode)
         {
             Degree = GetXmlNodeDouble(_degreePath);
-            Type = GetXmlNodeString(_typePath)=="path" ? ExcelFillGradientType.Path : ExcelFillGradientType.Linear;
+            Type = GetXmlNodeString(_typePath) == "path" ? ExcelFillGradientType.Path : ExcelFillGradientType.Linear;
             GradientColor1 = new ExcelColorXml(nsm, topNode.SelectSingleNode(_gradientColor1Path, nsm));
             GradientColor2 = new ExcelColorXml(nsm, topNode.SelectSingleNode(_gradientColor2Path, nsm));
-            
+
             Top = GetXmlNodeDouble(_topPath);
             Bottom = GetXmlNodeDouble(_bottomPath);
             Left = GetXmlNodeDouble(_leftPath);
             Right = GetXmlNodeDouble(_rightPath);
         }
-        const string _typePath = "d:gradientFill/@type";
+
+        private const string _typePath = "d:gradientFill/@type";
         /// <summary>
         /// Type of gradient fill. 
         /// </summary>
@@ -69,7 +67,8 @@ namespace OfficeOpenXml.Style.XmlAccess
             get;
             internal set;
         }
-        const string _degreePath = "d:gradientFill/@degree";
+
+        private const string _degreePath = "d:gradientFill/@degree";
         /// <summary>
         /// Angle of the linear gradient
         /// </summary>
@@ -78,16 +77,18 @@ namespace OfficeOpenXml.Style.XmlAccess
             get;
             internal set;
         }
-        const string _gradientColor1Path = "d:gradientFill/d:stop[@position=\"0\"]/d:color";
+
+        private const string _gradientColor1Path = "d:gradientFill/d:stop[@position=\"0\"]/d:color";
         /// <summary>
         /// Gradient color 1
         /// </summary>
-        public ExcelColorXml GradientColor1 
+        public ExcelColorXml GradientColor1
         {
             get;
             private set;
         }
-        const string _gradientColor2Path = "d:gradientFill/d:stop[@position=\"1\"]/d:color";
+
+        private const string _gradientColor2Path = "d:gradientFill/d:stop[@position=\"1\"]/d:color";
         /// <summary>
         /// Gradient color 2
         /// </summary>
@@ -96,16 +97,18 @@ namespace OfficeOpenXml.Style.XmlAccess
             get;
             private set;
         }
-        const string _bottomPath = "d:gradientFill/@bottom";
+
+        private const string _bottomPath = "d:gradientFill/@bottom";
         /// <summary>
         /// Percentage format bottom
         /// </summary>
         public double Bottom
-        { 
-            get; 
-            internal set; 
+        {
+            get;
+            internal set;
         }
-        const string _topPath = "d:gradientFill/@top";
+
+        private const string _topPath = "d:gradientFill/@top";
         /// <summary>
         /// Percentage format top
         /// </summary>
@@ -114,7 +117,8 @@ namespace OfficeOpenXml.Style.XmlAccess
             get;
             internal set;
         }
-        const string _leftPath = "d:gradientFill/@left";
+
+        private const string _leftPath = "d:gradientFill/@left";
         /// <summary>
         /// Percentage format left
         /// </summary>
@@ -123,7 +127,8 @@ namespace OfficeOpenXml.Style.XmlAccess
             get;
             internal set;
         }
-        const string _rightPath = "d:gradientFill/@right";
+
+        private const string _rightPath = "d:gradientFill/@right";
         /// <summary>
         /// Percentage format right
         /// </summary>
@@ -157,7 +162,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             newFill.Bottom = Bottom;
             newFill.Left = Left;
             newFill.Right = Right;
-            
+
             return newFill;
         }
 
@@ -165,9 +170,17 @@ namespace OfficeOpenXml.Style.XmlAccess
         {
             TopNode = topNode;
             CreateNode("d:gradientFill");
-            if(Type==ExcelFillGradientType.Path) SetXmlNodeString(_typePath, "path");
-            if(!double.IsNaN(Degree)) SetXmlNodeString(_degreePath, Degree.ToString(CultureInfo.InvariantCulture));
-            if (GradientColor1!=null)
+            if (Type == ExcelFillGradientType.Path)
+            {
+                SetXmlNodeString(_typePath, "path");
+            }
+
+            if (!double.IsNaN(Degree))
+            {
+                SetXmlNodeString(_degreePath, Degree.ToString(CultureInfo.InvariantCulture));
+            }
+
+            if (GradientColor1 != null)
             {
                 /*** Gradient color node 1***/
                 var node = TopNode.SelectSingleNode("d:gradientFill", NameSpaceManager);
@@ -187,10 +200,25 @@ namespace OfficeOpenXml.Style.XmlAccess
 
                 GradientColor2.CreateXmlNode(colorNode);
             }
-            if (!double.IsNaN(Top)) SetXmlNodeString(_topPath, Top.ToString("F5",CultureInfo.InvariantCulture));
-            if (!double.IsNaN(Bottom)) SetXmlNodeString(_bottomPath, Bottom.ToString("F5", CultureInfo.InvariantCulture));
-            if (!double.IsNaN(Left)) SetXmlNodeString(_leftPath, Left.ToString("F5", CultureInfo.InvariantCulture));
-            if (!double.IsNaN(Right)) SetXmlNodeString(_rightPath, Right.ToString("F5", CultureInfo.InvariantCulture));
+            if (!double.IsNaN(Top))
+            {
+                SetXmlNodeString(_topPath, Top.ToString("F5", CultureInfo.InvariantCulture));
+            }
+
+            if (!double.IsNaN(Bottom))
+            {
+                SetXmlNodeString(_bottomPath, Bottom.ToString("F5", CultureInfo.InvariantCulture));
+            }
+
+            if (!double.IsNaN(Left))
+            {
+                SetXmlNodeString(_leftPath, Left.ToString("F5", CultureInfo.InvariantCulture));
+            }
+
+            if (!double.IsNaN(Right))
+            {
+                SetXmlNodeString(_rightPath, Right.ToString("F5", CultureInfo.InvariantCulture));
+            }
 
             return topNode;
         }
