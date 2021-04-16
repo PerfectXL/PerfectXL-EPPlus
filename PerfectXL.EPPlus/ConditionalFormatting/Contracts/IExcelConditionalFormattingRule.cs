@@ -85,6 +85,6 @@ namespace OfficeOpenXml.ConditionalFormatting.Contracts
         /// <summary>
         /// Gives access to the differential styling (DXF) for the rule.
         /// </summary>
-        ExcelDxfStyleConditionalFormatting Style{ get; }
+        ExcelDxfStyleConditionalFormatting Style { get; }
     }
 }

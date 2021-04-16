@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Table.PivotTable;
 
@@ -54,14 +52,14 @@ namespace OfficeOpenXml.Drawing.Chart
             Init();
         }
 
-        internal ExcelSurfaceChart(ExcelChart topChart, XmlNode chartNode) : 
+        internal ExcelSurfaceChart(ExcelChart topChart, XmlNode chartNode) :
             base(topChart, chartNode)
         {
             Init();
         }
         private void Init()
         {
- 	        _floor=new ExcelChartSurface(NameSpaceManager, _chartXmlHelper.TopNode.SelectSingleNode("c:floor", NameSpaceManager));
+            _floor = new ExcelChartSurface(NameSpaceManager, _chartXmlHelper.TopNode.SelectSingleNode("c:floor", NameSpaceManager));
             _backWall = new ExcelChartSurface(NameSpaceManager, _chartXmlHelper.TopNode.SelectSingleNode("c:sideWall", NameSpaceManager));
             _sideWall = new ExcelChartSurface(NameSpaceManager, _chartXmlHelper.TopNode.SelectSingleNode("c:backWall", NameSpaceManager));
             SetTypeProperties();
@@ -69,7 +67,7 @@ namespace OfficeOpenXml.Drawing.Chart
         #endregion
 
 
-        ExcelChartSurface _floor;
+        private ExcelChartSurface _floor;
         public ExcelChartSurface Floor
         {
             get
@@ -77,7 +75,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _floor;
             }
         }
-        ExcelChartSurface _sideWall;
+
+        private ExcelChartSurface _sideWall;
         public ExcelChartSurface SideWall
         {
             get
@@ -85,7 +84,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _sideWall;
             }
         }
-        ExcelChartSurface _backWall;
+
+        private ExcelChartSurface _backWall;
         public ExcelChartSurface BackWall
         {
             get
@@ -93,7 +93,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _backWall;
             }
         }
-        const string WIREFRAME_PATH = "c:wireframe/@val";
+
+        private const string WIREFRAME_PATH = "c:wireframe/@val";
         public bool Wireframe
         {
             get
@@ -104,35 +105,35 @@ namespace OfficeOpenXml.Drawing.Chart
             {
                 _chartXmlHelper.SetXmlNodeBool(WIREFRAME_PATH, value);
             }
-        }        
+        }
         internal void SetTypeProperties()
         {
-               if(ChartType==eChartType.SurfaceWireframe || ChartType==eChartType.SurfaceTopViewWireframe)
-               {
-                   Wireframe=true;
-               }
-               else 
-               {
-                   Wireframe=false;
-               }
+            if (ChartType == eChartType.SurfaceWireframe || ChartType == eChartType.SurfaceTopViewWireframe)
+            {
+                Wireframe = true;
+            }
+            else
+            {
+                Wireframe = false;
+            }
 
-                if(ChartType==eChartType.SurfaceTopView || ChartType==eChartType.SurfaceTopViewWireframe)
-                {
-                   View3D.RotY = 0;
-                   View3D.RotX = 90;
-                }
-                else
-                {
-                   View3D.RotY = 20;
-                   View3D.RotX = 15;
-                }
-                View3D.RightAngleAxes = false;
-                View3D.Perspective = 0;
-                Axis[1].CrossBetween = eCrossBetween.MidCat;
+            if (ChartType == eChartType.SurfaceTopView || ChartType == eChartType.SurfaceTopViewWireframe)
+            {
+                View3D.RotY = 0;
+                View3D.RotX = 90;
+            }
+            else
+            {
+                View3D.RotY = 20;
+                View3D.RotX = 15;
+            }
+            View3D.RightAngleAxes = false;
+            View3D.Perspective = 0;
+            Axis[1].CrossBetween = eCrossBetween.MidCat;
         }
         internal override eChartType GetChartType(string name)
         {
-            if(Wireframe)
+            if (Wireframe)
             {
                 if (name == "surfaceChart")
                 {

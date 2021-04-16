@@ -1,8 +1,5 @@
 ﻿using OfficeOpenXml.Compatibility;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.FormulaParsing.Utilities
 {
@@ -27,7 +24,11 @@ namespace OfficeOpenXml.FormulaParsing.Utilities
 
         public static bool IsNumeric(this object obj)
         {
-            if (obj == null) return false;
+            if (obj == null)
+            {
+                return false;
+            }
+
             return (TypeCompat.IsPrimitive(obj) || obj is double || obj is decimal || obj is System.DateTime || obj is TimeSpan);
         }
     }

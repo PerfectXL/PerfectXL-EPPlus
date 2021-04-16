@@ -30,9 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Globalization;
 
@@ -46,7 +43,7 @@ namespace OfficeOpenXml.Table.PivotTable
         internal ExcelPivotTableFieldGroup(XmlNamespaceManager ns, XmlNode topNode) :
             base(ns, topNode)
         {
-            
+
         }
     }
     /// <summary>
@@ -58,7 +55,8 @@ namespace OfficeOpenXml.Table.PivotTable
             base(ns, topNode)
         {
         }
-        const string groupByPath = "d:fieldGroup/d:rangePr/@groupBy";
+
+        private const string groupByPath = "d:fieldGroup/d:rangePr/@groupBy";
         /// <summary>
         /// How to group the date field
         /// </summary>
@@ -111,7 +109,8 @@ namespace OfficeOpenXml.Table.PivotTable
             base(ns, topNode)
         {
         }
-        const string startPath = "d:fieldGroup/d:rangePr/@startNum";
+
+        private const string startPath = "d:fieldGroup/d:rangePr/@startNum";
         /// <summary>
         /// Start value
         /// </summary>
@@ -123,10 +122,11 @@ namespace OfficeOpenXml.Table.PivotTable
             }
             private set
             {
-                SetXmlNodeString(startPath,value.ToString(CultureInfo.InvariantCulture));
+                SetXmlNodeString(startPath, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string endPath = "d:fieldGroup/d:rangePr/@endNum";
+
+        private const string endPath = "d:fieldGroup/d:rangePr/@endNum";
         /// <summary>
         /// End value
         /// </summary>
@@ -141,7 +141,8 @@ namespace OfficeOpenXml.Table.PivotTable
                 SetXmlNodeString(endPath, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string groupIntervalPath = "d:fieldGroup/d:rangePr/@groupInterval";
+
+        private const string groupIntervalPath = "d:fieldGroup/d:rangePr/@groupInterval";
         /// <summary>
         /// Interval
         /// </summary>

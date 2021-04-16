@@ -30,9 +30,7 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Drawing;
 
@@ -54,22 +52,17 @@ namespace OfficeOpenXml.Drawing.Chart
             base(chartSeries, ns, node, isPivot)
         {
         }
-        ExcelChartSerieDataLabel _DataLabel = null;
+
+        private ExcelChartSerieDataLabel _DataLabel = null;
         /// <summary>
         /// Datalabels
         /// </summary>
         public ExcelChartSerieDataLabel DataLabel
         {
-            get
-            {
-                if (_DataLabel == null)
-                {
-                    _DataLabel = new ExcelChartSerieDataLabel(_ns, _node);
-                }
-                return _DataLabel;
-            }
+            get => _DataLabel ?? (_DataLabel = new ExcelChartSerieDataLabel(_ns, _node));
         }
-        const string markerPath = "c:marker/c:symbol/@val";
+
+        private const string markerPath = "c:marker/c:symbol/@val";
         /// <summary>
         /// Marker symbol 
         /// </summary>
@@ -92,25 +85,23 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(markerPath, value.ToString().ToLower(CultureInfo.InvariantCulture));
             }
         }
-        const string smoothPath = "c:smooth/@val";
+
+        private const string smoothPath = "c:smooth/@val";
+
         /// <summary>
         /// Smoth lines
         /// </summary>
         public bool Smooth
         {
-            get
-            {
-                return GetXmlNodeBool(smoothPath, false);
-            }
-            set
-            {
-                SetXmlNodeBool(smoothPath, value);
-            }
+            get => GetXmlNodeBool(smoothPath, false);
+            set => SetXmlNodeBool(smoothPath, value);
         }
 
         //new properties for excel line charts: LineColor, MarkerSize, LineWidth and MarkerLineColor 
         //implemented according to https://epplus.codeplex.com/discussions/287917
-        string LINECOLOR_PATH = "c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+
+        private readonly string LINECOLOR_PATH = "c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+
         /// <summary>
         /// Line color.
         /// </summary>
@@ -137,7 +128,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(LINECOLOR_PATH, value.ToArgb().ToString("X").Substring(2), true);
             }
         }
-        string MARKERSIZE_PATH = "c:marker/c:size/@val";
+
+        private readonly string MARKERSIZE_PATH = "c:marker/c:size/@val";
+
         /// <summary>
         /// Gets or sets the size of the marker.
         /// </summary>
@@ -171,7 +164,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(MARKERSIZE_PATH, size.ToString(), true);
             }
         }
-        string LINEWIDTH_PATH = "c:spPr/a:ln/@w";
+
+        private readonly string LINEWIDTH_PATH = "c:spPr/a:ln/@w";
+
         /// <summary>
         /// Gets or sets the width of the line in pt.
         /// </summary>
@@ -195,11 +190,13 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                SetXmlNodeString(LINEWIDTH_PATH, (( int )(12700 * value)).ToString(), true);
+                SetXmlNodeString(LINEWIDTH_PATH, ((int)(12700 * value)).ToString(), true);
             }
         }
+
         //marker line color
-        string MARKERLINECOLOR_PATH = "c:marker/c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+        private readonly string MARKERLINECOLOR_PATH = "c:marker/c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+
         /// <summary>
         /// Marker Line color. 
         /// (not to be confused with LineColor)
@@ -227,7 +224,5 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(MARKERLINECOLOR_PATH, value.ToArgb().ToString("X").Substring(2), true);
             }
         }
-
-
     }
 }

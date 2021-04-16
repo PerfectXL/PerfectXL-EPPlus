@@ -31,27 +31,28 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 
 namespace OfficeOpenXml.Drawing.Chart
 {
     /// <summary>
-    /// Enumerates charttypes 
+    /// Enumerates charttypes.
     /// </summary>
     public class ExcelChartCollection : IEnumerable<ExcelChart>
     {
-        List<ExcelChart> _list = new List<ExcelChart>();
-        ExcelChart _topChart;
+        private readonly List<ExcelChart> _list = new List<ExcelChart>();
+        private readonly ExcelChart _topChart;
+
         internal ExcelChartCollection(ExcelChart chart)
         {
             _topChart = chart;
             _list.Add(chart);
         }
+
         internal void Add(ExcelChart chart)
         {
             _list.Add(chart);
         }
+
         /// <summary>
         /// Add a new charttype to the chart
         /// </summary>
@@ -65,7 +66,7 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             else if (ExcelChart.IsType3D(chartType) || _list[0].IsType3D())
             {
-                throw(new InvalidOperationException("3D charts can not be combined with other charttypes"));
+                throw (new InvalidOperationException("3D charts can not be combined with other charttypes"));
             }
 
             var prependingChartNode = _list[_list.Count - 1].TopNode;
@@ -74,13 +75,9 @@ namespace OfficeOpenXml.Drawing.Chart
             _list.Add(chart);
             return chart;
         }
-        public int Count
-        {
-            get
-            {
-                return _list.Count;
-            }
-        }
+
+        public int Count => _list.Count;
+
         IEnumerator<ExcelChart> IEnumerable<ExcelChart>.GetEnumerator()
         {
             return _list.GetEnumerator();
@@ -90,8 +87,9 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             return _list.GetEnumerator();
         }
+
         /// <summary>
-        /// Returns a chart at the specific position.  
+        /// Returns a chart at the specific position.
         /// </summary>
         /// <param name="PositionID">The position of the chart. 0-base</param>
         /// <returns></returns>
@@ -102,7 +100,5 @@ namespace OfficeOpenXml.Drawing.Chart
                 return (_list[PositionID]);
             }
         }
-
-
-}
+    }
 }

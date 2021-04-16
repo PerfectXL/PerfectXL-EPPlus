@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Globalization;
 using OfficeOpenXml.Table.PivotTable;
@@ -77,36 +75,27 @@ namespace OfficeOpenXml.Drawing.Chart
         //    _holeSizePath = string.Format(_holeSizePath, chartNodeText);
         //}
         //string _firstSliceAngPath = "c:chartSpace/c:chart/c:plotArea/{0}/c:firstSliceAng/@val";
-        string _firstSliceAngPath = "c:firstSliceAng/@val";
+        private readonly string _firstSliceAngPath = "c:firstSliceAng/@val";
+
         /// <summary>
         /// Angle of the first slize
         /// </summary>
         public decimal FirstSliceAngle
         {
-            get
-            {
-                return _chartXmlHelper.GetXmlNodeDecimal(_firstSliceAngPath);
-            }
-            internal set
-            {
-                _chartXmlHelper.SetXmlNodeString(_firstSliceAngPath, value.ToString(CultureInfo.InvariantCulture));
-            }
+            get => _chartXmlHelper.GetXmlNodeDecimal(_firstSliceAngPath);
+            internal set => _chartXmlHelper.SetXmlNodeString(_firstSliceAngPath, value.ToString(CultureInfo.InvariantCulture));
         }
+
         //string _holeSizePath = "c:chartSpace/c:chart/c:plotArea/{0}/c:holeSize/@val";
-        string _holeSizePath = "c:holeSize/@val";
+        private readonly string _holeSizePath = "c:holeSize/@val";
+
         /// <summary>
         /// Size of the doubnut hole
         /// </summary>
         public decimal HoleSize
         {
-            get
-            {
-                return _chartXmlHelper.GetXmlNodeDecimal(_holeSizePath);
-            }
-            internal set
-            {
-                _chartXmlHelper.SetXmlNodeString(_holeSizePath, value.ToString(CultureInfo.InvariantCulture));
-            }
+            get => _chartXmlHelper.GetXmlNodeDecimal(_holeSizePath);
+            internal set => _chartXmlHelper.SetXmlNodeString(_holeSizePath, value.ToString(CultureInfo.InvariantCulture));
         }
         internal override eChartType GetChartType(string name)
         {

@@ -29,15 +29,10 @@
  * Mats Alm   		                Added       		        2011-01-08
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using OfficeOpenXml.DataValidation.Formulas;
 using System.Xml;
 using OfficeOpenXml.DataValidation.Contracts;
-using System.Runtime.CompilerServices;
 
 namespace OfficeOpenXml.DataValidation
 {
@@ -46,7 +41,7 @@ namespace OfficeOpenXml.DataValidation
     /// </summary>
     public class ExcelDataValidationTime : ExcelDataValidationWithFormula2<IExcelDataValidationFormulaTime>, IExcelDataValidationTime
     {
-         /// <summary>
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="worksheet"></param>
@@ -66,7 +61,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="address"></param>
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
-        internal ExcelDataValidationTime(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationTime(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode)
             : base(worksheet, address, validationType, storageType, itemElementNode)
         {
@@ -90,7 +85,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
         /// <param name="namespaceManager"></param>
-        internal ExcelDataValidationTime(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationTime(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             XmlNode itemElementNode, XmlNamespaceManager namespaceManager, eDataValidationStorageType storageType = eDataValidationStorageType.Normal)
             : base(worksheet, address, validationType, storageType, itemElementNode, namespaceManager)
         {

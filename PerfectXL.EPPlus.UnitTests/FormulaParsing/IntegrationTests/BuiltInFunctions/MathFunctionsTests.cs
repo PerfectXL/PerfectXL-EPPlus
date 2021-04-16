@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml;
-using FakeItEasy;
 
 namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
 {
@@ -167,7 +163,7 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
         [TestMethod]
         public void AverageShouldReturnDiv0IfEmptyCell()
         {
-            using(var pck = new ExcelPackage())
+            using (var pck = new ExcelPackage())
             {
                 var ws = pck.Workbook.Worksheets.Add("test");
                 ws.Cells["A2"].Formula = "AVERAGE(A1)";

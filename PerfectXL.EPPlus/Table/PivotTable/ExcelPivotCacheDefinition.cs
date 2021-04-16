@@ -93,16 +93,16 @@ namespace OfficeOpenXml.Table.PivotTable
             PivotTable = pivotTable;
 
             var pck = pivotTable.WorkSheet._package.Package;
-            
+
             //CacheDefinition
             CacheDefinitionXml = new XmlDocument();
             LoadXmlSafe(CacheDefinitionXml, GetStartXml(sourceAddress), Encoding.UTF8);
-            CacheDefinitionUri = GetNewUri(pck, "/xl/pivotCache/pivotCacheDefinition{0}.xml", ref tblId); 
+            CacheDefinitionUri = GetNewUri(pck, "/xl/pivotCache/pivotCacheDefinition{0}.xml", ref tblId);
             Part = pck.CreatePart(CacheDefinitionUri, ExcelPackage.schemaPivotCacheDefinition);
             TopNode = CacheDefinitionXml.DocumentElement;
 
             //CacheRecord. Create an empty one.
-            CacheRecordUri = GetNewUri(pck, "/xl/pivotCache/pivotCacheRecords{0}.xml", ref tblId); 
+            CacheRecordUri = GetNewUri(pck, "/xl/pivotCache/pivotCacheRecords{0}.xml", ref tblId);
             var cacheRecord = new XmlDocument();
             cacheRecord.LoadXml("<pivotCacheRecords xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" count=\"0\" />");
             var recPart = pck.CreatePart(CacheRecordUri, ExcelPackage.schemaPivotCacheRecords);
@@ -112,7 +112,7 @@ namespace OfficeOpenXml.Table.PivotTable
             RecordRelationshipID = RecordRelationship.Id;
 
             Part.SaveXml(CacheDefinitionXml);
-        }        
+        }
         /// <summary>
         /// Reference to the internal package part
         /// </summary>
@@ -148,7 +148,7 @@ namespace OfficeOpenXml.Table.PivotTable
             get;
             set;
         }
-        internal string RecordRelationshipID 
+        internal string RecordRelationshipID
         {
             get
             {
@@ -167,8 +167,8 @@ namespace OfficeOpenXml.Table.PivotTable
             get;
             private set;
         }
-        
-        const string _sourceWorksheetPath="d:cacheSource/d:worksheetSource/@sheet";
+
+        private const string _sourceWorksheetPath = "d:cacheSource/d:worksheetSource/@sheet";
         internal const string _sourceNamePath = "d:cacheSource/d:worksheetSource/@name";
         internal const string _sourceAddressPath = "d:cacheSource/d:worksheetSource/@ref";
         internal ExcelRangeBase _sourceRange = null;
@@ -236,7 +236,7 @@ namespace OfficeOpenXml.Table.PivotTable
                     throw (new ArgumentException("Range must be in the same package as the pivottable"));
                 }
 
-                var sr=SourceRange;
+                var sr = SourceRange;
                 if (value.End.Column - value.Start.Column != sr.End.Column - sr.Start.Column)
                 {
                     throw (new ArgumentException("Can not change the number of columns(fields) in the SourceRange"));
@@ -308,7 +308,7 @@ namespace OfficeOpenXml.Table.PivotTable
         {
             get
             {
-                var s=GetXmlNodeString("d:cacheSource/@type");
+                var s = GetXmlNodeString("d:cacheSource/@type");
                 if (s == "")
                 {
                     return eSourceType.Worksheet;
@@ -321,7 +321,7 @@ namespace OfficeOpenXml.Table.PivotTable
         }
         private string GetStartXml(ExcelRangeBase sourceAddress)
         {
-            string xml="<pivotCacheDefinition xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" r:id=\"\" refreshOnLoad=\"1\" refreshedBy=\"SomeUser\" refreshedDate=\"40504.582403125001\" createdVersion=\"1\" refreshedVersion=\"3\" recordCount=\"5\" upgradeOnRefresh=\"1\">";
+            string xml = "<pivotCacheDefinition xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" r:id=\"\" refreshOnLoad=\"1\" refreshedBy=\"SomeUser\" refreshedDate=\"40504.582403125001\" createdVersion=\"1\" refreshedVersion=\"3\" recordCount=\"5\" upgradeOnRefresh=\"1\">";
 
             xml += "<cacheSource type=\"worksheet\">";
             xml += string.Format("<worksheetSource ref=\"{0}\" sheet=\"{1}\" /> ", sourceAddress.Address, sourceAddress.WorkSheet);

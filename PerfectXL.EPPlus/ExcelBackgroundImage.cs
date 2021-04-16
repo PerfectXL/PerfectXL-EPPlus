@@ -30,14 +30,10 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Drawing;
 using System.IO;
 using OfficeOpenXml.Drawing;
-using OfficeOpenXml.Packaging;
 using OfficeOpenXml.Utils;
 using OfficeOpenXml.Compatibility;
 
@@ -48,20 +44,20 @@ namespace OfficeOpenXml
     /// </summary>
     public class ExcelBackgroundImage : XmlHelper
     {
-        ExcelWorksheet _workSheet;
+        private readonly ExcelWorksheet _workSheet;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="nsm"></param>
         /// <param name="topNode">The topnode of the worksheet</param>
         /// <param name="workSheet">Worksheet reference</param>
-        internal  ExcelBackgroundImage(XmlNamespaceManager nsm, XmlNode topNode, ExcelWorksheet workSheet) :
+        internal ExcelBackgroundImage(XmlNamespaceManager nsm, XmlNode topNode, ExcelWorksheet workSheet) :
             base(nsm, topNode)
         {
             _workSheet = workSheet;
         }
-        
-        const string BACKGROUNDPIC_PATH = "d:picture/@r:id";
+
+        private const string BACKGROUNDPIC_PATH = "d:picture/@r:id";
         /// <summary>
         /// The background image of the worksheet. 
         /// The image will be saved internally as a jpg.
@@ -89,7 +85,7 @@ namespace OfficeOpenXml
                 else
                 {
 #if (Core)
-                    var img=ImageCompat.GetImageAsByteArray(value);
+                    var img = ImageCompat.GetImageAsByteArray(value);
 #else
                     ImageConverter ic = new ImageConverter();
                     byte[] img = (byte[])ic.ConvertTo(value, typeof(byte[]));
@@ -127,7 +123,7 @@ namespace OfficeOpenXml
             var ii = _workSheet.Workbook._package.AddImage(fileBytes, imageURI, contentType);
 
 
-            if (_workSheet.Part.Package.PartExists(imageURI) && ii.RefCount==1) //The file exists with another content, overwrite it.
+            if (_workSheet.Part.Package.PartExists(imageURI) && ii.RefCount == 1) //The file exists with another content, overwrite it.
             {
                 //Remove the part if it exists
                 _workSheet.Part.Package.DeletePart(imageURI);
@@ -148,7 +144,7 @@ namespace OfficeOpenXml
             if (relID != "")
             {
 #if (Core)
-                var img=ImageCompat.GetImageAsByteArray(Image);
+                var img = ImageCompat.GetImageAsByteArray(Image);
 #else
                 var ic = new ImageConverter();
                 byte[] img = (byte[])ic.ConvertTo(Image, typeof(byte[]));
@@ -157,7 +153,7 @@ namespace OfficeOpenXml
 
                 //Delete the relation
                 _workSheet.Part.DeleteRelationship(relID);
-                
+
                 //Delete the image if there are no other references.
                 if (ii != null && ii.RefCount == 1)
                 {
@@ -166,7 +162,7 @@ namespace OfficeOpenXml
                         _workSheet.Part.Package.DeletePart(ii.Uri);
                     }
                 }
-                
+
             }
         }
     }

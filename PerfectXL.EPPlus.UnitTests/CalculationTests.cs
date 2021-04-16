@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Globalization;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using System.IO;
-using System.Diagnostics;
-using OfficeOpenXml.FormulaParsing;
 
 namespace EPPlusTest
 {
@@ -40,7 +37,7 @@ namespace EPPlusTest
         public void CalulationTestDatatypes()
         {
             var pck = new ExcelPackage();
-            var ws=pck.Workbook.Worksheets.Add("Calc1");
+            var ws = pck.Workbook.Worksheets.Add("Calc1");
             ws.SetValue("A1", (short)1);
             ws.SetValue("A2", (long)2);
             ws.SetValue("A3", (Single)3);
@@ -55,7 +52,7 @@ namespace EPPlusTest
             ws.Calculate();
             Assert.AreEqual(21D, ws.Cells["a10"].Value);
             Assert.AreEqual(21D, ws.Cells["a11"].Value);
-            Assert.AreEqual(21D/6, ws.Cells["a12"].Value);
+            Assert.AreEqual(21D / 6, ws.Cells["a12"].Value);
         }
         [TestMethod]
         public void CalculateTest()
@@ -63,10 +60,10 @@ namespace EPPlusTest
             var pck = new ExcelPackage();
             var ws = pck.Workbook.Worksheets.Add("Calc1");
 
-            ws.SetValue("A1",( short)1);
-            var v=ws.Calculate("2.5-A1+ABS(-3.0)-SIN(3)");
+            ws.SetValue("A1", (short)1);
+            var v = ws.Calculate("2.5-A1+ABS(-3.0)-SIN(3)");
             Assert.AreEqual(4.3589, Math.Round((double)v, 4));
-                        
+
             ws.Row(1).Hidden = true;
             v = ws.Calculate("subtotal(109,a1:a10)");
             Assert.AreEqual(0D, v);
@@ -151,15 +148,15 @@ namespace EPPlusTest
                     nErrors++;
                 }
             }
-		}
+        }
         [Ignore]
         [TestMethod]
         public void TestOneCell()
         {
             var pck = new ExcelPackage(new FileInfo(@"C:\temp\EPPlusTestark\Test4.xlsm"));
-            var ws = pck.Workbook.Worksheets.First(); 
+            var ws = pck.Workbook.Worksheets.First();
             pck.Workbook.Worksheets["Räntebärande formaterat utland"].Cells["M13"].Calculate();
-            Assert.AreEqual(0d, pck.Workbook.Worksheets["Räntebärande formaterat utland"].Cells["M13"].Value);  
+            Assert.AreEqual(0d, pck.Workbook.Worksheets["Räntebärande formaterat utland"].Cells["M13"].Value);
         }
         [Ignore]
         [TestMethod]
@@ -195,7 +192,7 @@ namespace EPPlusTest
             var ws = pck.Workbook.Worksheets.Add("CalcTest");
             ws.Names.AddValue("PRICE", 10);
             ws.Names.AddValue("QUANTITY", 11);
-            ws.Cells["A1"].Formula="PRICE*QUANTITY";
+            ws.Cells["A1"].Formula = "PRICE*QUANTITY";
             ws.Names.AddFormula("AMOUNT", "PRICE*QUANTITY");
 
             ws.Names["PRICE"].Value = 30;
@@ -289,10 +286,13 @@ namespace EPPlusTest
 
         public void TestAllWorkbooks()
         {
-            StringBuilder sb=new StringBuilder();
+            StringBuilder sb = new StringBuilder();
             //Add sheets to test in this directory or change it to your testpath.
             string path = @"C:\temp\EPPlusTestark\workbooks";
-            if(!Directory.Exists(path)) return;
+            if (!Directory.Exists(path))
+            {
+                return;
+            }
 
             foreach (var file in Directory.GetFiles(path, "*.xls*"))
             {
@@ -302,41 +302,41 @@ namespace EPPlusTest
             if (sb.Length > 0)
             {
                 File.WriteAllText(string.Format("TestAllWorkooks{0}.txt", DateTime.Now.ToString("d") + " " + DateTime.Now.ToString("t")), sb.ToString());
-                throw(new Exception("Test failed with\r\n\r\n" + sb.ToString()));
+                throw (new Exception("Test failed with\r\n\r\n" + sb.ToString()));
 
             }
         }
-		[TestMethod]
-		public void CalculateDateMath()
-		{
-			using (ExcelPackage package = new ExcelPackage())
-			{
-				var worksheet = package.Workbook.Worksheets.Add("Test");
-				var dateCell = worksheet.Cells[2, 2];
-				var date = new DateTime(2013, 1, 1);
-				dateCell.Value = date;
-				var quotedDateCell = worksheet.Cells[2, 3];
-				quotedDateCell.Formula = $"\"{date.ToString("d")}\"";
-				var dateFormula = "B2";
-				var dateFormulaWithMath = "B2+1";
-				var quotedDateFormulaWithMath = $"\"{date.ToString("d")}\"+1";
-				var quotedDateReferenceFormulaWithMath = "C2+1";
-				var expectedDate = 41275.0; // January 1, 2013
-				var expectedDateWithMath = 41276.0; // January 2, 2013
-				Assert.AreEqual(expectedDate, worksheet.Calculate(dateFormula));
-				Assert.AreEqual(expectedDateWithMath, worksheet.Calculate(dateFormulaWithMath));
-				Assert.AreEqual(expectedDateWithMath, worksheet.Calculate(quotedDateFormulaWithMath));
-				Assert.AreEqual(expectedDateWithMath, worksheet.Calculate(quotedDateReferenceFormulaWithMath));
-				var formulaCell = worksheet.Cells[2, 4];
-				formulaCell.Formula = dateFormulaWithMath;
-				formulaCell.Calculate();
-				Assert.AreEqual(expectedDateWithMath, formulaCell.Value);
-				formulaCell.Formula = quotedDateReferenceFormulaWithMath;
-				formulaCell.Calculate();
-				Assert.AreEqual(expectedDateWithMath, formulaCell.Value);
-			}
-		}
-		private string GetOutput(string file)
+        [TestMethod]
+        public void CalculateDateMath()
+        {
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Test");
+                var dateCell = worksheet.Cells[2, 2];
+                var date = new DateTime(2013, 1, 1);
+                dateCell.Value = date;
+                var quotedDateCell = worksheet.Cells[2, 3];
+                quotedDateCell.Formula = $"\"{date.ToString("d")}\"";
+                var dateFormula = "B2";
+                var dateFormulaWithMath = "B2+1";
+                var quotedDateFormulaWithMath = $"\"{date.ToString("d")}\"+1";
+                var quotedDateReferenceFormulaWithMath = "C2+1";
+                var expectedDate = 41275.0; // January 1, 2013
+                var expectedDateWithMath = 41276.0; // January 2, 2013
+                Assert.AreEqual(expectedDate, worksheet.Calculate(dateFormula));
+                Assert.AreEqual(expectedDateWithMath, worksheet.Calculate(dateFormulaWithMath));
+                Assert.AreEqual(expectedDateWithMath, worksheet.Calculate(quotedDateFormulaWithMath));
+                Assert.AreEqual(expectedDateWithMath, worksheet.Calculate(quotedDateReferenceFormulaWithMath));
+                var formulaCell = worksheet.Cells[2, 4];
+                formulaCell.Formula = dateFormulaWithMath;
+                formulaCell.Calculate();
+                Assert.AreEqual(expectedDateWithMath, formulaCell.Value);
+                formulaCell.Formula = quotedDateReferenceFormulaWithMath;
+                formulaCell.Calculate();
+                Assert.AreEqual(expectedDateWithMath, formulaCell.Value);
+            }
+        }
+        private string GetOutput(string file)
         {
             using (var pck = new ExcelPackage(new FileInfo(file)))
             {
@@ -359,9 +359,9 @@ namespace EPPlusTest
                 pck.Workbook.Calculate();
                 var nErrors = 0;
                 var errors = new List<Tuple<string, object, object>>();
-                ExcelWorksheet sheet=null;
-                string adr="";
-                var fileErr = new System.IO.StreamWriter(new FileStream("c:\\temp\\err.txt",FileMode.Append));
+                ExcelWorksheet sheet = null;
+                string adr = "";
+                var fileErr = new System.IO.StreamWriter(new FileStream("c:\\temp\\err.txt", FileMode.Append));
                 foreach (var cell in fr.Keys)
                 {
                     try
@@ -370,33 +370,33 @@ namespace EPPlusTest
                         var ix = int.Parse(spl[0]);
                         sheet = pck.Workbook.Worksheets[ix];
                         adr = spl[1];
-                        if (fr[cell] is double && (sheet.Cells[adr].Value is double || sheet.Cells[adr].Value is decimal  || OfficeOpenXml.Compatibility.TypeCompat.IsPrimitive(sheet.Cells[adr].Value)))
+                        if (fr[cell] is double && (sheet.Cells[adr].Value is double || sheet.Cells[adr].Value is decimal || OfficeOpenXml.Compatibility.TypeCompat.IsPrimitive(sheet.Cells[adr].Value)))
                         {
                             var d1 = Convert.ToDouble(fr[cell]);
                             var d2 = Convert.ToDouble(sheet.Cells[adr].Value);
                             //if (Math.Abs(d1 - d2) < double.Epsilon)
-                            if(double.Equals(d1,d2))
+                            if (double.Equals(d1, d2))
                             {
                                 continue;
                             }
                             else
                             {
                                 //errors.Add(new Tuple<string, object, object>(adr, fr[cell], sheet.Cells[adr].Value));
-                                fileErr.WriteLine("Diff cell " + sheet.Name + "!" + adr +"\t" + d1.ToString("R15") + "\t" + d2.ToString("R15"));
+                                fileErr.WriteLine("Diff cell " + sheet.Name + "!" + adr + "\t" + d1.ToString("R15") + "\t" + d2.ToString("R15"));
                             }
                         }
                         else
                         {
-                            if ((fr[cell]??"").ToString() != (sheet.Cells[adr].Value??"").ToString())
+                            if ((fr[cell] ?? "").ToString() != (sheet.Cells[adr].Value ?? "").ToString())
                             {
-                                fileErr.WriteLine("String?  cell " + sheet.Name + "!" + adr + "\t" + (fr[cell] ?? "").ToString() + "\t" + (sheet.Cells[adr].Value??"").ToString());
+                                fileErr.WriteLine("String?  cell " + sheet.Name + "!" + adr + "\t" + (fr[cell] ?? "").ToString() + "\t" + (sheet.Cells[adr].Value ?? "").ToString());
                             }
                             //errors.Add(new Tuple<string, object, object>(adr, fr[cell], sheet.Cells[adr].Value));
                         }
                     }
                     catch (Exception e)
-                    {                        
-                        fileErr.WriteLine("Exception cell " + sheet.Name + "!" + adr + "\t" + fr[cell].ToString() + "\t" + sheet.Cells[adr].Value +  "\t" + e.Message);
+                    {
+                        fileErr.WriteLine("Exception cell " + sheet.Name + "!" + adr + "\t" + fr[cell].ToString() + "\t" + sheet.Cells[adr].Value + "\t" + e.Message);
                         fileErr.WriteLine("***************************");
                         fileErr.WriteLine(e.ToString());
                         nErrors++;

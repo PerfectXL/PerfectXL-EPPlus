@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using EPPlusTest.FormulaParsing.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
@@ -42,7 +41,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
         [TestMethod]
         public void Should_Return_ArrayLookupNavigator_When_Array_Is_Supplied()
         {
-            var args = new LookupArguments(FunctionsHelper.CreateArgs(8, FunctionsHelper.CreateArgs(1,2), 1), ParsingContext.Create());
+            var args = new LookupArguments(FunctionsHelper.CreateArgs(8, FunctionsHelper.CreateArgs(1, 2), 1), ParsingContext.Create());
             var navigator = LookupNavigatorFactory.Create(LookupDirection.Horizontal, args, _context);
             Assert.IsInstanceOfType(navigator, typeof(ArrayLookupNavigator));
         }

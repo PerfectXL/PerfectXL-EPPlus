@@ -22,10 +22,8 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2015-01-15
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
@@ -39,19 +37,23 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
             var rows = new List<int>();
             var valueRange = functionArguments[0].ValueAsRangeInfo;
             List<double> sumRange;
-            if(valueRange != null)
+            if (valueRange != null)
             {
                 sumRange = ArgsToDoubleEnumerableZeroPadded(true, valueRange, context).ToList();
             }
             else
             {
                 sumRange = ArgsToDoubleEnumerable(true, new List<FunctionArgument> { functionArguments[0] }, context).Select(x => (double)x).ToList();
-            } 
+            }
             var argRanges = new List<ExcelDataProvider.IRangeInfo>();
             var criterias = new List<string>();
             for (var ix = 1; ix < 31; ix += 2)
             {
-                if (functionArguments.Length <= ix) break;
+                if (functionArguments.Length <= ix)
+                {
+                    break;
+                }
+
                 var rangeInfo = functionArguments[ix].ValueAsRangeInfo;
                 argRanges.Add(rangeInfo);
                 var value = functionArguments[ix + 1].Value != null ? functionArguments[ix + 1].Value.ToString() : null;

@@ -29,13 +29,8 @@
  * Jan Källman		Initial Release		     
  * Jan Källman		License changed GPL-->LGPL 2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.Style;
 using System.Xml;
-using OfficeOpenXml.Drawing;
 using OfficeOpenXml.Drawing.Vml;
 
 namespace OfficeOpenXml
@@ -46,13 +41,13 @@ namespace OfficeOpenXml
     public class ExcelComment : ExcelVmlDrawingComment
     {
         internal XmlHelper _commentHelper;
-        private string _text;
+        private readonly string _text;
         internal ExcelComment(XmlNamespaceManager ns, XmlNode commentTopNode, ExcelRangeBase cell)
             : base(null, cell, cell.Worksheet.VmlDrawingsComments.NameSpaceManager)
         {
             //_commentHelper = new XmlHelper(ns, commentTopNode);
             _commentHelper = XmlHelperFactory.Create(ns, commentTopNode);
-            var textElem=commentTopNode.SelectSingleNode("d:text", ns);
+            var textElem = commentTopNode.SelectSingleNode("d:text", ns);
             if (textElem == null)
             {
                 textElem = commentTopNode.OwnerDocument.CreateElement("text", ExcelPackage.schemaMain);
@@ -64,15 +59,16 @@ namespace OfficeOpenXml
             }
 
             TopNode = cell.Worksheet.VmlDrawingsComments[ExcelCellBase.GetCellID(cell.Worksheet.SheetID, cell.Start.Row, cell.Start.Column)].TopNode;
-            RichText = new ExcelRichTextCollection(ns,textElem);
+            RichText = new ExcelRichTextCollection(ns, textElem);
             var tNode = textElem.SelectSingleNode("d:t", ns);
             if (tNode != null)
             {
                 _text = tNode.InnerText;
             }
         }
-        const string AUTHORS_PATH = "d:comments/d:authors";
-        const string AUTHOR_PATH = "d:comments/d:authors/d:author";
+
+        private const string AUTHORS_PATH = "d:comments/d:authors";
+        private const string AUTHOR_PATH = "d:comments/d:authors/d:author";
         /// <summary>
         /// Author
         /// </summary>
@@ -81,7 +77,7 @@ namespace OfficeOpenXml
             get
             {
                 int authorRef = _commentHelper.GetXmlNodeInt("@authorId");
-                return _commentHelper.TopNode.OwnerDocument.SelectSingleNode(string.Format("{0}[{1}]", AUTHOR_PATH, authorRef+1), _commentHelper.NameSpaceManager).InnerText;
+                return _commentHelper.TopNode.OwnerDocument.SelectSingleNode(string.Format("{0}[{1}]", AUTHOR_PATH, authorRef + 1), _commentHelper.NameSpaceManager).InnerText;
             }
             set
             {
@@ -117,7 +113,11 @@ namespace OfficeOpenXml
         {
             get
             {
-                if(!string.IsNullOrEmpty(RichText.Text)) return RichText.Text;
+                if (!string.IsNullOrEmpty(RichText.Text))
+                {
+                    return RichText.Text;
+                }
+
                 return _text;
             }
             set
@@ -142,23 +142,23 @@ namespace OfficeOpenXml
         /// <summary>
         /// Richtext collection
         /// </summary>
-        public ExcelRichTextCollection RichText 
-        { 
-           get; 
-           set; 
+        public ExcelRichTextCollection RichText
+        {
+            get;
+            set;
         }
 
         /// <summary>
         /// Reference
         /// </summary>
         internal string Reference
-		{
-			get { return _commentHelper.GetXmlNodeString("@ref"); }
+        {
+            get { return _commentHelper.GetXmlNodeString("@ref"); }
             set
             {
                 var a = new ExcelAddressBase(value);
                 var rows = a._fromRow - Range._fromRow;
-                var cols= a._fromCol - Range._fromCol;
+                var cols = a._fromCol - Range._fromCol;
                 Range.Address = value;
                 _commentHelper.SetXmlNodeString("@ref", value);
 
@@ -172,5 +172,5 @@ namespace OfficeOpenXml
                 Column = Range._fromCol - 1;
             }
         }
-	}
+    }
 }

@@ -65,7 +65,6 @@
 
 
 using System;
-using Interop=System.Runtime.InteropServices;
 
 namespace OfficeOpenXml.Packaging.Ionic.Zlib
 {
@@ -80,10 +79,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
     /// href="http://www.ietf.org/rfc/rfc1951.txt">RFC 1951 - DEFLATE</see>.
     /// </remarks>
     //[Interop.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d0000D")]
-//    [Interop.ComVisible(true)]
-//#if !NETCF    
-//    [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]
-//#endif
+    //    [Interop.ComVisible(true)]
+    //#if !NETCF    
+    //    [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]
+    //#endif
     sealed public class ZlibCodec
     {
         /// <summary>
@@ -203,14 +202,23 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             if (mode == CompressionMode.Compress)
             {
                 int rc = InitializeDeflate();
-                if (rc != ZlibConstants.Z_OK) throw new ZlibException("Cannot initialize for deflate.");
+                if (rc != ZlibConstants.Z_OK)
+                {
+                    throw new ZlibException("Cannot initialize for deflate.");
+                }
             }
             else if (mode == CompressionMode.Decompress)
             {
                 int rc = InitializeInflate();
-                if (rc != ZlibConstants.Z_OK) throw new ZlibException("Cannot initialize for inflate.");
+                if (rc != ZlibConstants.Z_OK)
+                {
+                    throw new ZlibException("Cannot initialize for inflate.");
+                }
             }
-            else throw new ZlibException("Invalid ZlibStreamFlavor.");
+            else
+            {
+                throw new ZlibException("Invalid ZlibStreamFlavor.");
+            }
         }
 
         /// <summary>
@@ -257,7 +265,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         /// <returns>Z_OK if all goes well.</returns>
         public int InitializeInflate(int windowBits)
         {
-            this.WindowBits = windowBits;            
+            this.WindowBits = windowBits;
             return InitializeInflate(windowBits, true);
         }
 
@@ -283,7 +291,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int InitializeInflate(int windowBits, bool expectRfc1950Header)
         {
             this.WindowBits = windowBits;
-            if (dstate != null) throw new ZlibException("You may not call InitializeInflate() after calling InitializeDeflate().");
+            if (dstate != null)
+            {
+                throw new ZlibException("You may not call InitializeInflate() after calling InitializeDeflate().");
+            }
+
             istate = new InflateManager(expectRfc1950Header);
             return istate.Initialize(this, windowBits);
         }
@@ -354,7 +366,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int Inflate(FlushType flush)
         {
             if (istate == null)
+            {
                 throw new ZlibException("No Inflate State!");
+            }
+
             return istate.Inflate(flush);
         }
 
@@ -371,7 +386,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int EndInflate()
         {
             if (istate == null)
+            {
                 throw new ZlibException("No Inflate State!");
+            }
+
             int ret = istate.End();
             istate = null;
             return ret;
@@ -384,7 +402,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int SyncInflate()
         {
             if (istate == null)
+            {
                 throw new ZlibException("No Inflate State!");
+            }
+
             return istate.Sync();
         }
 
@@ -506,7 +527,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
 
         private int _InternalInitializeDeflate(bool wantRfc1950Header)
         {
-            if (istate != null) throw new ZlibException("You may not call InitializeDeflate() after calling InitializeInflate().");
+            if (istate != null)
+            {
+                throw new ZlibException("You may not call InitializeDeflate() after calling InitializeInflate().");
+            }
+
             dstate = new DeflateManager();
             dstate.WantRfc1950HeaderBytes = wantRfc1950Header;
 
@@ -584,7 +609,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int Deflate(FlushType flush)
         {
             if (dstate == null)
+            {
                 throw new ZlibException("No Deflate State!");
+            }
+
             return dstate.Deflate(flush);
         }
 
@@ -598,7 +626,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int EndDeflate()
         {
             if (dstate == null)
+            {
                 throw new ZlibException("No Deflate State!");
+            }
             // TODO: dinoch Tue, 03 Nov 2009  15:39 (test this)
             //int ret = dstate.End();
             dstate = null;
@@ -617,7 +647,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public void ResetDeflate()
         {
             if (dstate == null)
+            {
                 throw new ZlibException("No Deflate State!");
+            }
+
             dstate.Reset();
         }
 
@@ -631,7 +664,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int SetDeflateParams(CompressionLevel level, CompressionStrategy strategy)
         {
             if (dstate == null)
+            {
                 throw new ZlibException("No Deflate State!");
+            }
+
             return dstate.SetParams(level, strategy);
         }
 
@@ -644,10 +680,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public int SetDictionary(byte[] dictionary)
         {
             if (istate != null)
+            {
                 return istate.SetDictionary(dictionary);
+            }
 
             if (dstate != null)
+            {
                 return dstate.SetDictionary(dictionary);
+            }
 
             throw new ZlibException("No Inflate or Deflate state!");
         }
@@ -661,9 +701,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             int len = dstate.pendingCount;
 
             if (len > AvailableBytesOut)
+            {
                 len = AvailableBytesOut;
+            }
+
             if (len == 0)
+            {
                 return;
+            }
 
             if (dstate.pending.Length <= dstate.nextPending ||
                 OutputBuffer.Length <= NextOut ||
@@ -676,10 +721,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
 
             Array.Copy(dstate.pending, dstate.nextPending, OutputBuffer, NextOut, len);
 
-            NextOut             += len;
-            dstate.nextPending  += len;
-            TotalBytesOut       += len;
-            AvailableBytesOut   -= len;
+            NextOut += len;
+            dstate.nextPending += len;
+            TotalBytesOut += len;
+            AvailableBytesOut -= len;
             dstate.pendingCount -= len;
             if (dstate.pendingCount == 0)
             {
@@ -697,9 +742,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             int len = AvailableBytesIn;
 
             if (len > size)
+            {
                 len = size;
+            }
+
             if (len == 0)
+            {
                 return 0;
+            }
 
             AvailableBytesIn -= len;
 

@@ -29,10 +29,6 @@
  * Mats Alm   		                Added       		        2011-01-01
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using System.Xml;
 
@@ -57,18 +53,18 @@ namespace OfficeOpenXml.DataValidation
 
         }
 
-         /// <summary>
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="worksheet">Worksheet that owns the validation</param>
         /// <param name="itemElementNode">Xml top node (dataValidations)</param>
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
-        internal ExcelDataValidationWithFormula(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationWithFormula(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
              eDataValidationStorageType storageType, XmlNode itemElementNode)
             : base(worksheet, address, validationType, storageType, itemElementNode)
         {
-            
+
         }
 
         /// <summary>
@@ -79,7 +75,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
         /// <param name="namespaceManager">for test purposes</param>
-        internal ExcelDataValidationWithFormula(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationWithFormula(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode, XmlNamespaceManager namespaceManager)
             : base(worksheet, address, validationType, storageType, itemElementNode, namespaceManager)
         {

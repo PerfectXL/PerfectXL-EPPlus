@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.Utils;
 using OfficeOpenXml;
 using System.Security.Cryptography.X509Certificates;
 using System.IO;
-using System.Security.Cryptography;
 using OfficeOpenXml.VBA;
 
 namespace EPPlusTest
@@ -120,9 +118,17 @@ namespace EPPlusTest
         public void VbaError()
         {
             DirectoryInfo workingDir = new DirectoryInfo(@"C:\epplusExample\folder");
-            if (!workingDir.Exists) workingDir.Create();
+            if (!workingDir.Exists)
+            {
+                workingDir.Create();
+            }
+
             FileInfo f = new FileInfo(workingDir.FullName + "//" + "temp.xlsx");
-            if (f.Exists) f.Delete();
+            if (f.Exists)
+            {
+                f.Delete();
+            }
+
             ExcelPackage myPackage = new ExcelPackage(f);
             myPackage.Workbook.CreateVBAProject();
             ExcelWorksheet excelWorksheet = myPackage.Workbook.Worksheets.Add("Sheet1");
@@ -226,7 +232,7 @@ namespace EPPlusTest
             using (var package = new ExcelPackage(new FileInfo(@"c:\temp\bug\makro.xlsm")))
             {
                 Console.WriteLine(package.Workbook.VbaProject.Modules[0].Name);
-                
+
                 package.SaveAs(new FileInfo(@"c:\temp\bug\makroepp.xlsm"));
             }
         }

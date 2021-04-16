@@ -34,8 +34,6 @@
 *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Collections;
 using System.Globalization;
 using OfficeOpenXml.Utils;
@@ -70,13 +68,13 @@ namespace OfficeOpenXml.DataValidation
     /// </summary>
     public class ExcelDataValidationCollection : XmlHelper, IEnumerable<IExcelDataValidation>
     {
-        private List<IExcelDataValidation> _validations = new List<IExcelDataValidation>();
-        private ExcelWorksheet _worksheet = null;
+        private readonly List<IExcelDataValidation> _validations = new List<IExcelDataValidation>();
+        private readonly ExcelWorksheet _worksheet = null;
 
         private const string DataValidationPath = "//d:dataValidations";
         private readonly string DataValidationItemsPath = string.Format("{0}/d:dataValidation", DataValidationPath);
 
-        private static readonly string X14DataValidationItemsPath = "//d:extLst/d:ext/x14:dataValidations/x14:dataValidation";
+        private const string X14DataValidationItemsPath = "//d:extLst/d:ext/x14:dataValidations/x14:dataValidation";
 
         /// <summary>
         /// Constructor
@@ -95,7 +93,10 @@ namespace OfficeOpenXml.DataValidation
             {
                 foreach (XmlNode node in dataValidationNodes)
                 {
-                    if (node.Attributes["sqref"] == null) continue;
+                    if (node.Attributes["sqref"] == null)
+                    {
+                        continue;
+                    }
 
                     var addr = node.Attributes["sqref"].Value;
 
@@ -116,7 +117,10 @@ namespace OfficeOpenXml.DataValidation
                 foreach (XmlNode node in x14DataValidationNodes)
                 {
                     var sqrefNode = node.SelectSingleNode("./xm:sqref", worksheet.NameSpaceManager);
-                    if (sqrefNode == null) continue;
+                    if (sqrefNode == null)
+                    {
+                        continue;
+                    }
 
                     var addr = sqrefNode.InnerText;
                     var typeSchema = node.Attributes["type"] != null ? node.Attributes["type"].Value : "";
@@ -140,7 +144,6 @@ namespace OfficeOpenXml.DataValidation
 
         private void OnValidationCountChanged()
         {
-
             //if (TopNode != null)
             //{
             //    SetXmlNodeString("@count", _validations.Count.ToString());
@@ -180,8 +183,11 @@ namespace OfficeOpenXml.DataValidation
         private void ValidateAddress(string address, IExcelDataValidation validatingValidation)
         {
             Require.Argument(address).IsNotNullOrEmpty("address");
-            
-            if (!InternalValidationEnabled) return;
+
+            if (!InternalValidationEnabled)
+            {
+                return;
+            }
 
             // ensure that the new address does not collide with an existing validation.
             var newAddress = new ExcelAddress(address);
@@ -196,7 +202,7 @@ namespace OfficeOpenXml.DataValidation
                     var result = validation.Address.Collide(newAddress);
                     if (result != ExcelAddressBase.eAddressCollition.No)
                     {
-                         throw new InvalidOperationException(string.Format("The address ({0}) collides with an existing validation ({1})", address, validation.Address.Address));
+                        throw new InvalidOperationException(string.Format("The address ({0}) collides with an existing validation ({1})", address, validation.Address.Address));
                     }
                 }
             }
@@ -212,7 +218,10 @@ namespace OfficeOpenXml.DataValidation
         /// </summary>
         internal void ValidateAll()
         {
-            if (!InternalValidationEnabled) return;
+            if (!InternalValidationEnabled)
+            {
+                return;
+            }
 
             foreach (var validation in _validations)
             {
@@ -312,7 +321,6 @@ namespace OfficeOpenXml.DataValidation
             return item;
         }
 
-
         public IExcelDataValidationTime AddTimeValidation(string address)
         {
             ValidateAddress(address);
@@ -322,6 +330,7 @@ namespace OfficeOpenXml.DataValidation
             OnValidationCountChanged();
             return item;
         }
+
         /// <summary>
         /// Adds a <see cref="ExcelDataValidationCustom"/> to the worksheet.
         /// </summary>
@@ -354,29 +363,25 @@ namespace OfficeOpenXml.DataValidation
             var dvNode = _worksheet.WorksheetXml.DocumentElement.SelectSingleNode(DataValidationPath.TrimStart('/'), NameSpaceManager);
             dvNode?.RemoveChild(((ExcelDataValidation)item).TopNode);
             var retVal = _validations.Remove(item);
-            if (retVal) OnValidationCountChanged();
+            if (retVal)
+            {
+                OnValidationCountChanged();
+            }
+
             return retVal;
         }
 
         /// <summary>
         /// Number of validations
         /// </summary>
-        public int Count
-        {
-            get { return _validations.Count; }
-        }
-
+        public int Count => _validations.Count;
 
         /// <summary>
         /// Epplus validates that all data validations are consistend and valid
         /// when they are added and when a workbook is saved. Since this takes some
         /// resources, it can be disabled for improve performance. 
         /// </summary>
-        public bool InternalValidationEnabled
-        {
-            get;
-            set;
-        }
+        public bool InternalValidationEnabled { get; set; }
 
         /// <summary>
         /// Index operator, returns by 0-based index
@@ -385,8 +390,8 @@ namespace OfficeOpenXml.DataValidation
         /// <returns></returns>
         public IExcelDataValidation this[int index]
         {
-            get { return _validations[index]; }
-            set { _validations[index] = value; }
+            get => _validations[index];
+            set => _validations[index] = value;
         }
 
         /// <summary>

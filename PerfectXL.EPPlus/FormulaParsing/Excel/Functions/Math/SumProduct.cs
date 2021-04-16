@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.Exceptions;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
@@ -55,16 +54,16 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
                 }
                 else if (arg.IsExcelRange)
                 {
-                    var r=arg.ValueAsRangeInfo;
+                    var r = arg.ValueAsRangeInfo;
                     for (int col = r.Address._fromCol; col <= r.Address._toCol; col++)
                     {
                         for (int row = r.Address._fromRow; row <= r.Address._toRow; row++)
                         {
-                            AddValue(r.GetValue(row,col), currentResult);
+                            AddValue(r.GetValue(row, col), currentResult);
                         }
                     }
                 }
-                else if(IsNumeric(arg.Value))
+                else if (IsNumeric(arg.Value))
                 {
                     AddValue(arg.Value, currentResult);
                 }

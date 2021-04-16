@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using EPPlusTest.FormulaParsing.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
-using OfficeOpenXml.FormulaParsing.Exceptions;
 
 namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
 {
@@ -29,7 +27,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
         {
             _package.Dispose();
         }
-        
+
         [TestMethod]
         public void Index_Should_Return_Value_By_Index()
         {
@@ -38,7 +36,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
                 FunctionsHelper.CreateArgs(
                     FunctionsHelper.CreateArgs(1, 2, 5),
                     3
-                    ),_parsingContext);
+                    ), _parsingContext);
             Assert.AreEqual(5, result.Result);
         }
 

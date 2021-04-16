@@ -16,9 +16,7 @@
  *******************************************************************************
  * Mats Alm Added		                2018-12-27
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace OfficeOpenXml.FormulaParsing
 {
@@ -39,7 +37,7 @@ namespace OfficeOpenXml.FormulaParsing
         /// <returns></returns>
         public int GetNewId()
         {
-            lock(_myLock)
+            lock (_myLock)
             {
                 return _nextId++;
             }
@@ -53,15 +51,22 @@ namespace OfficeOpenXml.FormulaParsing
         /// <returns></returns>
         public bool Add(int id, string address)
         {
-            lock(_myLock)
+            lock (_myLock)
             {
-                if (_addressCache.ContainsKey(id)) return false;
+                if (_addressCache.ContainsKey(id))
+                {
+                    return false;
+                }
+
                 _addressCache.Add(id, address);
-                if(EnableLookupCache && !_lookupCache.ContainsKey(address))
+                if (EnableLookupCache && !_lookupCache.ContainsKey(address))
+                {
                     _lookupCache.Add(address, id);
+                }
+
                 return true;
             }
-            
+
         }
 
         /// <summary>
@@ -79,7 +84,11 @@ namespace OfficeOpenXml.FormulaParsing
         /// <returns></returns>
         public string Get(int id)
         {
-            if (!_addressCache.ContainsKey(id)) return string.Empty;
+            if (!_addressCache.ContainsKey(id))
+            {
+                return string.Empty;
+            }
+
             return _addressCache[id];
         }
 
@@ -88,12 +97,12 @@ namespace OfficeOpenXml.FormulaParsing
         /// </summary>
         public void Clear()
         {
-            lock(_myLock)
+            lock (_myLock)
             {
                 _addressCache.Clear();
                 _lookupCache.Clear();
                 _nextId = 1;
-            }  
+            }
         }
 
     }

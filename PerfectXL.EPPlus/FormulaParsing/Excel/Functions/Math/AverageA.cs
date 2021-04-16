@@ -22,11 +22,7 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2014-01-06
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 using OfficeOpenXml.Utils;
 
@@ -62,23 +58,27 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
             {
                 foreach (var c in arg.ValueAsRangeInfo)
                 {
-                    if (ShouldIgnore(c, context)) continue;
+                    if (ShouldIgnore(c, context))
+                    {
+                        continue;
+                    }
+
                     CheckForAndHandleExcelError(c);
-					if (IsNumeric(c.Value) && !(c.Value is bool))
-					{
-						nValues++;
-						retVal += c.ValueDouble;
-					}
-					else if (c.Value is bool)
-					{
-						nValues++;
-						retVal += (bool)c.Value ? 1 : 0;
-					}
-					else if (c.Value is string)
-					{
-						nValues++;
-					}
-				}
+                    if (IsNumeric(c.Value) && !(c.Value is bool))
+                    {
+                        nValues++;
+                        retVal += c.ValueDouble;
+                    }
+                    else if (c.Value is bool)
+                    {
+                        nValues++;
+                        retVal += (bool)c.Value ? 1 : 0;
+                    }
+                    else if (c.Value is string)
+                    {
+                        nValues++;
+                    }
+                }
             }
             else
             {
@@ -96,7 +96,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
                     }
                     else
                     {
-                        ThrowExcelErrorValueException(eErrorType.Value);   
+                        ThrowExcelErrorValueException(eErrorType.Value);
                     }
                 }
             }
@@ -105,29 +105,32 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
 
         private double? GetNumericValue(object obj, bool isInArray)
         {
-			double number;
-			System.DateTime date;
             if (IsNumeric(obj) && !(obj is bool))
             {
                 return ConvertUtil.GetValueDouble(obj);
             }
-			if (!isInArray)
-			{
-				if (obj is bool)
-				{
-					if (isInArray) return default(double?);
-					return ConvertUtil.GetValueDouble(obj);
-				}
-				else if (ConvertUtil.TryParseNumericString(obj, out number))
-				{
-					return number;
-				}
-				else if (ConvertUtil.TryParseDateString(obj, out date))
-				{
-					return date.ToOADate();
-				}
-			}
-			return default(double?);
+            if (!isInArray)
+            {
+                if (obj is bool)
+                {
+                    if (isInArray)
+                    {
+                        return default(double?);
+                    }
+
+                    return ConvertUtil.GetValueDouble(obj);
+                }
+                else if (ConvertUtil.TryParseNumericString(obj, out var number))
+                {
+                    return number;
+                }
+                else if (ConvertUtil.TryParseDateString(obj, out var date))
+                {
+                    return date.ToOADate();
+                }
+            }
+
+            return default(double?);
         }
     }
 }

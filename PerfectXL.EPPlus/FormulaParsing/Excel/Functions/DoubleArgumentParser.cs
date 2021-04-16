@@ -22,14 +22,11 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Globalization;
 using OfficeOpenXml.FormulaParsing.Utilities;
 using OfficeOpenXml.FormulaParsing.Exceptions;
-using util=OfficeOpenXml.Utils;
+using util = OfficeOpenXml.Utils;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions
 {
@@ -40,17 +37,26 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
             Require.That(obj).Named("argument").IsNotNull();
             if (obj is ExcelDataProvider.IRangeInfo)
             {
-                var r=((ExcelDataProvider.IRangeInfo)obj).FirstOrDefault();
+                var r = ((ExcelDataProvider.IRangeInfo)obj).FirstOrDefault();
                 return r == null ? 0 : r.ValueDouble;
             }
-            if (obj is double) return obj;
-            if (obj.IsNumeric()) return util.ConvertUtil.GetValueDouble(obj);
+            if (obj is double)
+            {
+                return obj;
+            }
+
+            if (obj.IsNumeric())
+            {
+                return util.ConvertUtil.GetValueDouble(obj);
+            }
+
             var str = obj != null ? obj.ToString() : string.Empty;
             try
             {
-                double d;
-                if (double.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(str, NumberStyles.Any, CultureInfo.InvariantCulture, out var d))
+                {
                     return d;
+                }
 
                 return System.DateTime.Parse(str, CultureInfo.CurrentCulture, DateTimeStyles.None).ToOADate();
             }

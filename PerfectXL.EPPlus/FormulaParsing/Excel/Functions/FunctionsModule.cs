@@ -24,8 +24,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions
@@ -57,5 +55,5 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
         {
             get { return _customCompilers; }
         }
-  }
+    }
 }

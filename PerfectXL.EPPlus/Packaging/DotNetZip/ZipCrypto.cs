@@ -66,7 +66,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         {
             ZipCrypto z = new ZipCrypto();
             if (password == null)
+            {
                 throw new BadPasswordException("This entry requires a password.");
+            }
+
             z.InitCipher(password);
             return z;
         }
@@ -80,7 +83,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             ZipCrypto z = new ZipCrypto();
 
             if (password == null)
+            {
                 throw new BadPasswordException("This entry requires a password.");
+            }
 
             z.InitCipher(password);
 
@@ -193,11 +198,15 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public byte[] DecryptMessage(byte[] cipherText, int length)
         {
             if (cipherText == null)
+            {
                 throw new ArgumentNullException("cipherText");
+            }
 
             if (length > cipherText.Length)
+            {
                 throw new ArgumentOutOfRangeException("length",
                                                       "Bad length during Decryption: the length parameter must be smaller than or equal to the size of the destination array.");
+            }
 
             byte[] plainText = new byte[length];
             for (int i = 0; i < length; i++)
@@ -225,11 +234,15 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public byte[] EncryptMessage(byte[] plainText, int length)
         {
             if (plainText == null)
+            {
                 throw new ArgumentNullException("plaintext");
+            }
 
             if (length > plainText.Length)
+            {
                 throw new ArgumentOutOfRangeException("length",
                                                       "Bad length during Encryption: The length parameter must be smaller than or equal to the size of the destination array.");
+            }
 
             byte[] cipherText = new byte[length];
             for (int i = 0; i < length; i++)
@@ -296,7 +309,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         {
             byte[] p = SharedUtilities.StringToByteArray(passphrase);
             for (int i = 0; i < passphrase.Length; i++)
+            {
                 UpdateKeys(p[i]);
+            }
         }
 
 
@@ -335,8 +350,8 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         //}
 
         // private fields for the crypto stuff:
-        private UInt32[] _Keys = { 0x12345678, 0x23456789, 0x34567890 };
-        private Ionic.Crc.CRC32 crc32 = new Ionic.Crc.CRC32();
+        private readonly UInt32[] _Keys = { 0x12345678, 0x23456789, 0x34567890 };
+        private readonly Ionic.Crc.CRC32 crc32 = new Ionic.Crc.CRC32();
 
     }
 
@@ -352,9 +367,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
     /// </summary>
     internal class ZipCipherStream : System.IO.Stream
     {
-        private ZipCrypto _cipher;
-        private System.IO.Stream _s;
-        private CryptoMode _mode;
+        private readonly ZipCrypto _cipher;
+        private readonly System.IO.Stream _s;
+        private readonly CryptoMode _mode;
 
         /// <summary>  The constructor. </summary>
         /// <param name="s">The underlying stream</param>
@@ -371,10 +386,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (_mode == CryptoMode.Encrypt)
+            {
                 throw new NotSupportedException("This stream does not encrypt via Read()");
+            }
 
             if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
+            }
 
             byte[] db = new byte[count];
             int n = _s.Read(db, 0, count);
@@ -389,13 +408,20 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (_mode == CryptoMode.Decrypt)
+            {
                 throw new NotSupportedException("This stream does not Decrypt via Write()");
+            }
 
             if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
+            }
 
             // workitem 7696
-            if (count == 0) return;
+            if (count == 0)
+            {
+                return;
+            }
 
             byte[] plaintext = null;
             if (offset != 0)
@@ -406,7 +432,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     plaintext[i] = buffer[offset + i];
                 }
             }
-            else plaintext = buffer;
+            else
+            {
+                plaintext = buffer;
+            }
 
             byte[] encrypted = _cipher.EncryptMessage(plaintext, count);
             _s.Write(encrypted, 0, encrypted.Length);

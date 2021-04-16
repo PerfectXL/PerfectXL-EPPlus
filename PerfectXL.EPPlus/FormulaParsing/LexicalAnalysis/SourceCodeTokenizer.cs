@@ -50,7 +50,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
         }
 
 
-        public SourceCodeTokenizer(IFunctionNameProvider functionRepository, INameValueProvider nameValueProvider, bool r1c1=false)
+        public SourceCodeTokenizer(IFunctionNameProvider functionRepository, INameValueProvider nameValueProvider, bool r1c1 = false)
             : this(new TokenFactory(functionRepository, nameValueProvider, r1c1), new TokenSeparatorProvider())
         {
 
@@ -77,7 +77,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             var context = new TokenizerContext(input);
             var handler = new TokenHandler(context, _tokenFactory, _separatorProvider);
             handler.Worksheet = worksheet;
-            while(handler.HasMore())
+            while (handler.HasMore())
             {
                 handler.Next();
             }
@@ -91,20 +91,20 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             return context.Result;
         }
 
-        
 
 
-        private static void HandleUnrecognizedTokens(TokenizerContext context, IDictionary<string, Token>  tokens)
+
+        private static void HandleUnrecognizedTokens(TokenizerContext context, IDictionary<string, Token> tokens)
         {
             int i = 0;
             while (i < context.Result.Count)
             {
-                var token=context.Result[i];
-                
+                var token = context.Result[i];
+
                 if (token.TokenType == TokenType.Unrecognized)
                 {
                     //Check 3-D sheet reference, Note: 3-D reference with single sheet name will be seen as a single sheet name
-                    if (i < context.Result.Count - 4 && context.Result[i+1].TokenType == TokenType.Colon && context.Result[i + 2].TokenType == TokenType.Unrecognized 
+                    if (i < context.Result.Count - 4 && context.Result[i + 1].TokenType == TokenType.Colon && context.Result[i + 2].TokenType == TokenType.Unrecognized
                             && context.Result[i + 3].TokenType == TokenType.ExclamationMark && _sheetReferenceTokens.Contains(context.Result[i + 4].TokenType))
                     {
                         token.TokenType = TokenType.WorksheetName;
@@ -130,7 +130,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                     }
 
                     //Check for Column / Row reference
-                    if (i < context.Result.Count - 2 && context.Result[i + 1].TokenType == TokenType.Colon && context.Result[i + 2].TokenType == TokenType.Unrecognized 
+                    if (i < context.Result.Count - 2 && context.Result[i + 1].TokenType == TokenType.Colon && context.Result[i + 2].TokenType == TokenType.Unrecognized
                         && IsColumnOrRowReference($"{token.Value}:{context.Result[i + 2].Value}"))
                     {
                         token.TokenType = TokenType.ExcelAddress;
@@ -138,7 +138,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
                         i += 3;
                         continue;
                     }
-                    
+
                     token.TokenType = TokenType.NameValue;
                 }
 
@@ -148,7 +148,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
 
         private static bool IsColumnOrRowReference(string address)
         {
-            return Regex.IsMatch(address, RegexConstants.ColumnReferencePattern, RegexOptions.IgnorePatternWhitespace) 
+            return Regex.IsMatch(address, RegexConstants.ColumnReferencePattern, RegexOptions.IgnorePatternWhitespace)
                    || Regex.IsMatch(address, RegexConstants.RowReferencePattern, RegexOptions.IgnorePatternWhitespace);
         }
 

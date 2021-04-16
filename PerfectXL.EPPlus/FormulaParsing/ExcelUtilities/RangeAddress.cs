@@ -28,11 +28,6 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OfficeOpenXml.FormulaParsing.Utilities;
 
 namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
 {
@@ -60,7 +55,7 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
             return Address;
         }
 
-        private static RangeAddress _empty = new RangeAddress();
+        private static readonly RangeAddress _empty = new RangeAddress();
         public static RangeAddress Empty
         {
             get { return _empty; }

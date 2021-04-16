@@ -30,13 +30,9 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Drawing.Chart;
-using System.Drawing;
 using OfficeOpenXml.Style.XmlAccess;
 
 namespace OfficeOpenXml.Drawing
@@ -95,7 +91,7 @@ namespace OfficeOpenXml.Drawing
     /// Base class for twoanchored drawings. 
     /// Drawings are Charts, shapes and Pictures.
     /// </summary>
-    public class ExcelDrawing : XmlHelper, IDisposable 
+    public class ExcelDrawing : XmlHelper, IDisposable
     {
         /// <summary>
         /// Position of the a drawing.
@@ -103,43 +99,42 @@ namespace OfficeOpenXml.Drawing
         public class ExcelPosition : XmlHelper
         {
             internal delegate void SetWidthCallback();
-            XmlNode _node;
-            XmlNamespaceManager _ns;
-            SetWidthCallback _setWidthCallback;
+            private readonly XmlNode _node;
+            private readonly XmlNamespaceManager _ns;
+            private readonly SetWidthCallback _setWidthCallback;
+
             internal ExcelPosition(XmlNamespaceManager ns, XmlNode node, SetWidthCallback setWidthCallback) :
-                base (ns,node)
+                base(ns, node)
             {
                 _node = node;
                 _ns = ns;
                 _setWidthCallback = setWidthCallback;
             }
-            const string colPath="xdr:col";
+
+            private const string colPath = "xdr:col";
+
             public int Column
             {
-                get
-                {
-                    return GetXmlNodeInt(colPath);
-                }
+                get => GetXmlNodeInt(colPath);
                 set
                 {
                     SetXmlNodeString(colPath, value.ToString());
                     _setWidthCallback();
                 }
             }
-            const string rowPath="xdr:row";
+
+            private const string rowPath = "xdr:row";
             public int Row
             {
-                get
-                {
-                    return GetXmlNodeInt(rowPath);
-                }
+                get => GetXmlNodeInt(rowPath);
                 set
                 {
                     SetXmlNodeString(rowPath, value.ToString());
                     _setWidthCallback();
                 }
             }
-            const string colOffPath = "xdr:colOff";
+
+            private const string colOffPath = "xdr:colOff";
             /// <summary>
             /// Column Offset
             /// 
@@ -149,17 +144,15 @@ namespace OfficeOpenXml.Drawing
             /// </summary>
             public int ColumnOff
             {
-                get
-                {
-                    return GetXmlNodeInt(colOffPath);
-                }
+                get => GetXmlNodeInt(colOffPath);
                 set
                 {
                     SetXmlNodeString(colOffPath, value.ToString());
                     _setWidthCallback();
                 }
             }
-            const string rowOffPath = "xdr:rowOff";
+
+            private const string rowOffPath = "xdr:rowOff";
             /// <summary>
             /// Row Offset
             /// 
@@ -169,10 +162,7 @@ namespace OfficeOpenXml.Drawing
             /// </summary>
             public int RowOff
             {
-                get
-                {
-                    return GetXmlNodeInt(rowOffPath);
-                }
+                get => GetXmlNodeInt(rowOffPath);
                 set
                 {
                     SetXmlNodeString(rowOffPath, value.ToString());
@@ -182,12 +172,13 @@ namespace OfficeOpenXml.Drawing
         }
         protected ExcelDrawings _drawings;
         protected XmlNode _topNode;
-        string _nameXPath;
+        private readonly string _nameXPath;
         protected internal int _id;
-        const float STANDARD_DPI = 96;
+        private const float STANDARD_DPI = 96;
         public const int EMU_PER_PIXEL = 9525;
-        protected internal int _width = int.MinValue, _height = int.MinValue, _top=int.MinValue, _left=int.MinValue;
-        bool _doNotAdjust = false;
+        protected internal int _width = int.MinValue, _height = int.MinValue, _top = int.MinValue, _left = int.MinValue;
+        private bool _doNotAdjust = false;
+
         internal ExcelDrawing(ExcelDrawings drawings, XmlNode node, string nameXPath) :
             base(drawings.NameSpaceManager, node)
         {
@@ -210,30 +201,39 @@ namespace OfficeOpenXml.Drawing
             }
             GetPositionSize();
             _nameXPath = nameXPath;
-            SchemaNodeOrder = new string[] { "from", "to", "graphicFrame", "sp", "clientData"  };
+            SchemaNodeOrder = new string[] { "from", "to", "graphicFrame", "sp", "clientData" };
         }
+
         /// <summary>
         /// The name of the drawing object
         /// </summary>
-        public string Name 
+        public string Name
         {
             get
             {
                 try
                 {
-                    if (_nameXPath == "") return "";
+                    if (_nameXPath == "")
+                    {
+                        return "";
+                    }
+
                     return GetXmlNodeString(_nameXPath);
                 }
                 catch
                 {
-                    return ""; 
+                    return "";
                 }
             }
             set
             {
                 try
                 {
-                    if (_nameXPath == "") throw new NotImplementedException();
+                    if (_nameXPath == "")
+                    {
+                        throw new NotImplementedException();
+                    }
+
                     SetXmlNodeString(_nameXPath, value);
                 }
                 catch
@@ -259,7 +259,7 @@ namespace OfficeOpenXml.Drawing
                     }
                     else
                     {
-                        return (eEditAs)Enum.Parse(typeof(eEditAs), s,true);
+                        return (eEditAs)Enum.Parse(typeof(eEditAs), s, true);
                     }
                 }
                 catch
@@ -269,71 +269,59 @@ namespace OfficeOpenXml.Drawing
             }
             set
             {
-                string s=value.ToString();
-                SetXmlNodeString("@editAs", s.Substring(0,1).ToLower(CultureInfo.InvariantCulture)+s.Substring(1,s.Length-1));
+                string s = value.ToString();
+                SetXmlNodeString("@editAs", s.Substring(0, 1).ToLower(CultureInfo.InvariantCulture) + s.Substring(1, s.Length - 1));
             }
         }
-        const string lockedPath="xdr:clientData/@fLocksWithSheet";
+
+        private const string lockedPath = "xdr:clientData/@fLocksWithSheet";
+
         /// <summary>
         /// Lock drawing
         /// </summary>
         public bool Locked
         {
-            get
-            {
-                return GetXmlNodeBool(lockedPath, true);
-            }
-            set
-            {
-                SetXmlNodeBool(lockedPath, value);
-            }
+            get => GetXmlNodeBool(lockedPath, true);
+            set => SetXmlNodeBool(lockedPath, value);
         }
-        const string printPath = "xdr:clientData/@fPrintsWithSheet";
+
+        private const string printPath = "xdr:clientData/@fPrintsWithSheet";
+
         /// <summary>
         /// Print drawing with sheet
         /// </summary>
         public bool Print
         {
-            get
-            {
-                return GetXmlNodeBool(printPath, true);
-            }
-            set
-            {
-                SetXmlNodeBool(printPath, value);
-            }
-        }        /// <summary>
+            get => GetXmlNodeBool(printPath, true);
+            set => SetXmlNodeBool(printPath, value);
+        }
+
+        /// <summary>
         /// Top Left position
         /// </summary>
-        public ExcelPosition From
-        {
-            get;
-            private set;
-        }
+        public ExcelPosition From { get; }
+
         /// <summary>
         /// Bottom right position
         /// </summary>
-        ExcelPosition _to = null;
+        private ExcelPosition _to = null;
+
         public ExcelPosition To
         {
-            get
-            {
-                return _to;
-            }
-            private set
-            {
-                _to = value;
-            }
+            get => _to;
+            private set => _to = value;
         }
+
         internal void ReSetWidthHeight()
         {
             if (!_drawings.Worksheet.Workbook._package.DoAdjustDrawings &&
-                EditAs==eEditAs.Absolute)
+                EditAs == eEditAs.Absolute)
             {
                 SetPixelWidth(_width);
                 SetPixelHeight(_height);
             }
         }
+
         /// <summary>
         /// Add new Drawing types here
         /// </summary>
@@ -359,10 +347,8 @@ namespace OfficeOpenXml.Drawing
                 return new ExcelDrawing(drawings, node, "");
             }
         }
-        internal string Id
-        {
-            get { return _id.ToString(); }
-        }
+        internal string Id => _id.ToString();
+
         internal static string GetTextAchoringText(eTextAnchoringType value)
         {
             switch (value)
@@ -379,6 +365,7 @@ namespace OfficeOpenXml.Drawing
                     return "t";
             }
         }
+
         internal static eTextAnchoringType GetTextAchoringEnum(string text)
         {
             switch (text)
@@ -395,6 +382,7 @@ namespace OfficeOpenXml.Drawing
                     return eTextAnchoringType.Top;
             }
         }
+
         internal static string GetTextVerticalText(eTextVerticalType value)
         {
             switch (value)
@@ -415,6 +403,7 @@ namespace OfficeOpenXml.Drawing
                     return "horz";
             }
         }
+
         internal static eTextVerticalType GetTextVerticalEnum(string text)
         {
             switch (text)
@@ -435,6 +424,7 @@ namespace OfficeOpenXml.Drawing
                     return eTextVerticalType.Horizontal;
             }
         }
+
         #region "Internal sizing functions"
         internal int GetPixelLeft()
         {
@@ -444,7 +434,7 @@ namespace OfficeOpenXml.Drawing
             int pix = 0;
             for (int col = 0; col < From.Column; col++)
             {
-                pix += (int)decimal.Truncate(((256 * GetColumnWidth(col + 1) + decimal.Truncate(128 / (decimal)mdw)) / 256) * mdw);
+                pix += (int)decimal.Truncate(((256 * GetColumnWidth(col + 1) + decimal.Truncate(128 / mdw)) / 256) * mdw);
             }
             pix += From.ColumnOff / EMU_PER_PIXEL;
             return pix;
@@ -468,9 +458,9 @@ namespace OfficeOpenXml.Drawing
             int pix = -From.ColumnOff / EMU_PER_PIXEL;
             for (int col = From.Column + 1; col <= To.Column; col++)
             {
-                pix += (int)decimal.Truncate(((256 * GetColumnWidth(col) + decimal.Truncate(128 / (decimal)mdw)) / 256) * mdw);
+                pix += (int)decimal.Truncate(((256 * GetColumnWidth(col) + decimal.Truncate(128 / mdw)) / 256) * mdw);
             }
-            pix += Convert.ToInt32(Math.Round(Convert.ToDouble(To.ColumnOff) / EMU_PER_PIXEL,0));
+            pix += Convert.ToInt32(Math.Round(Convert.ToDouble(To.ColumnOff) / EMU_PER_PIXEL, 0));
             return pix;
         }
         internal int GetPixelHeight()
@@ -527,7 +517,7 @@ namespace OfficeOpenXml.Drawing
         private double GetRowHeightFromCellFonts(int row, ExcelWorksheet ws)
         {
             var dh = ws.DefaultRowHeight;
-            if (double.IsNaN(dh) || ws.CustomHeight==false)
+            if (double.IsNaN(dh) || ws.CustomHeight == false)
             {
                 var height = dh;
 
@@ -584,13 +574,13 @@ namespace OfficeOpenXml.Drawing
             ExcelWorksheet ws = _drawings.Worksheet;
             decimal mdw = ws.Workbook.MaxFontWidth;
             int prevPix = 0;
-            int pix = (int)decimal.Truncate(((256 * GetColumnWidth(1) + decimal.Truncate(128 / (decimal)mdw)) / 256) * mdw);
+            int pix = (int)decimal.Truncate(((256 * GetColumnWidth(1) + decimal.Truncate(128 / mdw)) / 256) * mdw);
             int col = 2;
 
             while (pix < pixels)
             {
                 prevPix = pix;
-                pix += (int)decimal.Truncate(((256 * GetColumnWidth(col++) + decimal.Truncate(128 / (decimal)mdw)) / 256) * mdw);
+                pix += (int)decimal.Truncate(((256 * GetColumnWidth(col++) + decimal.Truncate(128 / mdw)) / 256) * mdw);
             }
             if (pix == pixels)
             {
@@ -615,7 +605,7 @@ namespace OfficeOpenXml.Drawing
             ExcelWorksheet ws = _drawings.Worksheet;
             //decimal mdw = ws.Workbook.MaxFontWidth;
             pixels = (int)(pixels / (dpi / STANDARD_DPI) + .5);
-            int pixOff = pixels - ((int)(GetRowHeight(From.Row + 1) / 0.75) - (int)(From.RowOff / EMU_PER_PIXEL));
+            int pixOff = pixels - ((int)(GetRowHeight(From.Row + 1) / 0.75) - From.RowOff / EMU_PER_PIXEL);
             int prevPixOff = pixels;
             int row = From.Row + 1;
 
@@ -631,7 +621,7 @@ namespace OfficeOpenXml.Drawing
             }
             else
             {
-                 To.RowOff = prevPixOff * EMU_PER_PIXEL;
+                To.RowOff = prevPixOff * EMU_PER_PIXEL;
             }
             _doNotAdjust = false;
         }
@@ -646,14 +636,14 @@ namespace OfficeOpenXml.Drawing
             decimal mdw = ws.Workbook.MaxFontWidth;
 
             pixels = (int)(pixels / (dpi / STANDARD_DPI) + .5);
-            int pixOff = (int)pixels - ((int)decimal.Truncate(((256 * GetColumnWidth(From.Column + 1) + decimal.Truncate(128 / (decimal)mdw)) / 256) * mdw) - From.ColumnOff / EMU_PER_PIXEL);
-            int prevPixOff = From.ColumnOff / EMU_PER_PIXEL + (int)pixels;
+            int pixOff = pixels - ((int)decimal.Truncate(((256 * GetColumnWidth(From.Column + 1) + decimal.Truncate(128 / mdw)) / 256) * mdw) - From.ColumnOff / EMU_PER_PIXEL);
+            int prevPixOff = From.ColumnOff / EMU_PER_PIXEL + pixels;
             int col = From.Column + 2;
 
             while (pixOff >= 0)
             {
                 prevPixOff = pixOff;
-                pixOff -= (int)decimal.Truncate(((256 * GetColumnWidth(col++) + decimal.Truncate(128 / (decimal)mdw)) / 256) * mdw);
+                pixOff -= (int)decimal.Truncate(((256 * GetColumnWidth(col++) + decimal.Truncate(128 / mdw)) / 256) * mdw);
             }
 
             To.Column = col - 2;
@@ -766,7 +756,11 @@ namespace OfficeOpenXml.Drawing
         }
         internal void GetPositionSize()
         {
-            if (_doNotAdjust) return;
+            if (_doNotAdjust)
+            {
+                return;
+            }
+
             _top = GetPixelTop();
             _left = GetPixelLeft();
             _height = GetPixelHeight();
@@ -778,13 +772,17 @@ namespace OfficeOpenXml.Drawing
         /// </summary>
         public void AdjustPositionAndSize()
         {
-            if (_drawings.Worksheet.Workbook._package.DoAdjustDrawings == false) return;
-            if (EditAs==eEditAs.Absolute)
+            if (_drawings.Worksheet.Workbook._package.DoAdjustDrawings == false)
+            {
+                return;
+            }
+
+            if (EditAs == eEditAs.Absolute)
             {
                 SetPixelLeft(_left);
                 SetPixelTop(_top);
             }
-            if(EditAs == eEditAs.Absolute || EditAs == eEditAs.OneCell)
+            if (EditAs == eEditAs.Absolute || EditAs == eEditAs.OneCell)
             {
                 SetPixelHeight(_height);
                 SetPixelWidth(_width);

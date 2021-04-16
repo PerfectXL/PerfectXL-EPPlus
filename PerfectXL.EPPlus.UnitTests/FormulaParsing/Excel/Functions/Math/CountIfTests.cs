@@ -85,7 +85,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.Math
             Assert.AreEqual(1d, result.Result);
         }
 
-[TestMethod]
+        [TestMethod]
         public void CountIfEqualToEmptyString()
         {
             _worksheet.Cells["A1"].Value = null;

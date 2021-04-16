@@ -29,10 +29,6 @@
  * Mats Alm   		                Added       		        2011-01-08
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using OfficeOpenXml.DataValidation.Formulas;
 using System.Xml;
@@ -45,7 +41,7 @@ namespace OfficeOpenXml.DataValidation
     /// </summary>
     public class ExcelDataValidationList : ExcelDataValidationWithFormula<IExcelDataValidationFormulaList>, IExcelDataValidationList
     {
-       
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -65,11 +61,11 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="address"></param>
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
-        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode)
             : base(worksheet, address, validationType, storageType, itemElementNode)
         {
-            
+
             Formula = storageType == eDataValidationStorageType.X14
                 ? new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _x14Formula1Path)
                 : new ExcelDataValidationFormulaList(NameSpaceManager, TopNode, _formula1Path);
@@ -83,7 +79,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
         /// <param name="namespaceManager">Namespace manager, for test purposes</param>
-        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationList(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             XmlNode itemElementNode, XmlNamespaceManager namespaceManager, eDataValidationStorageType storageType = eDataValidationStorageType.Normal)
             : base(worksheet, address, validationType, storageType, itemElementNode, namespaceManager)
         {

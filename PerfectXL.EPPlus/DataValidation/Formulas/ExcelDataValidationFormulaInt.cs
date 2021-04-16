@@ -29,10 +29,6 @@
  * Mats Alm   		                Added       		        2011-01-08
  * Jan Källman		    License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using System.Globalization;
@@ -47,8 +43,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
             var value = GetXmlNodeString(formulaPath);
             if (!string.IsNullOrEmpty(value))
             {
-                int intValue = default(int);
-                if (int.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out intValue))
+                if (int.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var intValue))
                 {
                     Value = intValue;
                 }

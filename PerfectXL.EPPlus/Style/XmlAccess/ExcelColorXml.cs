@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Globalization;
 namespace OfficeOpenXml.Style.XmlAccess
@@ -53,21 +51,21 @@ namespace OfficeOpenXml.Style.XmlAccess
         internal ExcelColorXml(XmlNamespaceManager nsm, XmlNode topNode) :
             base(nsm, topNode)
         {
-            if(topNode==null)
+            if (topNode == null)
             {
-                _exists=false;
+                _exists = false;
             }
             else
             {
                 _exists = true;
                 _auto = GetXmlNodeBool("@auto");
                 _theme = GetXmlNodeString("@theme");
-                _tint = GetXmlNodeDecimalNull("@tint")??decimal.MinValue;
+                _tint = GetXmlNodeDecimalNull("@tint") ?? decimal.MinValue;
                 _rgb = GetXmlNodeString("@rgb");
                 _indexed = GetXmlNodeIntNull("@indexed");
             }
         }
-        
+
         internal override string Id
         {
             get
@@ -75,7 +73,8 @@ namespace OfficeOpenXml.Style.XmlAccess
                 return _auto.ToString() + "|" + _theme + "|" + _tint + "|" + _rgb + "|" + _indexed;
             }
         }
-        bool _auto;
+
+        private bool _auto;
         public bool Auto
         {
             get
@@ -89,7 +88,8 @@ namespace OfficeOpenXml.Style.XmlAccess
                 Clear();
             }
         }
-        string _theme;
+
+        private string _theme;
         /// <summary>
         /// Theme color value
         /// </summary>
@@ -100,7 +100,8 @@ namespace OfficeOpenXml.Style.XmlAccess
                 return _theme;
             }
         }
-        decimal _tint;
+
+        private decimal _tint;
         /// <summary>
         /// Tint
         /// </summary>
@@ -123,7 +124,8 @@ namespace OfficeOpenXml.Style.XmlAccess
                 _exists = true;
             }
         }
-        string _rgb;
+
+        private string _rgb;
         /// <summary>
         /// RGB value
         /// </summary>
@@ -136,12 +138,13 @@ namespace OfficeOpenXml.Style.XmlAccess
             set
             {
                 _rgb = value;
-                _exists=true;
+                _exists = true;
                 _indexed = null;
                 _auto = false;
             }
         }
-        int? _indexed;
+
+        private int? _indexed;
         /// <summary>
         /// Indexed color value
         /// </summary>
@@ -178,13 +181,13 @@ namespace OfficeOpenXml.Style.XmlAccess
 
         internal ExcelColorXml Copy()
         {
-            return new ExcelColorXml(NameSpaceManager) {_indexed=_indexed, _tint=_tint, _rgb=_rgb, _theme=_theme, _auto=_auto, _exists=_exists };
+            return new ExcelColorXml(NameSpaceManager) { _indexed = _indexed, _tint = _tint, _rgb = _rgb, _theme = _theme, _auto = _auto, _exists = _exists };
         }
 
         internal override XmlNode CreateXmlNode(XmlNode topNode)
         {
             TopNode = topNode;
-            if(_rgb!="")
+            if (_rgb != "")
             {
                 SetXmlNodeString("@rgb", _rgb);
             }
@@ -207,7 +210,7 @@ namespace OfficeOpenXml.Style.XmlAccess
             return TopNode;
         }
 
-        bool _exists;
+        private bool _exists;
         internal bool Exists
         {
             get

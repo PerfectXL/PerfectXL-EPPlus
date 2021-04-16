@@ -31,8 +31,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Xml;
 
 namespace OfficeOpenXml.Table.PivotTable
 {
@@ -41,14 +39,15 @@ namespace OfficeOpenXml.Table.PivotTable
     /// </summary>
     public class ExcelPivotTableCollection : IEnumerable<ExcelPivotTable>
     {
-        List<ExcelPivotTable> _pivotTables = new List<ExcelPivotTable>();
         internal Dictionary<string, int> _pivotTableNames = new Dictionary<string, int>();
-        ExcelWorksheet _ws;        
+        private readonly List<ExcelPivotTable> _pivotTables = new List<ExcelPivotTable>();
+        private readonly ExcelWorksheet _ws;
+
         internal ExcelPivotTableCollection(ExcelWorksheet ws)
         {
             var pck = ws._package.Package;
-            _ws = ws;            
-            foreach(var rel in ws.Part.GetRelationships())
+            _ws = ws;
+            foreach (var rel in ws.Part.GetRelationships())
             {
                 if (rel.RelationshipType == ExcelPackage.schemaRelationships + "/pivotTable")
                 {
@@ -84,7 +83,7 @@ namespace OfficeOpenXml.Table.PivotTable
             }
             if (Range.WorkSheet != _ws.Name)
             {
-                throw(new Exception("The Range must be in the current worksheet"));
+                throw (new Exception("The Range must be in the current worksheet"));
             }
             else if (_ws.Workbook.ExistsTableName(Name))
             {
@@ -97,7 +96,7 @@ namespace OfficeOpenXml.Table.PivotTable
                     throw (new ArgumentException(string.Format("Table range collides with table {0}", t.Name)));
                 }
             }
-            
+
             return Add(new ExcelPivotTable(_ws, Range, Source, Name, _ws.Workbook._nextPivotTableID++));
         }
 
@@ -111,13 +110,8 @@ namespace OfficeOpenXml.Table.PivotTable
             }
             return name;
         }
-        public int Count
-        {
-            get
-            {
-                return _pivotTables.Count;
-            }
-        }
+        public int Count => _pivotTables.Count;
+
         /// <summary>
         /// The pivottable Index. Base 0.
         /// </summary>
@@ -134,6 +128,7 @@ namespace OfficeOpenXml.Table.PivotTable
                 return _pivotTables[Index];
             }
         }
+
         /// <summary>
         /// Pivottabes accesed by name
         /// </summary>
@@ -153,6 +148,7 @@ namespace OfficeOpenXml.Table.PivotTable
                 }
             }
         }
+
         public IEnumerator<ExcelPivotTable> GetEnumerator()
         {
             return _pivotTables.GetEnumerator();

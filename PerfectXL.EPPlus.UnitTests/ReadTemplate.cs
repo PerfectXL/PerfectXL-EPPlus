@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using System.IO;
-using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Style;
-using OfficeOpenXml.Drawing;
 using OfficeOpenXml.ConditionalFormatting;
 using System.Threading;
 using System.Drawing;
@@ -44,7 +41,7 @@ namespace EPPlusTest
             var file = new FileInfo(@"c:\temp\Adenoviridae Protocol.xlsx");
             using (ExcelPackage pck = new ExcelPackage(file))
             {
-                pck.Workbook.Worksheets[1].Cells["G4"].Value=12;
+                pck.Workbook.Worksheets[1].Cells["G4"].Value = 12;
                 pck.SaveAs(new FileInfo(@"c:\temp\Adenoviridae Protocol2.xlsx"));
             }
         }
@@ -72,7 +69,7 @@ namespace EPPlusTest
         [Ignore]
         [TestMethod]
         public void CondFormatDataValBug()
-        {            
+        {
             var file = new FileInfo(@"c:\temp\condi.xlsx");
             using (ExcelPackage pck = new ExcelPackage(file))
             {
@@ -102,27 +99,27 @@ namespace EPPlusTest
             ExcelWorkbook workBook = package.Workbook;
             if (workBook != null)
             {
-            if (workBook.Worksheets.Count > 0) //fails on this line
-            {
-            // Get the first worksheet
-            ExcelWorksheet currentWorksheet = workBook.Worksheets.First();
+                if (workBook.Worksheets.Count > 0) //fails on this line
+                {
+                    // Get the first worksheet
+                    ExcelWorksheet currentWorksheet = workBook.Worksheets.First();
 
-            var rowCount = 1;
-            var lastRow = currentWorksheet.Dimension.End.Row;
-            var lastColumn = currentWorksheet.Dimension.End.Column;
-            while (rowCount <= lastRow)
-            {
-            var columnCount = 1;
-            var line = "";
-            while (columnCount <= lastColumn)
-            {
-            line += currentWorksheet.Cells[rowCount, columnCount].Value + "|";
-            columnCount++;
-            }
-            lines.Add(line);
-            rowCount++;
-            }
-            }
+                    var rowCount = 1;
+                    var lastRow = currentWorksheet.Dimension.End.Row;
+                    var lastColumn = currentWorksheet.Dimension.End.Column;
+                    while (rowCount <= lastRow)
+                    {
+                        var columnCount = 1;
+                        var line = "";
+                        while (columnCount <= lastColumn)
+                        {
+                            line += currentWorksheet.Cells[rowCount, columnCount].Value + "|";
+                            columnCount++;
+                        }
+                        lines.Add(line);
+                        rowCount++;
+                    }
+                }
             }
         }
         [Ignore]
@@ -156,10 +153,10 @@ namespace EPPlusTest
                 var rt1 = rng.RichText.Add("TEXT1\r\n");
                 rt1.Bold = true;
                 rng.Style.WrapText = true;
-                var rt2=rng.RichText.Add("TEXT2");
+                var rt2 = rng.RichText.Add("TEXT2");
                 rt2.Bold = false;
             }
-            
+
             package.SaveAs(new FileInfo(@"c:\temp\2.9 bugs\error.xlsx"));
         }
         [Ignore]
@@ -243,7 +240,7 @@ namespace EPPlusTest
             var ws = package.Workbook.Worksheets[1];
             ws.Cells["A1"].Value = 1;
             package.SaveAs(new FileInfo(@"c:\temp\TestTableSave.xlsx"));
-        }        
+        }
         [TestMethod, Ignore]
         public void ReadBug12()
         {
@@ -283,9 +280,9 @@ namespace EPPlusTest
             col.Style.Fill.BackgroundColor.SetColor(Color.Red);
             package.SaveAs(new FileInfo(@"c:\temp\bug2.xlsx"));
         }
-#region "Threading Cellstore Test"
-        public int _threadCount=0;
-        ExcelPackage _pckThread;
+        #region "Threading Cellstore Test"
+        public int _threadCount = 0;
+        private ExcelPackage _pckThread;
         [TestMethod, Ignore]
         public void ThreadingTest()
         {
@@ -294,19 +291,19 @@ namespace EPPlusTest
 
             for (int t = 0; t < 20; t++)
             {
-                var ts=new ThreadState(Finnished)
+                var ts = new ThreadState(Finnished)
                 {
-                    ws=ws,
-                    StartRow=1+(t*1000),
-                    Rows=1000,                    
+                    ws = ws,
+                    StartRow = 1 + (t * 1000),
+                    Rows = 1000,
                 };
-                var tstart=new ThreadStart(ts.StartLoad);                                
+                var tstart = new ThreadStart(ts.StartLoad);
                 var thread = new Thread(tstart);
                 _threadCount++;
                 thread.Start();
             }
             while (1 == 1)
-            {                
+            {
                 if (_threadCount == 0)
                 {
                     _pckThread.SaveAs(new FileInfo("c:\\temp\\thread.xlsx"));
@@ -332,23 +329,23 @@ namespace EPPlusTest
             public cbFinished _cb;
             public void StartLoad()
             {
-                for(int row=StartRow;row<StartRow+Rows;row++)
+                for (int row = StartRow; row < StartRow + Rows; row++)
                 {
                     for (int col = 1; col < 100; col++)
                     {
-                        ws.SetValue(row,col,string.Format("row {0} col {1}", row,col));
+                        ws.SetValue(row, col, string.Format("row {0} col {1}", row, col));
                     }
                 }
                 _cb();
             }
         }
-#endregion
+        #endregion
         [Ignore]
         [TestMethod]
         public void TestInvalidVBA()
         {
-            const string infile=@"C:\temp\bug\Infile.xlsm";
-            const string outfile=@"C:\temp\bug\Outfile.xlsm";
+            const string infile = @"C:\temp\bug\Infile.xlsm";
+            const string outfile = @"C:\temp\bug\Outfile.xlsm";
             ExcelPackage ep;
 
             using (FileStream fs = File.OpenRead(infile))
@@ -369,7 +366,7 @@ namespace EPPlusTest
             using (FileStream fs = File.OpenWrite(outfile))
             {
                 ep.SaveAs(fs);
-            }            
+            }
         }
         [Ignore]
         [TestMethod]
@@ -391,18 +388,18 @@ namespace EPPlusTest
         }
         [TestMethod, Ignore]
         public void test()
-        { 
+        {
             CreateXlsxSheet(@"C:\temp\bug\test4.xlsx", 4, 4);
-            CreateXlsxSheet(@"C:\temp\bug\test25.xlsx", 25, 25); 
+            CreateXlsxSheet(@"C:\temp\bug\test25.xlsx", 25, 25);
         }
         [Ignore]
         [TestMethod]
         public void I15038()
         {
-            using(var p = new ExcelPackage(new FileInfo(@"c:\temp\bug\15038.xlsx")))
+            using (var p = new ExcelPackage(new FileInfo(@"c:\temp\bug\15038.xlsx")))
             {
-                var ws=p.Workbook.Worksheets[1];
-            
+                var ws = p.Workbook.Worksheets[1];
+
             }
         }
         [Ignore]
@@ -457,7 +454,7 @@ namespace EPPlusTest
             using (var p = new ExcelPackage(new FileInfo(@"C:\temp\bug\GridToExcel_05-12-2014.xlsx")))
             {
                 var ws = p.Workbook.Worksheets[1];
-                foreach (var cell in ws.Cells[1,84,3,86])
+                foreach (var cell in ws.Cells[1, 84, 3, 86])
                 {
                     Console.WriteLine(cell.Address);
                 }
@@ -479,7 +476,7 @@ namespace EPPlusTest
             using (var p = new ExcelPackage())
             {
                 p.Workbook.CreateVBAProject();
-                ws = p.Workbook.Worksheets.Add("Градуировка");                
+                ws = p.Workbook.Worksheets.Add("Градуировка");
                 using (var p2 = new ExcelPackage())
                 {
                     p2.Workbook.CreateVBAProject();
@@ -509,9 +506,9 @@ namespace EPPlusTest
             var fs = File.Create(@"c:\temp\fs.xlsx");
             using (var pkg = new ExcelPackage(fs))
             {
-                var ws=pkg.Workbook.Worksheets.Add("test");
+                var ws = pkg.Workbook.Worksheets.Add("test");
                 ws.Cells["A1"].Value = 1;
-                var col=ws.Column(1);
+                var col = ws.Column(1);
                 col.OutlineLevel = 1;
                 col.ColumnMax = ExcelPackage.MaxColumns;
                 col.ColumnMax = 1;
@@ -538,9 +535,12 @@ namespace EPPlusTest
             return templateFIle;
         }
 
-        private static void CreateXlsxSheet(string pFileName, int pRows, int pColumns) 
+        private static void CreateXlsxSheet(string pFileName, int pRows, int pColumns)
         {
-            if (File.Exists(pFileName)) File.Delete(pFileName);
+            if (File.Exists(pFileName))
+            {
+                File.Delete(pFileName);
+            }
 
             using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(pFileName)))
             {
@@ -572,7 +572,7 @@ namespace EPPlusTest
 
                 // now I would add data to the first column (left out here)...
                 excelPackage.Save();
-            } 
-        }    
+            }
+        }
     }
 }

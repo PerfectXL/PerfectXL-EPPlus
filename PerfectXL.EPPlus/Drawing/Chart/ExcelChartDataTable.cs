@@ -29,9 +29,6 @@
  * Mark Kromis		Added		2017-01-07
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Style;
 
@@ -42,37 +39,38 @@ namespace OfficeOpenXml.Drawing.Chart
     /// </summary>
     public class ExcelChartDataTable : XmlHelper
     {
-       internal ExcelChartDataTable(XmlNamespaceManager ns, XmlNode node)
-           : base(ns,node)
-       {
-           XmlNode topNode = node.SelectSingleNode("c:dTable", NameSpaceManager);
-           if (topNode == null)
-           {
-               topNode = node.OwnerDocument.CreateElement("c", "dTable", ExcelPackage.schemaChart);
-               //node.InsertAfter(_topNode, node.SelectSingleNode("c:order", NameSpaceManager));
-               InserAfter(node, "c:valAx,c:catAx", topNode);
-               SchemaNodeOrder = new string[] { "dTable", "showHorzBorder", "showVertBorder", "showOutline", "showKeys", "spPr", "txPr" };
-               topNode.InnerXml = "<c:showHorzBorder val=\"1\"/><c:showVertBorder val=\"1\"/><c:showOutline val=\"1\"/><c:showKeys val=\"1\"/>";
-           }
-           TopNode = topNode;
-       }
-       #region "Public properties"
-       const string showHorzBorderPath = "c:showHorzBorder/@val";
+        internal ExcelChartDataTable(XmlNamespaceManager ns, XmlNode node)
+            : base(ns, node)
+        {
+            XmlNode topNode = node.SelectSingleNode("c:dTable", NameSpaceManager);
+            if (topNode == null)
+            {
+                topNode = node.OwnerDocument.CreateElement("c", "dTable", ExcelPackage.schemaChart);
+                //node.InsertAfter(_topNode, node.SelectSingleNode("c:order", NameSpaceManager));
+                InserAfter(node, "c:valAx,c:catAx", topNode);
+                SchemaNodeOrder = new string[] { "dTable", "showHorzBorder", "showVertBorder", "showOutline", "showKeys", "spPr", "txPr" };
+                topNode.InnerXml = "<c:showHorzBorder val=\"1\"/><c:showVertBorder val=\"1\"/><c:showOutline val=\"1\"/><c:showKeys val=\"1\"/>";
+            }
+            TopNode = topNode;
+        }
+        #region "Public properties"
+        private const string showHorzBorderPath = "c:showHorzBorder/@val";
         /// <summary>
         /// The horizontal borders shall be shown in the data table
         /// </summary>
         public bool ShowHorizontalBorder
         {
-           get
-           {
-               return GetXmlNodeBool(showHorzBorderPath);
-           }
-           set
-           {
-               SetXmlNodeString(showHorzBorderPath, value ? "1" : "0");
-           }
-       }
-        const string showVertBorderPath = "c:showVertBorder/@val";
+            get
+            {
+                return GetXmlNodeBool(showHorzBorderPath);
+            }
+            set
+            {
+                SetXmlNodeString(showHorzBorderPath, value ? "1" : "0");
+            }
+        }
+
+        private const string showVertBorderPath = "c:showVertBorder/@val";
         /// <summary>
         /// The vertical borders shall be shown in the data table
         /// </summary>
@@ -87,7 +85,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(showVertBorderPath, value ? "1" : "0");
             }
         }
-        const string showOutlinePath = "c:showOutline/@val";
+
+        private const string showOutlinePath = "c:showOutline/@val";
         /// <summary>
         /// The outline shall be shown on the data table
         /// </summary>
@@ -102,7 +101,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(showOutlinePath, value ? "1" : "0");
             }
         }
-        const string showKeysPath = "c:showKeys/@val";
+
+        private const string showKeysPath = "c:showKeys/@val";
         /// <summary>
         /// The legend keys shall be shown in the data table
         /// </summary>
@@ -117,7 +117,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(showKeysPath, value ? "1" : "0");
             }
         }
-        ExcelDrawingFill _fill = null;
+
+        private ExcelDrawingFill _fill = null;
         /// <summary>
         /// Access fill properties
         /// </summary>
@@ -132,7 +133,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _fill;
             }
         }
-        ExcelDrawingBorder _border = null;
+
+        private ExcelDrawingBorder _border = null;
         /// <summary>
         /// Access border properties
         /// </summary>
@@ -147,8 +149,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _border;
             }
         }
-        string[] _paragraphSchemaOrder = new string[] { "spPr", "txPr", "dLblPos", "showVal", "showCatName", "showSerName", "showPercent", "separator", "showLeaderLines", "pPr", "defRPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" };
-        ExcelTextFont _font = null;
+
+        private readonly string[] _paragraphSchemaOrder = new string[] { "spPr", "txPr", "dLblPos", "showVal", "showCatName", "showSerName", "showPercent", "separator", "showLeaderLines", "pPr", "defRPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" };
+        private ExcelTextFont _font = null;
         /// <summary>
         /// Access font properties
         /// </summary>

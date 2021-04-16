@@ -14,11 +14,9 @@ using System.Collections.Generic;
 using OfficeOpenXml.Table.PivotTable;
 using OfficeOpenXml.Drawing.Chart;
 using System.Text;
-using System.Dynamic;
 using System.Globalization;
 using OfficeOpenXml.ConditionalFormatting.Contracts;
 using OfficeOpenXml.Drawing;
-using OfficeOpenXml.FormulaParsing;
 
 namespace EPPlusTest
 {
@@ -650,7 +648,9 @@ namespace EPPlusTest
         public void Issue14966()
         {
             using (var package = new ExcelPackage(new FileInfo(@"c:\temp\bug\ssis\FileFromReportingServer2012.xlsx")))
+            {
                 package.SaveAs(new FileInfo(@"c:\temp\bug\ssis\Corrupted.xlsx"));
+            }
         }
         [TestMethod, Ignore]
         public void Issue15200()
@@ -1095,7 +1095,7 @@ namespace EPPlusTest
                 var worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
                 var equalsRule = worksheet.ConditionalFormatting.AddEqual(new ExcelAddress(2, 3, 6, 3));
                 equalsRule.Formula = "0";
-                ((IExcelConditionalFormattingRuleStyle) equalsRule).Style.Fill.BackgroundColor.Color = Color.Blue;
+                ((IExcelConditionalFormattingRuleStyle)equalsRule).Style.Fill.BackgroundColor.Color = Color.Blue;
                 worksheet.ConditionalFormatting.AddDatabar(new ExcelAddress(4, 4, 4, 4), Color.Red);
                 excelPackage.Save();
             }
@@ -1251,7 +1251,10 @@ namespace EPPlusTest
             try
             {
                 if (file.Exists)
+                {
                     file.Delete();
+                }
+
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
                     var sheet = package.Workbook.Worksheets.Add("New Sheet");
@@ -1267,7 +1270,9 @@ namespace EPPlusTest
             finally
             {
                 if (file.Exists)
+                {
                     file.Delete();
+                }
             }
         }
 
@@ -1278,7 +1283,10 @@ namespace EPPlusTest
             try
             {
                 if (file.Exists)
+                {
                     file.Delete();
+                }
+
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
                     var sheet = package.Workbook.Worksheets.Add("New Sheet");
@@ -1294,7 +1302,9 @@ namespace EPPlusTest
             finally
             {
                 if (file.Exists)
+                {
                     file.Delete();
+                }
             }
         }
 
@@ -1305,7 +1315,10 @@ namespace EPPlusTest
             try
             {
                 if (file.Exists)
+                {
                     file.Delete();
+                }
+
                 using (ExcelPackage package = new ExcelPackage(file))
                 {
                     var sheet = package.Workbook.Worksheets.Add("New Sheet");
@@ -1321,7 +1334,9 @@ namespace EPPlusTest
             finally
             {
                 if (file.Exists)
+                {
                     file.Delete();
+                }
             }
         }
         [TestMethod, Ignore]
@@ -1380,7 +1395,9 @@ namespace EPPlusTest
         {
             var existingFile = new FileInfo(@"c:\temp\Chart_From_Cell_Union_Selector_Bug_Test.xlsx");
             if (existingFile.Exists)
+            {
                 existingFile.Delete();
+            }
 
             using (var pck = new ExcelPackage(existingFile))
             {
@@ -1743,7 +1760,9 @@ namespace EPPlusTest
             var fileInfo = new FileInfo(@"C:\Temp\issue58.xlsx");
             var package = new ExcelPackage(fileInfo);
             if (package.Workbook.Worksheets.Count > 0)
+            {
                 package.Workbook.Worksheets.Delete("Test");
+            }
 
             var worksheet = package.Workbook.Worksheets.Add("Test");
             worksheet.Cells[1, 1].Value = "Name";
@@ -1802,8 +1821,8 @@ namespace EPPlusTest
             }
         }
         #region Issue 44
-        private static string PIVOT_WS_NAME = "Pivot";
-        private static string DATA_WS_NAME = "Data";
+        private static readonly string PIVOT_WS_NAME = "Pivot";
+        private static readonly string DATA_WS_NAME = "Data";
         [TestMethod, Ignore]
         public void Issue44()
         {
@@ -2413,7 +2432,7 @@ namespace EPPlusTest
         {
             var p = OpenTemplatePackage("Issue460.xlsx");
             var ws = p.Workbook.Worksheets[0];
-            var newWs=p.Workbook.Worksheets.Add("NewSheet");
+            var newWs = p.Workbook.Worksheets.Add("NewSheet");
             ws.Cells.Copy(newWs.Cells);
             SaveWorksheet("Issue460_saved.xlsx");
         }

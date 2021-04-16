@@ -30,9 +30,6 @@
  * Jan Källman		    License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using System.Globalization;
@@ -46,8 +43,7 @@ namespace OfficeOpenXml.DataValidation.Formulas
             var value = GetXmlNodeString(formulaPath);
             if (!string.IsNullOrEmpty(value))
             {
-                double oADate = default(double);
-                if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out oADate))
+                if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var oADate))
                 {
                     Value = DateTime.FromOADate(oADate);
                 }

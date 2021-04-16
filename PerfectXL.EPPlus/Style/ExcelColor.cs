@@ -31,13 +31,11 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Text;
 using OfficeOpenXml.Style.XmlAccess;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml;
 using OfficeOpenXml.Theme;
 
 namespace OfficeOpenXml.Style
@@ -45,11 +43,11 @@ namespace OfficeOpenXml.Style
     /// <summary>
     /// Color for cellstyling
     /// </summary>
-    public sealed class ExcelColor :  StyleBase, IColor
+    public sealed class ExcelColor : StyleBase, IColor
     {
-        eStyleClass _cls;
-        StyleBase _parent;
-        internal ExcelColor(ExcelStyles styles, OfficeOpenXml.XmlHelper.ChangedEventHandler ChangedEvent, int worksheetID, string address, eStyleClass cls, StyleBase parent) : 
+        private readonly eStyleClass _cls;
+        private readonly StyleBase _parent;
+        internal ExcelColor(ExcelStyles styles, OfficeOpenXml.XmlHelper.ChangedEventHandler ChangedEvent, int worksheetID, string address, eStyleClass cls, StyleBase parent) :
             base(styles, ChangedEvent, worksheetID, address)
         {
             _parent = parent;
@@ -131,7 +129,7 @@ namespace OfficeOpenXml.Style
         /// <param name="blue">Blue component value</param>
         public void SetColor(int alpha, int red, int green, int blue)
         {
-            if(alpha < 0 || red < 0 || green < 0 ||blue < 0 ||
+            if (alpha < 0 || red < 0 || green < 0 || blue < 0 ||
                alpha > 255 || red > 255 || green > 255 || blue > 255)
             {
                 throw (new ArgumentException("Argument range must be from 0 to 255"));
@@ -141,7 +139,7 @@ namespace OfficeOpenXml.Style
         }
         internal override string Id
         {
-            get 
+            get
             {
                 return Theme + Tint + Rgb + Indexed;
             }
@@ -149,7 +147,7 @@ namespace OfficeOpenXml.Style
         private ExcelColorXml GetSource()
         {
             Index = _parent.Index < 0 ? 0 : _parent.Index;
-            switch(_cls)
+            switch (_cls)
             {
                 case eStyleClass.FillBackgroundColor:
                     return _styles.Fills[Index].BackgroundColor;
@@ -168,7 +166,7 @@ namespace OfficeOpenXml.Style
                 case eStyleClass.BorderDiagonal:
                     return _styles.Borders[Index].Diagonal.Color;
                 default:
-                    throw(new Exception("Invalid style-class for Color"));
+                    throw (new Exception("Invalid style-class for Color"));
             }
         }
 
@@ -270,7 +268,7 @@ namespace OfficeOpenXml.Style
             {
                 var index = int.Parse(theColor.Theme);
                 rawColorString = Enum.IsDefined(typeof(ThemeColorName), index)
-                    ? PrefixColorString(schemeColors?.FirstOrDefault(x => x.ThemeColorName == (ThemeColorName) index)?.Value)
+                    ? PrefixColorString(schemeColors?.FirstOrDefault(x => x.ThemeColorName == (ThemeColorName)index)?.Value)
                     : null;
             }
             else if (theColor.Indexed == null)
@@ -307,7 +305,7 @@ namespace OfficeOpenXml.Style
 
             Color color = HexValueToColor(argbColor);
             var (hue, li, sat) = ColorConversion.RgbToHls(color.R, color.G, color.B);
-            li += tint < 0 ? li * (double) tint : (1.0 - li) * (double) tint;
+            li += tint < 0 ? li * (double)tint : (1.0 - li) * (double)tint;
             var (r, g, b) = ColorConversion.HlsToRgb(hue, li, sat);
             return PrefixColorString($"{r:X2}{g:X2}{b:X2}");
         }
@@ -342,8 +340,8 @@ namespace OfficeOpenXml.Style
                 var doubleG = g / 255.0;
                 var doubleB = b / 255.0;
 
-                var max = new[] {doubleR, doubleB, doubleG}.Max();
-                var min = new[] {doubleR, doubleB, doubleG}.Min();
+                var max = new[] { doubleR, doubleB, doubleG }.Max();
+                var min = new[] { doubleR, doubleB, doubleG }.Min();
 
                 var diff = max - min;
                 var li = (max + min) / 2;
@@ -396,16 +394,16 @@ namespace OfficeOpenXml.Style
 
                 if (Math.Abs(sat) < 0.00001)
                 {
-                    var rgb = (byte) (li * 255.0);
+                    var rgb = (byte)(li * 255.0);
                     return (rgb, rgb, rgb);
                 }
 
                 var doubleR = QqhToRgb(p1, p2, hue + 120);
                 var doubleG = QqhToRgb(p1, p2, hue);
                 var doubleB = QqhToRgb(p1, p2, hue - 120);
-                var r = (byte) (doubleR * 255.0);
-                var g = (byte) (doubleG * 255.0);
-                var b = (byte) (doubleB * 255.0);
+                var r = (byte)(doubleR * 255.0);
+                var g = (byte)(doubleG * 255.0);
+                var b = (byte)(doubleB * 255.0);
                 return (r, g, b);
             }
 

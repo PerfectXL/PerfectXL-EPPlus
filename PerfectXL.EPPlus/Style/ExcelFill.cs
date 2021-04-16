@@ -29,11 +29,6 @@
  * Jan Källman		                Initial Release		        2009-10-01
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
-using OfficeOpenXml.Style.XmlAccess;
-using System.Globalization;
 
 namespace OfficeOpenXml.Style
 {
@@ -66,11 +61,16 @@ namespace OfficeOpenXml.Style
             }
             set
             {
-                if (_gradient != null) _gradient = null;
+                if (_gradient != null)
+                {
+                    _gradient = null;
+                }
+
                 _ChangedEvent(this, new StyleChangeEventArgs(eStyleClass.Fill, eStyleProperty.PatternType, value, _positionID, _address));
             }
         }
-        ExcelColor _patternColor = null;
+
+        private ExcelColor _patternColor = null;
         /// <summary>
         /// The color of the pattern
         /// </summary>
@@ -81,12 +81,16 @@ namespace OfficeOpenXml.Style
                 if (_patternColor == null)
                 {
                     _patternColor = new ExcelColor(_styles, _ChangedEvent, _positionID, _address, eStyleClass.FillPatternColor, this);
-                    if (_gradient != null) _gradient = null;
+                    if (_gradient != null)
+                    {
+                        _gradient = null;
+                    }
                 }
                 return _patternColor;
             }
         }
-        ExcelColor _backgroundColor = null;
+
+        private ExcelColor _backgroundColor = null;
         /// <summary>
         /// The background color
         /// </summary>
@@ -97,22 +101,26 @@ namespace OfficeOpenXml.Style
                 if (_backgroundColor == null)
                 {
                     _backgroundColor = new ExcelColor(_styles, _ChangedEvent, _positionID, _address, eStyleClass.FillBackgroundColor, this);
-                    if (_gradient != null) _gradient = null;
+                    if (_gradient != null)
+                    {
+                        _gradient = null;
+                    }
                 }
                 return _backgroundColor;
-                
+
             }
         }
-        ExcelGradientFill _gradient=null;
+
+        private ExcelGradientFill _gradient = null;
         /// <summary>
         /// Access to properties for gradient fill.
         /// </summary>
-        public ExcelGradientFill Gradient 
+        public ExcelGradientFill Gradient
         {
             get
             {
                 if (_gradient == null)
-                {                    
+                {
                     _gradient = new ExcelGradientFill(_styles, _ChangedEvent, _positionID, _address, Index);
                     _backgroundColor = null;
                     _patternColor = null;

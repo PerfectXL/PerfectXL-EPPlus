@@ -55,7 +55,7 @@ namespace EPPlusTest
                     var stylesDict = new System.Collections.Generic.Dictionary<string, string>();
                     string[] styles = a1.Comment.Style
                         .Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach(var s in styles)
+                    foreach (var s in styles)
                     {
                         string[] split = s.Split(':');
                         if (split.Length == 2)

@@ -30,14 +30,10 @@
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.Utils;
 using System.Xml;
 using System.Text.RegularExpressions;
-using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using OfficeOpenXml.DataValidation.Contracts;
 
 namespace OfficeOpenXml.DataValidation
@@ -48,7 +44,6 @@ namespace OfficeOpenXml.DataValidation
     public abstract class ExcelDataValidation : XmlHelper, IExcelDataValidation
     {
         private const string _itemElementNodeName = "d:dataValidation";
-
 
         private readonly string _errorStylePath = "@errorStyle";
         private readonly string _errorTitlePath = "@errorTitle";
@@ -80,11 +75,10 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="itemElementNode">Xml top node (dataValidations)</param>
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
-        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode)
             : this(worksheet, address, validationType, storageType, itemElementNode, null)
         {
-
         }
 
         /// <summary>
@@ -95,7 +89,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType">Data validation type</param>
         /// <param name="address">address for data validation</param>
         /// <param name="namespaceManager">Xml Namespace manager</param>
-        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidation(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             eDataValidationStorageType storageType, XmlNode itemElementNode, XmlNamespaceManager namespaceManager)
             : base(namespaceManager != null ? namespaceManager : worksheet.NameSpaceManager)
         {
@@ -121,7 +115,7 @@ namespace OfficeOpenXml.DataValidation
         private void Init()
         {
             // set schema node order
-            if(ValidationType == ExcelDataValidationType.List)
+            if (ValidationType == ExcelDataValidationType.List)
             {
                 SchemaNodeOrder = new string[]{
                     "type",
@@ -155,7 +149,6 @@ namespace OfficeOpenXml.DataValidation
                     "formula2"
                 };
             }
-            
         }
 
         private string CheckAndFixRangeAddress(string address)
@@ -203,28 +196,17 @@ namespace OfficeOpenXml.DataValidation
         /// <summary>
         /// True if the validation type allows operator to be set.
         /// </summary>
-        public bool AllowsOperator
-        {
-            get
-            {
-                return ValidationType.AllowOperator;
-            }
-        }
+        public bool AllowsOperator => ValidationType.AllowOperator;
 
         /// <summary>
         /// Address of data validation
         /// </summary>
         public ExcelAddress Address
         {
-            get
-            {
-                return new ExcelAddress(GetXmlNodeString(_sqrefPath));
-            }
-            private set
-            {
-                SetAddress(value.Address);
-            }
+            get => new ExcelAddress(GetXmlNodeString(_sqrefPath));
+            private set => SetAddress(value.Address);
         }
+
         /// <summary>
         /// Validation type
         /// </summary>
@@ -432,7 +414,6 @@ namespace OfficeOpenXml.DataValidation
         {
             var dvAddress = AddressUtility.ParseEntireColumnSelections(address);
             SetXmlNodeString(_sqrefPath, dvAddress);
-            
         }
     }
 }

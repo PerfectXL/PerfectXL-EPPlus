@@ -86,14 +86,10 @@
 //
 // -----------------------------------------------------------------------
 
-
-
-using System;
-using Interop=System.Runtime.InteropServices;
+using Interop = System.Runtime.InteropServices;
 
 namespace OfficeOpenXml.Packaging.Ionic.Zlib
 {
-
     /// <summary>
     /// Describes how to flush the current deflate operation.
     /// </summary>
@@ -147,7 +143,8 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         /// If you are producing ZIPs for use on Mac OSX, be aware that archives produced with CompressionLevel.None
         /// cannot be opened with the default zip reader. Use a different CompressionLevel.
         /// </summary>
-        None= 0,
+        None = 0,
+
         /// <summary>
         /// Same as None.
         /// </summary>
@@ -187,6 +184,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         /// The default compression level, with a good balance of speed and compression efficiency.
         /// </summary>
         Default = 6,
+
         /// <summary>
         /// A synonym for Default.
         /// </summary>
@@ -251,7 +249,8 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         /// <summary>
         /// Used to specify that the stream should compress the data.
         /// </summary>
-        Compress= 0,
+        Compress = 0,
+
         /// <summary>
         /// Used to specify that the stream should decompress the data.
         /// </summary>
@@ -278,12 +277,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         /// This ctor collects a message attached to the exception.
         /// </summary>
         /// <param name="s">the message for the exception.</param>
-        public ZlibException(System.String s)
+        public ZlibException(string s)
             : base(s)
         {
         }
     }
-
 
     internal class SharedUtils
     {
@@ -326,57 +324,62 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         ///   count depending on the data available in the source TextReader. Returns -1
         ///   if the end of the stream is reached.
         /// </returns>
-        public static System.Int32 ReadInput(System.IO.TextReader sourceTextReader, byte[] target, int start, int count)
+        public static int ReadInput(System.IO.TextReader sourceTextReader, byte[] target, int start, int count)
         {
             // Returns 0 bytes if not enough space in target
-            if (target.Length == 0) return 0;
+            if (target.Length == 0)
+            {
+                return 0;
+            }
 
             char[] charArray = new char[target.Length];
             int bytesRead = sourceTextReader.Read(charArray, start, count);
 
             // Returns -1 if EOF
-            if (bytesRead == 0) return -1;
+            if (bytesRead == 0)
+            {
+                return -1;
+            }
 
             for (int index = start; index < start + bytesRead; index++)
+            {
                 target[index] = (byte)charArray[index];
+            }
 
             return bytesRead;
         }
 
-
-        internal static byte[] ToByteArray(System.String sourceString)
+        internal static byte[] ToByteArray(string sourceString)
         {
-            return System.Text.UTF8Encoding.UTF8.GetBytes(sourceString);
+            return System.Text.Encoding.UTF8.GetBytes(sourceString);
         }
-
 
         internal static char[] ToCharArray(byte[] byteArray)
         {
-            return System.Text.UTF8Encoding.UTF8.GetChars(byteArray);
+            return System.Text.Encoding.UTF8.GetChars(byteArray);
         }
     }
 
     internal static class InternalConstants
     {
-        internal static readonly int MAX_BITS     = 15;
-        internal static readonly int BL_CODES     = 19;
-        internal static readonly int D_CODES      = 30;
-        internal static readonly int LITERALS     = 256;
+        internal static readonly int MAX_BITS = 15;
+        internal static readonly int BL_CODES = 19;
+        internal static readonly int D_CODES = 30;
+        internal static readonly int LITERALS = 256;
         internal static readonly int LENGTH_CODES = 29;
-        internal static readonly int L_CODES      = (LITERALS + 1 + LENGTH_CODES);
+        internal static readonly int L_CODES = (LITERALS + 1 + LENGTH_CODES);
 
         // Bit length codes must not exceed MAX_BL_BITS bits
-        internal static readonly int MAX_BL_BITS  = 7;
+        internal static readonly int MAX_BL_BITS = 7;
 
         // repeat previous bit length 3-6 times (2 bits of repeat count)
-        internal static readonly int REP_3_6      = 16;
+        internal static readonly int REP_3_6 = 16;
 
         // repeat a zero length 3-10 times  (3 bits of repeat count)
-        internal static readonly int REPZ_3_10    = 17;
+        internal static readonly int REPZ_3_10 = 17;
 
         // repeat a zero length 11-138 times  (7 bits of repeat count)
-        internal static readonly int REPZ_11_138  = 18;
-
+        internal static readonly int REPZ_11_138 = 18;
     }
 
     internal sealed class StaticTree
@@ -452,8 +455,6 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         }
     }
 
-
-
     /// <summary>
     /// Computes an Adler-32 checksum.
     /// </summary>
@@ -468,13 +469,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
     public sealed class Adler
     {
         // largest prime smaller than 65536
-        private static readonly uint BASE = 65521;
+        private const uint BASE = 65521;
+
         // NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1
-        private static readonly int NMAX = 5552;
-
-
-#pragma warning disable 3001
-#pragma warning disable 3002
+        private const int NMAX = 5552;
 
         /// <summary>
         ///   Calculates the Adler32 checksum.
@@ -494,10 +492,12 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         public static uint Adler32(uint adler, byte[] buf, int index, int len)
         {
             if (buf == null)
+            {
                 return 1;
+            }
 
-            uint s1 = (uint) (adler & 0xffff);
-            uint s2 = (uint) ((adler >> 16) & 0xffff);
+            uint s1 = adler & 0xffff;
+            uint s2 = (adler >> 16) & 0xffff;
 
             while (len > 0)
             {
@@ -536,11 +536,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 s1 %= BASE;
                 s2 %= BASE;
             }
-            return (uint)((s2 << 16) | s1);
+            return (s2 << 16) | s1;
         }
-#pragma warning restore 3001
-#pragma warning restore 3002
-
     }
-
 }

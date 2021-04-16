@@ -31,9 +31,6 @@
  * Raziq York 		                Added support for Any type  2014-08-08
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Utils;
 
@@ -52,7 +49,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="address"></param>
         /// <param name="itemElementNode"></param>
         /// <returns></returns>
-        public static ExcelDataValidation Create(ExcelDataValidationType type, ExcelWorksheet worksheet, string address, 
+        public static ExcelDataValidation Create(ExcelDataValidationType type, ExcelWorksheet worksheet, string address,
             eDataValidationStorageType storageType, XmlNode itemElementNode)
         {
             Require.Argument(type).IsNotNull("validationType");

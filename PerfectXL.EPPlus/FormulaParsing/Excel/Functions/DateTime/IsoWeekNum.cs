@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
@@ -41,7 +39,10 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
                 case 53:
                     // If dec 31st falls before thursday it is week 01 of next year
                     if (endOfYear.DayOfWeek < DayOfWeek.Thursday)
+                    {
                         return 1;
+                    }
+
                     return wk;
                 default: return wk;
             }

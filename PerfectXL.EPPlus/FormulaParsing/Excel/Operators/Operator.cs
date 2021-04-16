@@ -29,11 +29,7 @@
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
-using OfficeOpenXml.FormulaParsing.Exceptions;
 using OfficeOpenXml.Utils;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Operators
@@ -101,8 +97,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Operators
                 {
                     l = l == null || l.Result == null ? new CompileResult(0, DataType.Integer) : l;
                     r = r == null || r.Result == null ? new CompileResult(0, DataType.Integer) : r;
-                    ExcelErrorValue errorVal;
-                    if (EitherIsError(l, r, out errorVal))
+                    if (EitherIsError(l, r, out var errorVal))
                     {
                         return new CompileResult(errorVal);
                     }
@@ -155,12 +150,12 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Operators
                     r = r ?? new CompileResult(0, DataType.Integer);
                     if (l.DataType == DataType.Integer && r.DataType == DataType.Integer)
                     {
-                        return new CompileResult(l.ResultNumeric*r.ResultNumeric, DataType.Integer);
+                        return new CompileResult(l.ResultNumeric * r.ResultNumeric, DataType.Integer);
                     }
                     else if ((l.IsNumeric || l.IsNumericString || l.IsDateString || l.Result is ExcelDataProvider.IRangeInfo) &&
                              (r.IsNumeric || r.IsNumericString || r.IsDateString || r.Result is ExcelDataProvider.IRangeInfo))
                     {
-                        return new CompileResult(l.ResultNumeric*r.ResultNumeric, DataType.Decimal);
+                        return new CompileResult(l.ResultNumeric * r.ResultNumeric, DataType.Decimal);
                     }
                     return new CompileResult(eErrorType.Value);
                 }));
@@ -188,7 +183,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Operators
                     else if ((l.IsNumeric || l.IsNumericString || l.IsDateString || l.Result is ExcelDataProvider.IRangeInfo) &&
                              (r.IsNumeric || r.IsNumericString || r.IsDateString || r.Result is ExcelDataProvider.IRangeInfo))
                     {
-                        return new CompileResult(left/right, DataType.Decimal);
+                        return new CompileResult(left / right, DataType.Decimal);
                     }
                     return new CompileResult(eErrorType.Value);
                 }));
@@ -208,7 +203,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Operators
                         l = l ?? new CompileResult(0, DataType.Integer);
                         r = r ?? new CompileResult(0, DataType.Integer);
                         if ((l.IsNumeric || l.IsNumericString || l.IsDateString || l.Result is ExcelDataProvider.IRangeInfo) &&
-							(r.IsNumeric || r.IsNumericString || r.IsDateString || r.Result is ExcelDataProvider.IRangeInfo))
+                            (r.IsNumeric || r.IsNumericString || r.IsDateString || r.Result is ExcelDataProvider.IRangeInfo))
                         {
                             return new CompileResult(Math.Pow(l.ResultNumeric, r.ResultNumeric), DataType.Decimal);
                         }
@@ -317,7 +312,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Operators
                                 return new CompileResult(l.ResultNumeric * r.ResultNumeric, DataType.Integer);
                             }
                             else if ((l.IsNumeric || l.IsNumericString || l.IsDateString || l.Result is ExcelDataProvider.IRangeInfo) &&
-								(r.IsNumeric || r.IsNumericString || r.IsDateString || r.Result is ExcelDataProvider.IRangeInfo))
+                                (r.IsNumeric || r.IsNumericString || r.IsDateString || r.Result is ExcelDataProvider.IRangeInfo))
                             {
                                 return new CompileResult(l.ResultNumeric * r.ResultNumeric, DataType.Decimal);
                             }
@@ -332,16 +327,21 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Operators
         {
             if (obj.Result == null)
             {
-                if (other.DataType == DataType.String) return string.Empty;
-                else return 0d;
+                if (other.DataType == DataType.String)
+                {
+                    return string.Empty;
+                }
+                else
+                {
+                    return 0d;
+                }
             }
             return obj.ResultValue;
         }
 
-        private static CompileResult Compare(CompileResult l, CompileResult r, Func<int, bool> comparison )
+        private static CompileResult Compare(CompileResult l, CompileResult r, Func<int, bool> comparison)
         {
-            ExcelErrorValue errorVal;
-            if (EitherIsError(l, r, out errorVal))
+            if (EitherIsError(l, r, out var errorVal))
             {
                 return new CompileResult(errorVal);
             }
@@ -373,16 +373,16 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Operators
             return System.String.Compare(sl, sr, System.StringComparison.OrdinalIgnoreCase);
         }
 
-        private static bool  EitherIsError(CompileResult l, CompileResult r, out ExcelErrorValue errorVal)
+        private static bool EitherIsError(CompileResult l, CompileResult r, out ExcelErrorValue errorVal)
         {
             if (l.DataType == DataType.ExcelError)
             {
-                errorVal = (ExcelErrorValue) l.Result;
+                errorVal = (ExcelErrorValue)l.Result;
                 return true;
             }
             if (r.DataType == DataType.ExcelError)
             {
-                errorVal = (ExcelErrorValue) r.Result;
+                errorVal = (ExcelErrorValue)r.Result;
                 return true;
             }
             errorVal = null;

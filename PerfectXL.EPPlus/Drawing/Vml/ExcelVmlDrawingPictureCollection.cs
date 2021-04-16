@@ -31,7 +31,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Collections;
 using System.Globalization;
@@ -42,11 +41,11 @@ namespace OfficeOpenXml.Drawing.Vml
     public class ExcelVmlDrawingPictureCollection : ExcelVmlDrawingBaseCollection, IEnumerable
     {
         internal List<ExcelVmlDrawingPicture> _images;
-        ExcelPackage _pck;
-        ExcelWorksheet _ws;
+        private readonly ExcelPackage _pck;
+        private readonly ExcelWorksheet _ws;
         internal ExcelVmlDrawingPictureCollection(ExcelPackage pck, ExcelWorksheet ws, Uri uri) :
             base(pck, ws, uri)
-        {            
+        {
             _pck = pck;
             _ws = ws;
             if (uri == null)
@@ -79,20 +78,20 @@ namespace OfficeOpenXml.Drawing.Vml
 
         private string CreateVmlDrawings()
         {
-            string vml=string.Format("<xml xmlns:v=\"{0}\" xmlns:o=\"{1}\" xmlns:x=\"{2}\">", 
-                ExcelPackage.schemaMicrosoftVml, 
-                ExcelPackage.schemaMicrosoftOffice, 
+            string vml = string.Format("<xml xmlns:v=\"{0}\" xmlns:o=\"{1}\" xmlns:x=\"{2}\">",
+                ExcelPackage.schemaMicrosoftVml,
+                ExcelPackage.schemaMicrosoftOffice,
                 ExcelPackage.schemaMicrosoftExcel);
-            
-             vml+="<o:shapelayout v:ext=\"edit\">";
-             vml+="<o:idmap v:ext=\"edit\" data=\"1\"/>";
-             vml+="</o:shapelayout>";
 
-             vml+="<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\" path=\"m,l,21600r21600,l21600,xe\">";
-             vml+="<v:stroke joinstyle=\"miter\" />";
-             vml+="<v:path gradientshapeok=\"t\" o:connecttype=\"rect\" />";
-             vml+="</v:shapetype>";
-             vml+= "</xml>";
+            vml += "<o:shapelayout v:ext=\"edit\">";
+            vml += "<o:idmap v:ext=\"edit\" data=\"1\"/>";
+            vml += "</o:shapelayout>";
+
+            vml += "<v:shapetype id=\"_x0000_t202\" coordsize=\"21600,21600\" o:spt=\"202\" path=\"m,l,21600r21600,l21600,xe\">";
+            vml += "<v:stroke joinstyle=\"miter\" />";
+            vml += "<v:path gradientshapeok=\"t\" o:connecttype=\"rect\" />";
+            vml += "</v:shapetype>";
+            vml += "</xml>";
 
             return vml;
         }
@@ -114,7 +113,7 @@ namespace OfficeOpenXml.Drawing.Vml
             //node.SetAttribute("fillcolor", "#ffffe1");
             //node.SetAttribute("insetmode", ExcelPackage.schemaMicrosoftOffice, "auto");
 
-            node.InnerXml = string.Format("<v:imagedata o:relid=\"\" o:title=\"{0}\"/><o:lock v:ext=\"edit\" rotation=\"t\"/>",  Name);
+            node.InnerXml = string.Format("<v:imagedata o:relid=\"\" o:title=\"{0}\"/><o:lock v:ext=\"edit\" rotation=\"t\"/>", Name);
             return node;
         }
         /// <summary>
@@ -126,7 +125,7 @@ namespace OfficeOpenXml.Drawing.Vml
         {
             get
             {
-                return _images[Index] as ExcelVmlDrawingPicture;
+                return _images[Index];
             }
         }
         public int Count
@@ -137,7 +136,7 @@ namespace OfficeOpenXml.Drawing.Vml
             }
         }
 
-        int _nextID = 0;
+        private int _nextID = 0;
         /// <summary>
         /// returns the next drawing id.
         /// </summary>
@@ -150,8 +149,7 @@ namespace OfficeOpenXml.Drawing.Vml
                 {
                     if (draw.Id.Length > 3 && draw.Id.StartsWith("vml"))
                     {
-                        int id;
-                        if (int.TryParse(draw.Id.Substring(3, draw.Id.Length - 3), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out id))
+                        if (int.TryParse(draw.Id.Substring(3, draw.Id.Length - 3), System.Globalization.NumberStyles.Number, CultureInfo.InvariantCulture, out var id))
                         {
                             if (id > _nextID)
                             {
@@ -166,7 +164,7 @@ namespace OfficeOpenXml.Drawing.Vml
         }
         #region IEnumerable Members
 
-        IEnumerator IEnumerable.GetEnumerator() 
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return _images.GetEnumerator();
         }

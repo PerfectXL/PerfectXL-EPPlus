@@ -1,8 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.FormulaParsing;
 using FakeItEasy;
 
@@ -22,7 +18,7 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
         [TestMethod]
         public void TextShouldConcatenateWithNextExpression()
         {
-            A.CallTo(() =>_provider.GetFormat(23.5, "$0.00")).Returns("$23.50");
+            A.CallTo(() => _provider.GetFormat(23.5, "$0.00")).Returns("$23.50");
             var result = _parser.Parse("TEXT(23.5,\"$0.00\") & \" per hour\"");
             Assert.AreEqual("$23.50 per hour", result);
         }

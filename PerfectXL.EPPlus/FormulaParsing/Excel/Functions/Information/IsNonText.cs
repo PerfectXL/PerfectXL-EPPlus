@@ -22,10 +22,8 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2015-01-15
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Information
@@ -36,7 +34,11 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Information
         {
             ValidateArguments(arguments, 1);
             var firstArg = arguments.ElementAt(0);
-            if (firstArg.Value == null || firstArg.ValueIsExcelError) return CreateResult(false, DataType.Boolean);
+            if (firstArg.Value == null || firstArg.ValueIsExcelError)
+            {
+                return CreateResult(false, DataType.Boolean);
+            }
+
             return CreateResult(!(firstArg.Value is string), DataType.Boolean);
         }
     }

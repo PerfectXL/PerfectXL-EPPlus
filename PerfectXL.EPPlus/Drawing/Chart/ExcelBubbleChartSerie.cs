@@ -29,8 +29,6 @@
  * Jan Källman		Initial Release		        2009-10-01
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 
@@ -53,7 +51,8 @@ namespace OfficeOpenXml.Drawing.Chart
         {
 
         }
-        ExcelChartSerieDataLabel _DataLabel = null;
+
+        private ExcelChartSerieDataLabel _DataLabel = null;
         /// <summary>
         /// Datalabel
         /// </summary>
@@ -68,7 +67,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _DataLabel;
             }
         }
-        const string BUBBLE3D_PATH = "c:bubble3D/@val";
+
+        private const string BUBBLE3D_PATH = "c:bubble3D/@val";
         internal bool Bubble3D
         {
             get
@@ -77,10 +77,11 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                SetXmlNodeBool(BUBBLE3D_PATH, value);    
+                SetXmlNodeBool(BUBBLE3D_PATH, value);
             }
         }
-        const string INVERTIFNEGATIVE_PATH = "c:invertIfNegative/@val";
+
+        private const string INVERTIFNEGATIVE_PATH = "c:invertIfNegative/@val";
         internal bool InvertIfNegative
         {
             get
@@ -101,14 +102,15 @@ namespace OfficeOpenXml.Drawing.Chart
             set
             {
                 base.Series = value;
-                if(string.IsNullOrEmpty(BubbleSize))
+                if (string.IsNullOrEmpty(BubbleSize))
                 {
                     GenerateLit();
                 }
             }
         }
-        const string BUBBLESIZE_TOPPATH = "c:bubbleSize";
-        const string BUBBLESIZE_PATH = BUBBLESIZE_TOPPATH + "/c:numRef/c:f";
+
+        private const string BUBBLESIZE_TOPPATH = "c:bubbleSize";
+        private const string BUBBLESIZE_PATH = BUBBLESIZE_TOPPATH + "/c:numRef/c:f";
         public string BubbleSize
         {
             get
@@ -117,14 +119,14 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     GenerateLit();
                 }
                 else
                 {
                     SetXmlNodeString(BUBBLESIZE_PATH, ExcelCellBase.GetFullAddress(_chartSeries.Chart.WorkSheet.Name, value));
-                
+
                     XmlNode cache = TopNode.SelectSingleNode(string.Format("{0}/c:numCache", BUBBLESIZE_PATH), _ns);
                     if (cache != null)
                     {

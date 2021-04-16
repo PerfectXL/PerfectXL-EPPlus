@@ -2,11 +2,7 @@
 using OfficeOpenXml;
 using OfficeOpenXml.Drawing.Chart;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace EPPlusTest.Drawing.Chart
@@ -18,7 +14,7 @@ namespace EPPlusTest.Drawing.Chart
         /// <summary>
         /// Basic test to check output with excel. need enhanced to be stand alone checking
         /// </summary>
-        [TestMethod,Ignore]
+        [TestMethod, Ignore]
         public void DataTableFile()
         {
             string outfile = Path.Combine(_worksheetPath, "DataTableFile.xlsx");
@@ -33,7 +29,7 @@ namespace EPPlusTest.Drawing.Chart
                 {
 
                     worksheet.Cells[x + 1, 1].Value = $"Sample {x}";
-                    worksheet.Cells[x + 1, 2].Value = (double)x / 3.0;
+                    worksheet.Cells[x + 1, 2].Value = x / 3.0;
                 }
 
                 // Add chart from sample data

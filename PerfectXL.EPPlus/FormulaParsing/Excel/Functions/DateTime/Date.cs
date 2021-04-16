@@ -22,10 +22,7 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
@@ -41,7 +38,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
             var date = new System.DateTime(year, 1, 1);
             month -= 1;
             date = date.AddMonths(month);
-            date = date.AddDays((double)(day - 1));
+            date = date.AddDays(day - 1);
             return CreateResult(date.ToOADate(), DataType.Date);
         }
     }

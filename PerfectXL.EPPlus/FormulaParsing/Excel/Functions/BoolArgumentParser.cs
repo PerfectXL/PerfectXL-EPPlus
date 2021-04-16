@@ -23,9 +23,7 @@
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.Utilities;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions
@@ -39,11 +37,22 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
                 var r = ((ExcelDataProvider.IRangeInfo)obj).FirstOrDefault();
                 obj = (r == null ? null : r.Value);
             }
-            if (obj == null) return false;
-            if (obj is bool) return (bool)obj;
-            if (obj.IsNumeric()) return Convert.ToBoolean(obj);
-            bool result;
-            if (bool.TryParse(obj.ToString(), out result))
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (obj is bool)
+            {
+                return (bool)obj;
+            }
+
+            if (obj.IsNumeric())
+            {
+                return Convert.ToBoolean(obj);
+            }
+
+            if (bool.TryParse(obj.ToString(), out var result))
             {
                 return result;
             }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using OfficeOpenXml.FormulaParsing;
@@ -28,7 +25,7 @@ namespace EPPlusTest.FormulaParsing
         [TestMethod]
         public void ConstructorShouldSetAddress()
         {
-            var expectedAddress =  _factory.Create("A1");
+            var expectedAddress = _factory.Create("A1");
             var scope = new ParsingScope(_parsingScopes, expectedAddress);
             Assert.AreEqual(expectedAddress, scope.Address);
         }
@@ -46,7 +43,7 @@ namespace EPPlusTest.FormulaParsing
         {
             var scope = new ParsingScope(_parsingScopes, _factory.Create("A1"));
             ((IDisposable)scope).Dispose();
-           A.CallTo(() => _parsingScopes.KillScope(scope)).MustHaveHappened();
+            A.CallTo(() => _parsingScopes.KillScope(scope)).MustHaveHappened();
         }
     }
 }

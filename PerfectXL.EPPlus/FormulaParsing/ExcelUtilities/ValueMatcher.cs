@@ -29,9 +29,6 @@
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
 {
@@ -41,9 +38,20 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
 
         public virtual int IsMatch(object o1, object o2)
         {
-            if (o1 != null && o2 == null) return 1;
-            if (o1 == null && o2 != null) return -1;
-            if (o1 == null && o2 == null) return 0;
+            if (o1 != null && o2 == null)
+            {
+                return 1;
+            }
+
+            if (o1 == null && o2 != null)
+            {
+                return -1;
+            }
+
+            if (o1 == null && o2 == null)
+            {
+                return 0;
+            }
             //Handle ranges and defined names
             o1 = CheckGetRange(o1);
             o2 = CheckGetRange(o2);
@@ -52,7 +60,7 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
             {
                 return CompareStringToString(o1.ToString().ToLower(), o2.ToString().ToLower());
             }
-            else if( o1.GetType() == typeof(string))
+            else if (o1.GetType() == typeof(string))
             {
                 return CompareStringToObject(o1.ToString(), o2);
             }
@@ -89,18 +97,15 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
 
         protected virtual int CompareStringToObject(string o1, object o2)
         {
-            double d1;
-            if (double.TryParse(o1, out d1))
+            if (double.TryParse(o1, out var d1))
             {
                 return d1.CompareTo(Convert.ToDouble(o2));
             }
-            bool b1;
-            if (bool.TryParse(o1, out b1))
+            if (bool.TryParse(o1, out var b1))
             {
                 return b1.CompareTo(Convert.ToBoolean(o2));
             }
-            DateTime dt1;
-            if (DateTime.TryParse(o1, out dt1))
+            if (DateTime.TryParse(o1, out var dt1))
             {
                 return dt1.CompareTo(Convert.ToDateTime(o2));
             }
@@ -109,8 +114,7 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
 
         protected virtual int CompareObjectToString(object o1, string o2)
         {
-            double d2;
-            if (double.TryParse(o2, out d2))
+            if (double.TryParse(o2, out var d2))
             {
                 return Convert.ToDouble(o1).CompareTo(d2);
             }

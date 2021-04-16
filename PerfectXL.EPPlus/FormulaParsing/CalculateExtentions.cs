@@ -33,8 +33,6 @@ using System.Threading;
 using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.Exceptions;
 
@@ -45,7 +43,7 @@ namespace OfficeOpenXml
 
         public static void Calculate(this ExcelWorkbook workbook)
         {
-            Calculate(workbook, new ExcelCalculationOption(){AllowCirculareReferences=false});
+            Calculate(workbook, new ExcelCalculationOption() { AllowCirculareReferences = false });
         }
         public static void Calculate(this ExcelWorkbook workbook, ExcelCalculationOption options)
         {
@@ -61,7 +59,7 @@ namespace OfficeOpenXml
 
             //TODO: Remove when tests are done. Outputs the dc to a text file. 
             //var fileDc = new System.IO.StreamWriter("c:\\temp\\dc.txt");
-                        
+
             //for (int i = 0; i < dc.list.Count; i++)
             //{
             //    fileDc.WriteLine(i.ToString() + "," + dc.list[i].Column.ToString() + "," + dc.list[i].Row.ToString() + "," + (dc.list[i].ws==null ? "" : dc.list[i].ws.Name) + "," + dc.list[i].Formula);
@@ -120,11 +118,19 @@ namespace OfficeOpenXml
             try
             {
                 worksheet.CheckSheetType();
-                if(string.IsNullOrEmpty(Formula.Trim())) return null;
+                if (string.IsNullOrEmpty(Formula.Trim()))
+                {
+                    return null;
+                }
+
                 Init(worksheet.Workbook);
                 var parser = worksheet.Workbook.FormulaParser;
                 parser.InitNewCalc();
-                if (Formula[0] == '=') Formula = Formula.Substring(1); //Remove any starting equal sign
+                if (Formula[0] == '=')
+                {
+                    Formula = Formula.Substring(1); //Remove any starting equal sign
+                }
+
                 var dc = DependencyChainFactory.Create(worksheet, Formula, options);
                 var f = dc.list[0];
                 dc.CalcOrder.RemoveAt(dc.CalcOrder.Count - 1);
@@ -168,7 +174,7 @@ namespace OfficeOpenXml
         }
         private static void Init(ExcelWorkbook workbook)
         {
-            workbook._formulaTokens = new CellStore<List<Token>>();;
+            workbook._formulaTokens = new CellStore<List<Token>>(); ;
             foreach (var ws in workbook.Worksheets)
             {
                 if (!(ws is ExcelChartsheet))

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.FormulaParsing.Excel.Functions;
 
@@ -109,7 +106,7 @@ namespace EPPlusTest.Excel.Functions
         {
             var parser = new DoubleArgumentParser();
             var result = parser.Parse("3.3.2015");
-            Assert.AreEqual(new DateTime(2015,3,3).ToOADate(), result);
+            Assert.AreEqual(new DateTime(2015, 3, 3).ToOADate(), result);
         }
     }
 }

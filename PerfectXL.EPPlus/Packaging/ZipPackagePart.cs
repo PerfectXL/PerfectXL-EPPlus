@@ -29,8 +29,6 @@
  * Jan Källman		Added		25-Oct-2012
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml;
@@ -61,7 +59,7 @@ namespace OfficeOpenXml.Packaging
         internal ZipPackage Package { get; set; }
         internal ZipEntry Entry { get; set; }
         internal CompressionLevel CompressionLevel;
-        MemoryStream _stream = null;
+        private MemoryStream _stream = null;
         internal MemoryStream Stream
         {
             get
@@ -96,12 +94,12 @@ namespace OfficeOpenXml.Packaging
             }
             else
             {
-                _stream.Seek(0, SeekOrigin.Begin);                
+                _stream.Seek(0, SeekOrigin.Begin);
             }
             return _stream;
         }
 
-        string _contentType = "";
+        private string _contentType = "";
         public string ContentType
         {
             get
@@ -149,7 +147,7 @@ namespace OfficeOpenXml.Packaging
             }
             else
             {
-                SaveHandler(os, (CompressionLevel)CompressionLevel, Uri.OriginalString);
+                SaveHandler(os, CompressionLevel, Uri.OriginalString);
             }
 
             if (_rels.Count > 0)
@@ -166,7 +164,7 @@ namespace OfficeOpenXml.Packaging
             var stream = GetStream(FileMode.Create, FileAccess.Write);
             var xr = new XmlTextWriter(stream, Encoding.UTF8);
             xr.Formatting = Formatting.None;
-            
+
             xmlDoc.Save(xr);
         }
 

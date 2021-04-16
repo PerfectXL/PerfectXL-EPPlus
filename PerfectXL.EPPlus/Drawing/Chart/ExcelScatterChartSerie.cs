@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 using System.Drawing;
 
@@ -70,22 +69,17 @@ namespace OfficeOpenXml.Drawing.Chart
                 Smooth = 0;
             }
         }
-        ExcelChartSerieDataLabel _DataLabel = null;
+
+        private ExcelChartSerieDataLabel _DataLabel = null;
         /// <summary>
         /// Datalabel
         /// </summary>
         public ExcelChartSerieDataLabel DataLabel
         {
-            get
-            {
-                if (_DataLabel == null)
-                {
-                    _DataLabel = new ExcelChartSerieDataLabel(_ns, _node);
-                }
-                return _DataLabel;
-            }
+            get => _DataLabel ?? (_DataLabel = new ExcelChartSerieDataLabel(_ns, _node));
         }
-        const string smoothPath = "c:smooth/@val";
+
+        private const string smoothPath = "c:smooth/@val";
         /// <summary>
         /// Smooth for scattercharts
         /// </summary>
@@ -100,7 +94,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(smoothPath, value.ToString());
             }
         }
-        const string markerPath = "c:marker/c:symbol/@val";
+
+        private const string markerPath = "c:marker/c:symbol/@val";
         /// <summary>
         /// Marker symbol 
         /// </summary>
@@ -132,7 +127,9 @@ namespace OfficeOpenXml.Drawing.Chart
 
         //new properties for excel scatter-plots: LineColor, MarkerSize, MarkerColor, LineWidth and MarkerLineColor
         //implemented according to https://epplus.codeplex.com/discussions/287917
-        string LINECOLOR_PATH = "c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+
+        private readonly string LINECOLOR_PATH = "c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+
         /// <summary>
         /// Line color.
         /// </summary>
@@ -166,7 +163,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 setAlphaChannel(value, LINECOLOR_PATH);
             }
         }
-        string MARKERSIZE_PATH = "c:marker/c:size/@val";
+
+        private readonly string MARKERSIZE_PATH = "c:marker/c:size/@val";
+
         /// <summary>
         /// Gets or sets the size of the marker.
         /// </summary>
@@ -200,7 +199,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString(MARKERSIZE_PATH, size.ToString(), true);
             }
         }
-        string MARKERCOLOR_PATH = "c:marker/c:spPr/a:solidFill/a:srgbClr/@val";
+
+        private readonly string MARKERCOLOR_PATH = "c:marker/c:spPr/a:solidFill/a:srgbClr/@val";
+
         /// <summary>
         /// Marker color.
         /// </summary>
@@ -235,7 +236,8 @@ namespace OfficeOpenXml.Drawing.Chart
             }
         }
 
-        string LINEWIDTH_PATH = "c:spPr/a:ln/@w";
+        private readonly string LINEWIDTH_PATH = "c:spPr/a:ln/@w";
+
         /// <summary>
         /// Gets or sets the width of the line in pt.
         /// </summary>
@@ -259,11 +261,14 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             set
             {
-                SetXmlNodeString(LINEWIDTH_PATH, (( int )(12700 * value)).ToString(), true);
+                SetXmlNodeString(LINEWIDTH_PATH, ((int)(12700 * value)).ToString(), true);
             }
         }
+
         //marker line color
-        string MARKERLINECOLOR_PATH = "c:marker/c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+
+        private readonly string MARKERLINECOLOR_PATH = "c:marker/c:spPr/a:ln/a:solidFill/a:srgbClr/@val";
+
         /// <summary>
         /// Marker Line color.
         /// (not to be confused with LineColor)
@@ -299,7 +304,6 @@ namespace OfficeOpenXml.Drawing.Chart
             }
         }
 
-
         /// <summary>
         /// write alpha value (if Color.A != 255)
         /// </summary>
@@ -324,6 +328,7 @@ namespace OfficeOpenXml.Drawing.Chart
                 }
             }
         }
+
         /// <summary>
         /// read AlphaChannel from a:solidFill
         /// </summary>
@@ -335,16 +340,16 @@ namespace OfficeOpenXml.Drawing.Chart
             string s = xPath4Alpha(xPath);
             if (s.Length > 0)
             {
-                int i = 0;
-                if (int.TryParse(GetXmlNodeString(s), System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out i))
+                if (int.TryParse(GetXmlNodeString(s), System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out var i))
                 {
                     r = (i == 0) ? 0 : 100 - (i / 1000);
                 }
             }
             return r;
         }
+
         /// <summary>
-        /// creates xPath to alpha attribute for a color 
+        /// creates xPath to alpha attribute for a color
         /// eg: a:prstClr/a:alpha/@val
         /// </summary>
         /// <param name="xPath">xPath to color node</param>
@@ -373,7 +378,5 @@ namespace OfficeOpenXml.Drawing.Chart
             }
             return s;
         }
-
-
     }
 }
