@@ -549,6 +549,9 @@ namespace OfficeOpenXml.VBA
                     case 0x28:
                         currentModule.Private = true;
                         break;
+                    case 0x4a:
+                        br.ReadUInt32();
+                        break;
                     default:
                         break;
                 }
