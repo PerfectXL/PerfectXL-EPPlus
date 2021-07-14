@@ -31,7 +31,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Xml;
 
@@ -52,7 +51,7 @@ namespace OfficeOpenXml.Encryption
             {
                 ret = new EncryptionInfoBinary();
             }
-            else if (majorVersion == 4 && minorVersion==4)
+            else if (majorVersion == 4 && minorVersion == 4)
             {
                 ret = new EncryptionInfoAgile();
             }
@@ -93,7 +92,7 @@ namespace OfficeOpenXml.Encryption
         /// </summary>
         TRIPLE_DES,
         /// 3DES_112 MUST conform to the [RFC1851] algorithm. 
-        TRIPLE_DES_112        
+        TRIPLE_DES_112
     }
     internal enum eChainingMode
     {
@@ -157,7 +156,8 @@ namespace OfficeOpenXml.Encryption
     /// </summary>
     internal class EncryptionInfoAgile : EncryptionInfo
     {
-        XmlNamespaceManager _nsm;
+        private readonly XmlNamespaceManager _nsm;
+
         public EncryptionInfoAgile()
         {
             var nt = new NameTable();
@@ -166,13 +166,14 @@ namespace OfficeOpenXml.Encryption
             _nsm.AddNamespace("c", "http://schemas.microsoft.com/office/2006/keyEncryptor/certificate");
             _nsm.AddNamespace("p", "http://schemas.microsoft.com/office/2006/keyEncryptor/password");
         }
+
         internal class EncryptionKeyData : XmlHelper
         {
             public EncryptionKeyData(XmlNamespaceManager nsm, XmlNode topNode) :
                 base(nsm, topNode)
             {
-
             }
+
             internal byte[] SaltValue
             {
                 get
@@ -189,16 +190,11 @@ namespace OfficeOpenXml.Encryption
                     SetXmlNodeString("@saltValue", Convert.ToBase64String(value));
                 }
             }
+
             internal eHashAlogorithm HashAlgorithm
             {
-                get
-                {
-                    return GetHashAlgorithm(GetXmlNodeString("@hashAlgorithm"));
-                }
-                set
-                {
-                    SetXmlNodeString("@hashAlgorithm", GetHashAlgorithmString(value));
-                }
+                get => GetHashAlgorithm(GetXmlNodeString("@hashAlgorithm"));
+                set => SetXmlNodeString("@hashAlgorithm", GetHashAlgorithmString(value));
             }
 
             private eHashAlogorithm GetHashAlgorithm(string v)
@@ -214,7 +210,7 @@ namespace OfficeOpenXml.Encryption
                     default:
                         try
                         {
-                            return (eHashAlogorithm)Enum.Parse(typeof(eHashAlogorithm),v);
+                            return (eHashAlogorithm)Enum.Parse(typeof(eHashAlogorithm), v);
                         }
                         catch
                         {
@@ -233,7 +229,7 @@ namespace OfficeOpenXml.Encryption
                         return "RIPEMD-160";
                     case eHashAlogorithm.SHA1:
                         return "SHA-1";
-                    default: 
+                    default:
                         return value.ToString();
                 }
             }
@@ -241,7 +237,7 @@ namespace OfficeOpenXml.Encryption
             {
                 get
                 {
-                    var v=GetXmlNodeString("@cipherChaining");
+                    var v = GetXmlNodeString("@cipherChaining");
                     try
                     {
                         return (eChainingMode)Enum.Parse(typeof(eChainingMode), v);
@@ -256,16 +252,11 @@ namespace OfficeOpenXml.Encryption
                     SetXmlNodeString("@cipherChaining", value.ToString());
                 }
             }
+
             internal eCipherAlgorithm CipherAlgorithm
             {
-                get
-                {
-                    return GetCipherAlgorithm(GetXmlNodeString("@cipherAlgorithm"));
-                }
-                set
-                {
-                    SetXmlNodeString("@cipherAlgorithm", GetCipherAlgorithmString(value));
-                }
+                get => GetCipherAlgorithm(GetXmlNodeString("@cipherAlgorithm"));
+                set => SetXmlNodeString("@cipherAlgorithm", GetCipherAlgorithmString(value));
             }
 
             private eCipherAlgorithm GetCipherAlgorithm(string v)
@@ -295,63 +286,43 @@ namespace OfficeOpenXml.Encryption
                     case eCipherAlgorithm.TRIPLE_DES:
                         return "3DES";
                     case eCipherAlgorithm.TRIPLE_DES_112:
-                        return "3DES_112";                    
+                        return "3DES_112";
                     default:
                         return alg.ToString();
                 }
             }
             internal int HashSize
             {
-                get
-                {
-                    return GetXmlNodeInt("@hashSize");
-                }
-                set
-                {
-                    SetXmlNodeString("@hashSize", value.ToString());
-                }
+                get => GetXmlNodeInt("@hashSize");
+                set => SetXmlNodeString("@hashSize", value.ToString());
             }
+
             internal int KeyBits
             {
-                get
-                {
-                    return GetXmlNodeInt("@keyBits");
-                }
-                set
-                {
-                    SetXmlNodeString("@keyBits", value.ToString());
-                }
+                get => GetXmlNodeInt("@keyBits");
+                set => SetXmlNodeString("@keyBits", value.ToString());
             }
+
             internal int BlockSize
             {
-                get
-                {
-                    return GetXmlNodeInt("@blockSize");
-                }
-                set
-                {
-                    SetXmlNodeString("@blockSize", value.ToString());
-                }
+                get => GetXmlNodeInt("@blockSize");
+                set => SetXmlNodeString("@blockSize", value.ToString());
             }
+
             internal int SaltSize
             {
-                get
-                {
-                    return GetXmlNodeInt("@saltSize");
-                }
-                set
-                {
-                    SetXmlNodeString("@saltSize", value.ToString());
-                }
+                get => GetXmlNodeInt("@saltSize");
+                set => SetXmlNodeString("@saltSize", value.ToString());
             }
         }
+
         internal class EncryptionDataIntegrity : XmlHelper
         {
             public EncryptionDataIntegrity(XmlNamespaceManager nsm, XmlNode topNode) :
                 base(nsm, topNode)
             {
-
             }
+
             internal byte[] EncryptedHmacValue
             {
                 get
@@ -385,13 +356,14 @@ namespace OfficeOpenXml.Encryption
                 }
             }
         }
+
         internal class EncryptionKeyEncryptor : EncryptionKeyData
         {
             public EncryptionKeyEncryptor(XmlNamespaceManager nsm, XmlNode topNode) :
                 base(nsm, topNode)
             {
-
             }
+
             internal byte[] EncryptedKeyValue
             {
                 get
@@ -441,19 +413,17 @@ namespace OfficeOpenXml.Encryption
                     SetXmlNodeString("@encryptedVerifierHashInput", Convert.ToBase64String(value));
                 }
             }
+
             internal byte[] VerifierHashInput { get; set; }
+
             internal byte[] VerifierHash { get; set; }
+
             internal byte[] KeyValue { get; set; }
+
             internal int SpinCount
             {
-                get
-                {
-                    return GetXmlNodeInt("@spinCount");
-                }
-                set
-                {
-                    SetXmlNodeString("@spinCount", value.ToString());
-                }
+                get => GetXmlNodeInt("@spinCount");
+                set => SetXmlNodeString("@spinCount", value.ToString());
             }
         }
         /*
@@ -466,7 +436,7 @@ namespace OfficeOpenXml.Encryption
                       <p:encryptedKey spinCount="100000" saltSize="16" blockSize="16" keyBits="256" hashSize="64" cipherAlgorithm="AES" cipherChaining="ChainingModeCBC" hashAlgorithm="SHA512" saltValue="u2BNFAuHYn3M/WRja3/uPg==" encryptedVerifierHashInput="M0V+fRolJMRgFyI9w+AVxQ==" encryptedVerifierHashValue="V/6l9pFH7AaXFqEbsnFBfHe7gMOqFeRwaNMjc7D3LNdw6KgZzOOQlt5sE8/oG7GPVBDGfoQMTxjQydVPVy4qng==" encryptedKeyValue="B0/rbSQRiIKG5CQDH6AKYSybdXzxgKAfX1f+S5k7mNE=" />
                    </keyEncryptor></keyEncryptors></encryption>
         */
-        
+
         /***
          * <?xml version="1.0" encoding="UTF-8" standalone="true"?>
             <encryption xmlns:c="http://schemas.microsoft.com/office/2006/keyEncryptor/certificate" xmlns:p="http://schemas.microsoft.com/office/2006/keyEncryptor/password" xmlns="http://schemas.microsoft.com/office/2006/encryption">
@@ -480,14 +450,13 @@ namespace OfficeOpenXml.Encryption
          *      </encryption
          * ***/
         internal EncryptionDataIntegrity DataIntegrity { get; set; }
-        internal EncryptionKeyData KeyData { get; set; }
-        internal List<EncryptionKeyEncryptor> KeyEncryptors
-        {
-            get;
-            private set;
-        }
 
-        internal XmlDocument Xml {get;set;}
+        internal EncryptionKeyData KeyData { get; set; }
+
+        internal List<EncryptionKeyEncryptor> KeyEncryptors { get; private set; }
+
+        internal XmlDocument Xml { get; set; }
+
         internal override void Read(byte[] data)
         {
             var byXml = new byte[data.Length - 8];
@@ -495,6 +464,7 @@ namespace OfficeOpenXml.Encryption
             var xml = Encoding.UTF8.GetString(byXml);
             ReadFromXml(xml);
         }
+
         internal void ReadFromXml(string xml)
         {
             Xml = new XmlDocument();
@@ -513,16 +483,14 @@ namespace OfficeOpenXml.Encryption
                     KeyEncryptors.Add(new EncryptionKeyEncryptor(_nsm, n));
                 }
             }
-
         }
     }
+
     /// <summary>
     /// Handles the EncryptionInfo stream
     /// </summary>
     internal class EncryptionInfoBinary : EncryptionInfo
     {
-
-
         internal Flags Flags;
         internal uint HeaderSize;
         internal EncryptionHeader Header;
@@ -563,6 +531,7 @@ namespace OfficeOpenXml.Encryption
             Verifier.EncryptedVerifierHash = new byte[Verifier.VerifierHashSize];
             Array.Copy(data, pos + 40, Verifier.EncryptedVerifierHash, 0, (int)Verifier.VerifierHashSize);
         }
+
         internal byte[] WriteBinary()
         {
             MemoryStream ms = new MemoryStream();
@@ -579,6 +548,5 @@ namespace OfficeOpenXml.Encryption
             bw.Flush();
             return ms.ToArray();
         }
-
     }
 }

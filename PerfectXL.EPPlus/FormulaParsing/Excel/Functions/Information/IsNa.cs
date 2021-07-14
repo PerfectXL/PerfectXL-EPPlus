@@ -22,10 +22,8 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2015-01-15
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Information
@@ -41,7 +39,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Information
 
             var v = GetFirstValue(arguments);
 
-            if (v is ExcelErrorValue && ((ExcelErrorValue)v).Type==eErrorType.NA)
+            if (v is ExcelErrorValue && ((ExcelErrorValue)v).Type == eErrorType.NA)
             {
                 return CreateResult(true, DataType.Boolean);
             }

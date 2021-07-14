@@ -16,17 +16,12 @@
  *******************************************************************************
  * Mats Alm Added		                2016-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OfficeOpenXml.FormulaParsing;
 
 namespace OfficeOpenXml.FormulaParsing
 {
     public class EpplusNameValueProvider : INameValueProvider
     {
-        private ExcelDataProvider _excelDataProvider;
+        private readonly ExcelDataProvider _excelDataProvider;
         private ExcelNamedRangeCollection _values;
 
         public EpplusNameValueProvider(ExcelDataProvider excelDataProvider)
@@ -37,10 +32,10 @@ namespace OfficeOpenXml.FormulaParsing
 
         public virtual bool IsNamedValue(string key, string ws)
         {
-            if(ws!=null)
+            if (ws != null)
             {
                 var wsNames = _excelDataProvider.GetWorksheetNames(ws);
-                if(wsNames!=null && wsNames.ContainsKey(key))
+                if (wsNames != null && wsNames.ContainsKey(key))
                 {
                     return true;
                 }

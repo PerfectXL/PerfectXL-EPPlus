@@ -75,7 +75,7 @@ namespace OfficeOpenXml.Style
             _styleXml = xml;
             _wb = wb;
             _namespaceManager = namespaceManager;
-            SchemaNodeOrder = new[] {"numFmts", "fonts", "fills", "borders", "cellStyleXfs", "cellXfs", "cellStyles", "dxfs"};
+            SchemaNodeOrder = new[] { "numFmts", "fonts", "fills", "borders", "cellStyleXfs", "cellXfs", "cellStyles", "dxfs" };
             LoadFromDocument();
         }
 
@@ -162,7 +162,7 @@ namespace OfficeOpenXml.Style
                 }
             }
 
-            ((XmlElement) nfNode).SetAttribute("count", count.ToString());
+            ((XmlElement)nfNode).SetAttribute("count", count.ToString());
 
             //Font
             count = 0;
@@ -188,7 +188,7 @@ namespace OfficeOpenXml.Style
                 }
             }
 
-            ((XmlElement) fntNode).SetAttribute("count", count.ToString());
+            ((XmlElement)fntNode).SetAttribute("count", count.ToString());
 
             //Fills
             count = 0;
@@ -207,7 +207,7 @@ namespace OfficeOpenXml.Style
                 }
             }
 
-            ((XmlElement) fillsNode).SetAttribute("count", count.ToString());
+            ((XmlElement)fillsNode).SetAttribute("count", count.ToString());
 
             //Borders
             count = 0;
@@ -225,7 +225,7 @@ namespace OfficeOpenXml.Style
                 }
             }
 
-            ((XmlElement) bordersNode).SetAttribute("count", count.ToString());
+            ((XmlElement)bordersNode).SetAttribute("count", count.ToString());
 
             XmlNode styleXfsNode = _styleXml.SelectSingleNode(CellStyleXfsPath, _namespaceManager);
             if (styleXfsNode == null && NamedStyles.Count > 0)
@@ -309,15 +309,15 @@ namespace OfficeOpenXml.Style
                         var ix = Dxfs.FindIndexById(cf.Style.Id);
                         if (ix < 0)
                         {
-                            ((ExcelConditionalFormattingRule) cf).DxfId = Dxfs.Count;
+                            ((ExcelConditionalFormattingRule)cf).DxfId = Dxfs.Count;
                             Dxfs.Add(cf.Style.Id, cf.Style);
-                            XmlElement elem = ((XmlDocument) TopNode).CreateElement("d", "dxf", ExcelPackage.schemaMain);
+                            XmlElement elem = ((XmlDocument)TopNode).CreateElement("d", "dxf", ExcelPackage.schemaMain);
                             cf.Style.CreateNodes(new XmlHelperInstance(NameSpaceManager, elem), "");
                             dxfsNode.AppendChild(elem);
                         }
                         else
                         {
-                            ((ExcelConditionalFormattingRule) cf).DxfId = ix;
+                            ((ExcelConditionalFormattingRule)cf).DxfId = ix;
                         }
                     }
                 }
@@ -378,7 +378,7 @@ namespace OfficeOpenXml.Style
                         var ix = NumberFormats.FindIndexById(format);
                         if (ix < 0)
                         {
-                            var item = new ExcelNumberFormatXml(NameSpaceManager) {Format = format, NumFmtId = NumberFormats.NextId++};
+                            var item = new ExcelNumberFormatXml(NameSpaceManager) { Format = format, NumFmtId = NumberFormats.NextId++ };
                             NumberFormats.Add(format, item);
                             //rake36: Use the just added format id
                             newXfs.NumberFormatId = item.NumFmtId;
@@ -506,7 +506,7 @@ namespace OfficeOpenXml.Style
             {
                 //var column=ws.GetValueInner(0,c) as ExcelColumn;
                 ExcelCoreValue val = ws._values.GetValue(0, c);
-                var column = (ExcelColumn) val._value;
+                var column = (ExcelColumn)val._value;
                 if (column != null && column.ColumnMax >= col) //Fixes issue 15174
                 {
                     //return ws.GetStyleInner(0, c);
@@ -849,7 +849,7 @@ namespace OfficeOpenXml.Style
                 else
                 {
                     //column = (ExcelColumn)ws.GetValueInner(0, address.Start.Column);
-                    column = (ExcelColumn) o;
+                    column = (ExcelColumn)o;
                     isNew = false;
                 }
 
@@ -1112,7 +1112,7 @@ namespace OfficeOpenXml.Style
                                         }
 
                                         ExcelCoreValue val = colCache[c];
-                                        var colObj = (ExcelColumn) val._value;
+                                        var colObj = (ExcelColumn)val._value;
                                         if (colObj != null && colObj.ColumnMax >= column) //Fixes issue 15174
                                         {
                                             s = val._styleId;
@@ -1125,7 +1125,7 @@ namespace OfficeOpenXml.Style
                         if (tmpCache.ContainsKey(s))
                         {
                             //ws.SetStyleInner(row, column, tmpCache[s]);
-                            list[index] = new ExcelCoreValue {_value = list[index]._value, _styleId = tmpCache[s]};
+                            list[index] = new ExcelCoreValue { _value = list[index]._value, _styleId = tmpCache[s] };
                         }
                         else
                         {
@@ -1133,7 +1133,7 @@ namespace OfficeOpenXml.Style
                             var newId = st.GetNewID(CellXfs, sender, e.StyleClass, e.StyleProperty, e.Value);
                             tmpCache.Add(s, newId);
                             //ws.SetStyleInner(row, column, newId);
-                            list[index] = new ExcelCoreValue {_value = list[index]._value, _styleId = newId};
+                            list[index] = new ExcelCoreValue { _value = list[index]._value, _styleId = newId };
                         }
                     }, e);
             }

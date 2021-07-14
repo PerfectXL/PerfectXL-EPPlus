@@ -28,7 +28,6 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
 
 namespace OfficeOpenXml.Packaging.Ionic.Zip
 {
@@ -203,10 +202,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public ZipEntry AddItem(String fileOrDirectoryName, String directoryPathInArchive)
         {
             if (File.Exists(fileOrDirectoryName))
+            {
                 return AddFile(fileOrDirectoryName, directoryPathInArchive);
+            }
 
             if (Directory.Exists(fileOrDirectoryName))
+            {
                 return AddDirectory(fileOrDirectoryName, directoryPathInArchive);
+            }
 
             throw new FileNotFoundException(String.Format("That file or directory ({0}) does not exist!",
                                                           fileOrDirectoryName));
@@ -404,7 +407,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         {
             string nameInArchive = ZipEntry.NameInArchive(fileName, directoryPathInArchive);
             ZipEntry ze = ZipEntry.CreateFromFile(fileName, nameInArchive);
-            if (Verbose) StatusMessageTextWriter.WriteLine("adding {0}...", fileName);
+            if (Verbose)
+            {
+                StatusMessageTextWriter.WriteLine("adding {0}...", fileName);
+            }
+
             return _InternalAddEntry(ze);
         }
 
@@ -426,7 +433,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public void RemoveEntries(System.Collections.Generic.ICollection<ZipEntry> entriesToRemove)
         {
             if (entriesToRemove == null)
+            {
                 throw new ArgumentNullException("entriesToRemove");
+            }
 
             foreach (ZipEntry e in entriesToRemove)
             {
@@ -450,7 +459,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public void RemoveEntries(System.Collections.Generic.ICollection<String> entriesToRemove)
         {
             if (entriesToRemove == null)
+            {
                 throw new ArgumentNullException("entriesToRemove");
+            }
 
             foreach (String e in entriesToRemove)
             {
@@ -664,7 +675,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                              String directoryPathInArchive)
         {
             if (fileNames == null)
+            {
                 throw new ArgumentNullException("fileNames");
+            }
 
             _addOperationCanceled = false;
             OnAddStarted();
@@ -672,7 +685,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             {
                 foreach (var f in fileNames)
                 {
-                    if (_addOperationCanceled) break;
+                    if (_addOperationCanceled)
+                    {
+                        break;
+                    }
+
                     if (directoryPathInArchive != null)
                     {
                         //string s = SharedUtilities.NormalizePath(Path.Combine(directoryPathInArchive, Path.GetDirectoryName(f)));
@@ -680,19 +697,27 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                         this.AddFile(f, s);
                     }
                     else
+                    {
                         this.AddFile(f, null);
+                    }
                 }
             }
             else
             {
                 foreach (var f in fileNames)
                 {
-                    if (_addOperationCanceled) break;
+                    if (_addOperationCanceled)
+                    {
+                        break;
+                    }
+
                     this.AddFile(f, directoryPathInArchive);
                 }
             }
             if (!_addOperationCanceled)
+            {
                 OnAddCompleted();
+            }
         }
 
 
@@ -738,11 +763,16 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public void UpdateFiles(System.Collections.Generic.IEnumerable<String> fileNames, String directoryPathInArchive)
         {
             if (fileNames == null)
+            {
                 throw new ArgumentNullException("fileNames");
+            }
 
             OnAddStarted();
             foreach (var f in fileNames)
+            {
                 this.UpdateFile(f, directoryPathInArchive);
+            }
+
             OnAddCompleted();
         }
 
@@ -899,7 +929,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             // ideally this would all be transactional!
             var key = ZipEntry.NameInArchive(fileName, directoryPathInArchive);
             if (this[key] != null)
+            {
                 this.RemoveEntry(key);
+            }
+
             return this.AddFile(fileName, directoryPathInArchive);
         }
 
@@ -1071,13 +1104,17 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public void UpdateItem(string itemName, string directoryPathInArchive)
         {
             if (File.Exists(itemName))
+            {
                 UpdateFile(itemName, directoryPathInArchive);
-
+            }
             else if (Directory.Exists(itemName))
+            {
                 UpdateDirectory(itemName, directoryPathInArchive);
-
+            }
             else
+            {
                 throw new FileNotFoundException(String.Format("That file or directory ({0}) does not exist!", itemName));
+            }
         }
 
 
@@ -1300,8 +1337,12 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public ZipEntry AddEntry(string entryName, Stream stream)
         {
             ZipEntry ze = ZipEntry.CreateForStream(entryName, stream);
-            ze.SetEntryTimes(DateTime.Now,DateTime.Now,DateTime.Now);
-            if (Verbose) StatusMessageTextWriter.WriteLine("adding {0}...", entryName);
+            ze.SetEntryTimes(DateTime.Now, DateTime.Now, DateTime.Now);
+            if (Verbose)
+            {
+                StatusMessageTextWriter.WriteLine("adding {0}...", entryName);
+            }
+
             return _InternalAddEntry(ze);
         }
 
@@ -1491,7 +1532,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public ZipEntry AddEntry(string entryName, WriteDelegate writer)
         {
             ZipEntry ze = ZipEntry.CreateForWriter(entryName, writer);
-            if (Verbose) StatusMessageTextWriter.WriteLine("adding {0}...", entryName);
+            if (Verbose)
+            {
+                StatusMessageTextWriter.WriteLine("adding {0}...", entryName);
+            }
+
             return _InternalAddEntry(ze);
         }
 
@@ -1605,8 +1650,12 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public ZipEntry AddEntry(string entryName, OpenDelegate opener, CloseDelegate closer)
         {
             ZipEntry ze = ZipEntry.CreateForJitStreamProvider(entryName, opener, closer);
-            ze.SetEntryTimes(DateTime.Now,DateTime.Now,DateTime.Now);
-            if (Verbose) StatusMessageTextWriter.WriteLine("adding {0}...", entryName);
+            ze.SetEntryTimes(DateTime.Now, DateTime.Now, DateTime.Now);
+            if (Verbose)
+            {
+                StatusMessageTextWriter.WriteLine("adding {0}...", entryName);
+            }
+
             return _InternalAddEntry(ze);
         }
 
@@ -1628,7 +1677,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             ze.EmitTimesInWindowsFormatWhenSaving = this._emitNtfsTimes;
             ze.EmitTimesInUnixFormatWhenSaving = this._emitUnixTimes;
             //string key = DictionaryKeyForEntry(ze);
-            InternalAddEntry(ze.FileName,ze);
+            InternalAddEntry(ze.FileName, ze);
             AfterAddEntry(ze);
             return ze;
         }
@@ -1826,7 +1875,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         private void RemoveEntryForUpdate(string entryName)
         {
             if (String.IsNullOrEmpty(entryName))
+            {
                 throw new ArgumentNullException("entryName");
+            }
 
             string directoryPathInArchive = null;
             if (entryName.IndexOf('\\') != -1)
@@ -1836,7 +1887,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             }
             var key = ZipEntry.NameInArchive(entryName, directoryPathInArchive);
             if (this[key] != null)
+            {
                 this.RemoveEntry(key);
+            }
         }
 
 
@@ -1857,7 +1910,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         /// <returns>The <c>ZipEntry</c> added.</returns>
         public ZipEntry AddEntry(string entryName, byte[] byteContent)
         {
-            if (byteContent == null) throw new ArgumentException("bad argument", "byteContent");
+            if (byteContent == null)
+            {
+                throw new ArgumentException("bad argument", "byteContent");
+            }
+
             var ms = new MemoryStream(byteContent);
             return AddEntry(entryName, ms);
         }
@@ -1890,11 +1947,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         }
 
 
-//         private string DictionaryKeyForEntry(ZipEntry ze1)
-//         {
-//             var filename = SharedUtilities.NormalizePathForUseInZipFile(ze1.FileName);
-//             return filename;
-//         }
+        //         private string DictionaryKeyForEntry(ZipEntry ze1)
+        //         {
+        //             var filename = SharedUtilities.NormalizePathForUseInZipFile(ze1.FileName);
+        //             return filename;
+        //         }
 
 
         /// <summary>
@@ -2051,12 +2108,12 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             dir.MarkAsDirectory();
             dir.AlternateEncoding = this.AlternateEncoding;  // workitem 8984
             dir.AlternateEncodingUsage = this.AlternateEncodingUsage;
-            dir.SetEntryTimes(DateTime.Now,DateTime.Now,DateTime.Now);
+            dir.SetEntryTimes(DateTime.Now, DateTime.Now, DateTime.Now);
             dir.EmitTimesInWindowsFormatWhenSaving = _emitNtfsTimes;
             dir.EmitTimesInUnixFormatWhenSaving = _emitUnixTimes;
             dir._Source = ZipEntrySource.Stream;
             //string key = DictionaryKeyForEntry(dir);
-            InternalAddEntry(dir.FileName,dir);
+            InternalAddEntry(dir.FileName, dir);
             AfterAddEntry(dir);
             return dir;
         }
@@ -2092,9 +2149,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                                   int level)
         {
             if (Verbose)
+            {
                 StatusMessageTextWriter.WriteLine("{0} {1}...",
                                                   (action == AddOrUpdateAction.AddOnly) ? "adding" : "Adding or updating",
                                                   directoryName);
+            }
 
             if (level == 0)
             {
@@ -2104,7 +2163,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
             // workitem 13371
             if (_addOperationCanceled)
+            {
                 return null;
+            }
 
             string dirForEntries = rootDirectoryPathInArchive;
             ZipEntry baseDir = null;
@@ -2113,7 +2174,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             {
                 int f = directoryName.Length;
                 for (int i = level; i > 0; i--)
+                {
                     f = directoryName.LastIndexOfAny("/\\".ToCharArray(), f - 1, f - 1);
+                }
 
                 dirForEntries = directoryName.Substring(f + 1);
                 dirForEntries = Path.Combine(rootDirectoryPathInArchive, dirForEntries);
@@ -2134,7 +2197,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 // It's not an error if it already exists.
                 if (!_entries.ContainsKey(baseDir.FileName))
                 {
-                    InternalAddEntry(baseDir.FileName,baseDir);
+                    InternalAddEntry(baseDir.FileName, baseDir);
                     AfterAddEntry(baseDir);
                 }
                 dirForEntries = baseDir.FileName;
@@ -2150,11 +2213,19 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                     // add the files:
                     foreach (String filename in filenames)
                     {
-                        if (_addOperationCanceled) break;
+                        if (_addOperationCanceled)
+                        {
+                            break;
+                        }
+
                         if (action == AddOrUpdateAction.AddOnly)
+                        {
                             AddFile(filename, dirForEntries);
+                        }
                         else
+                        {
                             UpdateFile(filename, dirForEntries);
+                        }
                     }
 
                     if (!_addOperationCanceled)
@@ -2175,8 +2246,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                                 || ((fileAttrs & FileAttributes.ReparsePoint) == 0)
 #endif
                                 )
+                            {
                                 AddOrUpdateDirectoryImpl(dir, rootDirectoryPathInArchive, action, recurse, level + 1);
-
+                            }
                         }
 
                     }
@@ -2184,7 +2256,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             }
 
             if (level == 0)
+            {
                 OnAddCompleted();
+            }
 
             return baseDir;
         }

@@ -22,13 +22,8 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
-using OfficeOpenXml.FormulaParsing.Exceptions;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
 {
@@ -83,9 +78,16 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
                 var matchResult = IsMatch(navigator.CurrentValue, lookupArgs.SearchedValue);
                 if (matchResult != 0)
                 {
-                    if (lastValue != null && navigator.CurrentValue == null) break;
+                    if (lastValue != null && navigator.CurrentValue == null)
+                    {
+                        break;
+                    }
 
-                    if (!lookupArgs.RangeLookup) continue;
+                    if (!lookupArgs.RangeLookup)
+                    {
+                        continue;
+                    }
+
                     if (lastValue == null && matchResult > 0)
                     {
                         return new CompileResult(eErrorType.NA);

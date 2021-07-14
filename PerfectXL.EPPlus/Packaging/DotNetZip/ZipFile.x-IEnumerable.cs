@@ -121,7 +121,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         public System.Collections.Generic.IEnumerator<ZipEntry> GetEnumerator()
         {
             foreach (ZipEntry e in _entries.Values)
+            {
                 yield return e;
+            }
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()

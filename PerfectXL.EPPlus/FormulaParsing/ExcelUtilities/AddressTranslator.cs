@@ -28,13 +28,7 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.Utilities;
 
 namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
@@ -111,7 +105,7 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
 
         private int GetNumericAlphaValue(char c)
         {
-            return (int)c - 64;
+            return c - 64;
         }
 
         private string GetAlphaPart(string address)

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.Excel.Functions;
 using OfficeOpenXml.FormulaParsing.Exceptions;
 
@@ -10,14 +8,18 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers
     public class IfNaFunctionCompiler : FunctionCompiler
     {
         public IfNaFunctionCompiler(ExcelFunction function, ParsingContext context)
-            :base(function, context)
+            : base(function, context)
         {
-            
+
         }
 
         public override CompileResult Compile(IEnumerable<Expression> children)
         {
-            if (children.Count() != 2) return new CompileResult(eErrorType.Value);
+            if (children.Count() != 2)
+            {
+                return new CompileResult(eErrorType.Value);
+            }
+
             var args = new List<FunctionArgument>();
             Function.BeforeInvoke(Context);
             var firstChild = children.First();

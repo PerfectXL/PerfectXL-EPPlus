@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Table.PivotTable;
 using System.Globalization;
@@ -51,7 +49,7 @@ namespace OfficeOpenXml.Drawing.Chart
         internal ExcelOfPieChart(ExcelDrawings drawings, XmlNode node, eChartType type, bool isPivot) :
             base(drawings, node, type, isPivot)
         {
-                SetTypeProperties();
+            SetTypeProperties();
         }
         internal ExcelOfPieChart(ExcelDrawings drawings, XmlNode node, eChartType type, ExcelChart topChart, ExcelPivotTable PivotTableSource) :
             base(drawings, node, type, topChart, PivotTableSource)
@@ -77,7 +75,7 @@ namespace OfficeOpenXml.Drawing.Chart
             }
         }
 
-        const string pieTypePath = "c:ofPieType/@val";
+        private const string pieTypePath = "c:ofPieType/@val";
         /// <summary>
         /// Type, pie or bar
         /// </summary>
@@ -86,7 +84,9 @@ namespace OfficeOpenXml.Drawing.Chart
             get
             {
                 if (_chartXmlHelper.GetXmlNodeString(pieTypePath) == "bar")
+                {
                     return ePieType.Bar;
+                }
                 else
                 {
                     return ePieType.Pie;
@@ -98,26 +98,23 @@ namespace OfficeOpenXml.Drawing.Chart
                 _chartXmlHelper.SetXmlNodeString(pieTypePath, value == ePieType.Bar ? "bar" : "pie");
             }
         }
-        string _gapWidthPath = "c:gapWidth/@val";
+
+        private readonly string _gapWidthPath = "c:gapWidth/@val";
+
         /// <summary>
         /// The size of the gap between two adjacent bars/columns
         /// </summary>
         public int GapWidth
         {
-            get
-            {
-                return _chartXmlHelper.GetXmlNodeInt(_gapWidthPath);
-            }
-            set
-            {
-                _chartXmlHelper.SetXmlNodeString(_gapWidthPath, value.ToString(CultureInfo.InvariantCulture));
-            }
+            get => _chartXmlHelper.GetXmlNodeInt(_gapWidthPath);
+            set => _chartXmlHelper.SetXmlNodeString(_gapWidthPath, value.ToString(CultureInfo.InvariantCulture));
         }
+
         internal override eChartType GetChartType(string name)
         {
             if (name == "ofPieChart")
             {
-                if (OfPieType==ePieType.Bar)
+                if (OfPieType == ePieType.Bar)
                 {
                     return eChartType.BarOfPie;
                 }

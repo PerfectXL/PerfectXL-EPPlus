@@ -28,7 +28,6 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,8 +46,8 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             _currentToken = new StringBuilder();
         }
 
-        private char[] _chars;
-        private List<Token> _result;
+        private readonly char[] _chars;
+        private readonly List<Token> _result;
         private StringBuilder _currentToken;
 
         public char[] FormulaChars
@@ -129,7 +128,7 @@ namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis
             var count = _result.Count;
             if (count > 0)
             {
-                _result.RemoveAt(count - 1);   
+                _result.RemoveAt(count - 1);
             }
             _result.Add(newToken);
         }

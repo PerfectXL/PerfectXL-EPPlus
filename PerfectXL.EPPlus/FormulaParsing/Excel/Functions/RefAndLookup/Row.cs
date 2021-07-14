@@ -25,10 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
-using System.Text.RegularExpressions;
-using OfficeOpenXml.FormulaParsing.Utilities;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
@@ -43,7 +40,10 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
             }
             var rangeAddress = ArgToAddress(arguments, 0, context);
             if (!ExcelAddressUtil.IsValidAddress(rangeAddress))
+            {
                 throw new ArgumentException("An invalid argument was supplied");
+            }
+
             var factory = new RangeAddressFactory(context.ExcelDataProvider);
             var address = factory.Create(rangeAddress);
             return CreateResult(address.FromRow, DataType.Integer);

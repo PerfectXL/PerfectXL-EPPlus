@@ -10,11 +10,11 @@ namespace EPPlusTest
     public abstract class TestBase
     {
         protected ExcelPackage _pck;
-        protected string _clipartPath="";
-        protected string _worksheetPath= @"c:\epplusTest\Testoutput\";
+        protected string _clipartPath = "";
+        protected string _worksheetPath = @"c:\epplusTest\Testoutput\";
         protected string _testInputPath = @"c:\epplusTest\workbooks\";
         public TestContext TestContext { get; set; }
-        
+
         [TestInitialize]
         public void InitBase()
         {
@@ -23,7 +23,7 @@ namespace EPPlusTest
             {
                 Directory.CreateDirectory(_clipartPath);
             }
-            if(Environment.GetEnvironmentVariable("EPPlusTestInputPath")!=null)
+            if (Environment.GetEnvironmentVariable("EPPlusTestInputPath") != null)
             {
                 _testInputPath = Environment.GetEnvironmentVariable("EPPlusTestInputPath");
             }
@@ -49,22 +49,22 @@ namespace EPPlusTest
                     }
                 }
             }
-            
+
             //_worksheetPath = Path.Combine(Path.GetTempPath(), @"EPPlus worksheets");
             //if (!Directory.Exists(_worksheetPath))
             //{
             //    Directory.CreateDirectory(_worksheetPath);
             //}
-            var di=new DirectoryInfo(_worksheetPath);            
+            var di = new DirectoryInfo(_worksheetPath);
             _worksheetPath = di.FullName + "\\";
 
             _pck = new ExcelPackage();
         }
 
-        protected ExcelPackage OpenPackage(string name, bool delete=false)
+        protected ExcelPackage OpenPackage(string name, bool delete = false)
         {
             var fi = new FileInfo(_worksheetPath + name);
-            if(delete && fi.Exists)
+            if (delete && fi.Exists)
             {
                 fi.Delete();
             }
@@ -88,7 +88,11 @@ namespace EPPlusTest
 
         protected void SaveWorksheet(string name)
         {
-            if (_pck.Workbook.Worksheets.Count == 0) return;
+            if (_pck.Workbook.Worksheets.Count == 0)
+            {
+                return;
+            }
+
             var fi = new FileInfo(_worksheetPath + name);
             if (fi.Exists)
             {

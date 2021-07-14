@@ -26,7 +26,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
@@ -59,7 +58,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
 
     public class ChoosenInfo : ExcelDataProvider.IRangeInfo
     {
-        private string[] chosenIndeces = null;
+        private readonly string[] chosenIndeces = null;
 
         public ChoosenInfo(string[] chosenIndeces)
         {

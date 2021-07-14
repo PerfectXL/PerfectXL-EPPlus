@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace OfficeOpenXml.Drawing.Chart
@@ -39,27 +37,27 @@ namespace OfficeOpenXml.Drawing.Chart
     /// <summary>
     /// A charts plot area
     /// </summary>
-    public sealed class ExcelChartPlotArea :  XmlHelper
+    public sealed class ExcelChartPlotArea : XmlHelper
     {
-        ExcelChart _firstChart;
+        private readonly ExcelChart _firstChart;
         internal ExcelChartPlotArea(XmlNamespaceManager ns, XmlNode node, ExcelChart firstChart)
-           : base(ns,node)
-       {
-           _firstChart = firstChart;
+           : base(ns, node)
+        {
+            _firstChart = firstChart;
             if (TopNode.SelectSingleNode("c:dTable", NameSpaceManager) != null)
             {
                 _dataTable = new ExcelChartDataTable(NameSpaceManager, TopNode);
             }
         }
 
-        ExcelChartCollection _chartTypes;
+        private ExcelChartCollection _chartTypes;
         public ExcelChartCollection ChartTypes
         {
             get
             {
                 if (_chartTypes == null)
                 {
-                    _chartTypes = new ExcelChartCollection(_firstChart); 
+                    _chartTypes = new ExcelChartCollection(_firstChart);
                 }
                 return _chartTypes;
             }
@@ -72,7 +70,7 @@ namespace OfficeOpenXml.Drawing.Chart
         /// </summary>
         public ExcelChartDataTable CreateDataTable()
         {
-            if(_dataTable!=null)
+            if (_dataTable != null)
             {
                 throw (new InvalidOperationException("Data table already exists"));
             }
@@ -88,7 +86,8 @@ namespace OfficeOpenXml.Drawing.Chart
             DeleteAllNode("c:dTable");
             _dataTable = null;
         }
-        ExcelChartDataTable _dataTable = null;
+
+        private ExcelChartDataTable _dataTable = null;
         /// <summary>
         /// The data table object.
         /// Use the CreateDataTable method to create a datatable if it does not exist.
@@ -103,7 +102,7 @@ namespace OfficeOpenXml.Drawing.Chart
             }
         }
         #endregion
-        ExcelDrawingFill _fill = null;
+        private ExcelDrawingFill _fill = null;
         public ExcelDrawingFill Fill
         {
             get
@@ -115,7 +114,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _fill;
             }
         }
-        ExcelDrawingBorder _border = null;
+
+        private ExcelDrawingBorder _border = null;
         public ExcelDrawingBorder Border
         {
             get

@@ -29,9 +29,6 @@
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
 {
@@ -47,7 +44,11 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
             {
                 obj = ((ExcelDataProvider.IRangeInfo)obj).GetOffset(0, 0);
             }
-            if (obj == null) return new CompileResult(null, DataType.Empty);
+            if (obj == null)
+            {
+                return new CompileResult(null, DataType.Empty);
+            }
+
             if (obj.GetType().Equals(typeof(string)))
             {
                 return new CompileResult(obj, DataType.String);
@@ -64,7 +65,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
             {
                 return new CompileResult(obj, DataType.Boolean);
             }
-            if (obj.GetType().Equals(typeof (ExcelErrorValue)))
+            if (obj.GetType().Equals(typeof(ExcelErrorValue)))
             {
                 return new CompileResult(obj, DataType.ExcelError);
             }

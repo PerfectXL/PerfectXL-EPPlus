@@ -57,41 +57,40 @@ namespace OfficeOpenXml.Drawing
     /// <summary>
     /// Properties for drawing line ends
     /// </summary>
-    public sealed class ExcelDrawingLineEnd:XmlHelper
+    public sealed class ExcelDrawingLineEnd : XmlHelper
     {
-         string _linePath;
-        internal ExcelDrawingLineEnd(XmlNamespaceManager nameSpaceManager, XmlNode topNode, string linePath) : 
+        private readonly string _linePath;
+
+        internal ExcelDrawingLineEnd(XmlNamespaceManager nameSpaceManager, XmlNode topNode, string linePath) :
             base(nameSpaceManager, topNode)
         {
             SchemaNodeOrder = new string[] { "headEnd", "tailEnd" };
-            _linePath = linePath;   
+            _linePath = linePath;
         }
-        string _headEndStylePath = "xdr:sp/xdr:spPr/a:ln/a:headEnd/@type";
+
+        private readonly string _headEndStylePath = "xdr:sp/xdr:spPr/a:ln/a:headEnd/@type";
+
         /// <summary>
         /// HeaderEnd
         /// </summary>
         public eEndStyle HeadEnd
         {
-            get
-            {
-                return TranslateEndStyle(GetXmlNodeString(_headEndStylePath));
-            }
+            get => TranslateEndStyle(GetXmlNodeString(_headEndStylePath));
             set
             {
                 CreateNode(_linePath, false);
                 SetXmlNodeString(_headEndStylePath, TranslateEndStyleText(value));
             }
         }
-        string _tailEndStylePath = "xdr:sp/xdr:spPr/a:ln/a:tailEnd/@type";
+
+        private readonly string _tailEndStylePath = "xdr:sp/xdr:spPr/a:ln/a:tailEnd/@type";
+
         /// <summary>
         /// HeaderEnd
         /// </summary>
         public eEndStyle TailEnd
         {
-            get
-            {
-                return TranslateEndStyle(GetXmlNodeString(_tailEndStylePath));
-            }
+            get => TranslateEndStyle(GetXmlNodeString(_tailEndStylePath));
             set
             {
                 CreateNode(_linePath, false);
@@ -99,16 +98,14 @@ namespace OfficeOpenXml.Drawing
             }
         }
 
-        string _tailEndSizeWidthPath = "xdr:sp/xdr:spPr/a:ln/a:tailEnd/@w";
+        private readonly string _tailEndSizeWidthPath = "xdr:sp/xdr:spPr/a:ln/a:tailEnd/@w";
+
         /// <summary>
         /// TailEndSizeWidth
         /// </summary>
         public eEndSize TailEndSizeWidth
         {
-            get
-            {
-                return TranslateEndSize(GetXmlNodeString(_tailEndSizeWidthPath));
-            }
+            get => TranslateEndSize(GetXmlNodeString(_tailEndSizeWidthPath));
             set
             {
                 CreateNode(_linePath, false);
@@ -116,16 +113,14 @@ namespace OfficeOpenXml.Drawing
             }
         }
 
-        string _tailEndSizeHeightPath = "xdr:sp/xdr:spPr/a:ln/a:tailEnd/@len";
+        private readonly string _tailEndSizeHeightPath = "xdr:sp/xdr:spPr/a:ln/a:tailEnd/@len";
+
         /// <summary>
         /// TailEndSizeHeight
         /// </summary>
         public eEndSize TailEndSizeHeight
         {
-            get
-            {
-                return TranslateEndSize(GetXmlNodeString(_tailEndSizeHeightPath));
-            }
+            get => TranslateEndSize(GetXmlNodeString(_tailEndSizeHeightPath));
             set
             {
                 CreateNode(_linePath, false);
@@ -133,16 +128,14 @@ namespace OfficeOpenXml.Drawing
             }
         }
 
-        string _headEndSizeWidthPath = "xdr:sp/xdr:spPr/a:ln/a:headEnd/@w";
+        private readonly string _headEndSizeWidthPath = "xdr:sp/xdr:spPr/a:ln/a:headEnd/@w";
+
         /// <summary>
         /// TailEndSizeWidth
         /// </summary>
         public eEndSize HeadEndSizeWidth
         {
-            get
-            {
-                return TranslateEndSize(GetXmlNodeString(_headEndSizeWidthPath));
-            }
+            get => TranslateEndSize(GetXmlNodeString(_headEndSizeWidthPath));
             set
             {
                 CreateNode(_linePath, false);
@@ -150,16 +143,14 @@ namespace OfficeOpenXml.Drawing
             }
         }
 
-        string _headEndSizeHeightPath = "xdr:sp/xdr:spPr/a:ln/a:headEnd/@len";
+        private readonly string _headEndSizeHeightPath = "xdr:sp/xdr:spPr/a:ln/a:headEnd/@len";
+
         /// <summary>
         /// TailEndSizeHeight
         /// </summary>
         public eEndSize HeadEndSizeHeight
         {
-            get
-            {
-                return TranslateEndSize(GetXmlNodeString(_headEndSizeHeightPath));
-            }
+            get => TranslateEndSize(GetXmlNodeString(_headEndSizeHeightPath));
             set
             {
                 CreateNode(_linePath, false);
@@ -168,10 +159,9 @@ namespace OfficeOpenXml.Drawing
         }
 
         #region "Translate Enum functions"
-        private string TranslateEndStyleText(eEndStyle value)
-        {
-            return value.ToString().ToLower();
-        }
+
+        private string TranslateEndStyleText(eEndStyle value) => value.ToString().ToLower();
+
         private eEndStyle TranslateEndStyle(string text)
         {
             switch (text)
@@ -203,6 +193,7 @@ namespace OfficeOpenXml.Drawing
                     throw (new Exception("Invalid Endsize"));
             }
         }
+
         private eEndSize TranslateEndSize(string text)
         {
             switch (text)
@@ -215,6 +206,7 @@ namespace OfficeOpenXml.Drawing
                     throw (new Exception("Invalid Endsize"));
             }
         }
+
         #endregion
     }
 }

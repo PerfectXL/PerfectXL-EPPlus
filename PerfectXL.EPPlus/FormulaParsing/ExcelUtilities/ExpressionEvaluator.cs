@@ -32,7 +32,6 @@ using System;
 using System.Text.RegularExpressions;
 using OfficeOpenXml.FormulaParsing.Excel.Operators;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
-using OfficeOpenXml.Utils;
 
 namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
 {
@@ -57,8 +56,15 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
         {
             if (!string.IsNullOrEmpty(expression))
             {
-                if (Regex.IsMatch(expression, @"^([^a-zA-Z0-9]{2})")) return expression.Substring(0, 2);
-                if (Regex.IsMatch(expression, @"^([^a-zA-Z0-9]{1})")) return expression.Substring(0, 1);
+                if (Regex.IsMatch(expression, @"^([^a-zA-Z0-9]{2})"))
+                {
+                    return expression.Substring(0, 2);
+                }
+
+                if (Regex.IsMatch(expression, @"^([^a-zA-Z0-9]{1})"))
+                {
+                    return expression.Substring(0, 1);
+                }
             }
             return null;
         }
@@ -84,7 +90,7 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
             }
             else if (op is DateTime)
             {
-                d = ((DateTime) op).ToOADate();
+                d = ((DateTime)op).ToOADate();
                 return true;
             }
             else if (op != null)
@@ -107,8 +113,7 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
             var operatorCandidate = GetNonAlphanumericStartChars(expression);
             if (!string.IsNullOrEmpty(operatorCandidate) && operatorCandidate != "-")
             {
-                IOperator op;
-                if (OperatorsDict.Instance.TryGetValue(operatorCandidate, out op))
+                if (OperatorsDict.Instance.TryGetValue(operatorCandidate, out var op))
                 {
                     var right = expression.Replace(operatorCandidate, string.Empty);
                     if (left == null && right == string.Empty)
@@ -119,14 +124,12 @@ namespace OfficeOpenXml.FormulaParsing.ExcelUtilities
                     {
                         return op.Operator == Operators.NotEqualTo;
                     }
-                    double leftNum, rightNum;
-                    DateTime date;
-                    bool leftIsNumeric = TryConvertToDouble(left, out leftNum);
-                    bool rightIsNumeric = double.TryParse(right, out rightNum);
-                    bool rightIsDate = DateTime.TryParse(right, out date);
+                    bool leftIsNumeric = TryConvertToDouble(left, out var leftNum);
+                    bool rightIsNumeric = double.TryParse(right, out var rightNum);
+                    bool rightIsDate = DateTime.TryParse(right, out var date);
                     if (leftIsNumeric && rightIsNumeric)
                     {
-                         return EvaluateOperator(leftNum, rightNum, op);
+                        return EvaluateOperator(leftNum, rightNum, op);
                     }
                     if (leftIsNumeric && rightIsDate)
                     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.Utils;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime.Workdays
@@ -11,9 +10,9 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime.Workdays
         private readonly List<DayOfWeek> _holidayDays = new List<DayOfWeek>();
 
         public HolidayWeekdays()
-            :this(DayOfWeek.Saturday, DayOfWeek.Sunday)
+            : this(DayOfWeek.Saturday, DayOfWeek.Sunday)
         {
-            
+
         }
 
         public int NumberOfWorkdaysPerWeek => 7 - _holidayDays.Count;
@@ -34,7 +33,11 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime.Workdays
         public System.DateTime AdjustResultWithHolidays(System.DateTime resultDate,
                                                          IEnumerable<FunctionArgument> arguments)
         {
-            if (arguments.Count() == 2) return resultDate;
+            if (arguments.Count() == 2)
+            {
+                return resultDate;
+            }
+
             var holidays = arguments.ElementAt(2).Value as IEnumerable<FunctionArgument>;
             if (holidays != null)
             {

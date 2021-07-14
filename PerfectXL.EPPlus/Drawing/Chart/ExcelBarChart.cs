@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Table.PivotTable;
 using System.Globalization;
@@ -70,7 +68,7 @@ namespace OfficeOpenXml.Drawing.Chart
             SetChartNodeText(chartNode.Name);
         }
 
-        internal ExcelBarChart(ExcelChart topChart, XmlNode chartNode) : 
+        internal ExcelBarChart(ExcelChart topChart, XmlNode chartNode) :
             base(topChart, chartNode)
         {
             SetChartNodeText(chartNode.Name);
@@ -80,7 +78,7 @@ namespace OfficeOpenXml.Drawing.Chart
         //string _chartTopPath="c:chartSpace/c:chart/c:plotArea/{0}";
         private void SetChartNodeText(string chartNodeText)
         {
-            if(string.IsNullOrEmpty(chartNodeText))
+            if (string.IsNullOrEmpty(chartNodeText))
             {
                 chartNodeText = GetChartNodeText();
             }
@@ -186,7 +184,8 @@ namespace OfficeOpenXml.Drawing.Chart
         }
         #endregion
         #region "Properties"
-        string _directionPath = "c:barDir/@val";
+
+        private readonly string _directionPath = "c:barDir/@val";
         /// <summary>
         /// Direction, Bar or columns
         /// </summary>
@@ -201,7 +200,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 _chartXmlHelper.SetXmlNodeString(_directionPath, GetDirectionText(value));
             }
         }
-        string _shapePath = "c:shape/@val";
+
+        private readonly string _shapePath = "c:shape/@val";
+
         /// <summary>
         /// The shape of the bar/columns
         /// </summary>
@@ -216,7 +217,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 _chartXmlHelper.SetXmlNodeString(_shapePath, GetShapeText(value));
             }
         }
-        ExcelChartDataLabel _DataLabel = null;
+
+        private ExcelChartDataLabel _DataLabel = null;
         /// <summary>
         /// Access to datalabel properties
         /// </summary>
@@ -231,7 +233,9 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _DataLabel;
             }
         }
-        string _gapWidthPath = "c:gapWidth/@val";
+
+        private readonly string _gapWidthPath = "c:gapWidth/@val";
+
         /// <summary>
         /// The size of the gap between two adjacent bars/columns
         /// </summary>
@@ -351,7 +355,7 @@ namespace OfficeOpenXml.Drawing.Chart
             if (name == "bar3DChart")
             {
                 #region "Bar Shape"
-                if (this.Shape==eShape.Box)
+                if (this.Shape == eShape.Box)
                 {
                     if (this.Direction == eDirection.Bar)
                     {

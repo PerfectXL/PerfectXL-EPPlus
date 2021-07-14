@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 
 namespace EPPlusTest.FormulaParsing
@@ -35,7 +30,7 @@ namespace EPPlusTest.FormulaParsing
             s1.Cells["C4"].Value = 8;
 
             _sheet = s1;
-            _sheet2 = _package.Workbook.Worksheets.Add("test2",s1);
+            _sheet2 = _package.Workbook.Worksheets.Add("test2", s1);
         }
 
         [TestCleanup]
@@ -51,7 +46,7 @@ namespace EPPlusTest.FormulaParsing
             _sheet.Cells[5, 1].FormulaR1C1 = fR1C1;
             string f = _sheet.Cells[5, 1].Formula;
             _sheet.Cells[5, 1].Formula = f;
-            Assert.AreEqual(fR1C1, _sheet.Cells[5,1].FormulaR1C1);
+            Assert.AreEqual(fR1C1, _sheet.Cells[5, 1].FormulaR1C1);
         }
         [TestMethod]
         public void C()
@@ -93,7 +88,7 @@ namespace EPPlusTest.FormulaParsing
             string fR1C1 = "SUM(R2)";
             _sheet.Cells[5, 3].FormulaR1C1 = fR1C1;
             string f = _sheet.Cells[5, 3].Formula;
-            Assert.AreEqual("SUM($2:$2)",f);
+            Assert.AreEqual("SUM($2:$2)", f);
 
             fR1C1 = "SUM(TEST2!R2)";
             _sheet.Cells[5, 3].FormulaR1C1 = fR1C1;
@@ -248,23 +243,23 @@ namespace EPPlusTest.FormulaParsing
         public void TranslateToR1C1Test1()
         {
             const string formula = "SUM(Sheet1!A:A)";
-            var formulaR1C1 = ExcelCellBase.TranslateToR1C1(formula, 1,2);
-            Assert.AreEqual("SUM(Sheet1!C[-1])",formulaR1C1);
+            var formulaR1C1 = ExcelCellBase.TranslateToR1C1(formula, 1, 2);
+            Assert.AreEqual("SUM(Sheet1!C[-1])", formulaR1C1);
         }
 
         [TestMethod]
         public void TranslateToR1C1Test2()
         {
             const string formula = "SUM(Sheet1!1:1)";
-            var formulaR1C1 = ExcelCellBase.TranslateToR1C1(formula, 2,1);
-            Assert.AreEqual("SUM(Sheet1!R[-1])",formulaR1C1);
+            var formulaR1C1 = ExcelCellBase.TranslateToR1C1(formula, 2, 1);
+            Assert.AreEqual("SUM(Sheet1!R[-1])", formulaR1C1);
         }
 
         [TestMethod]
         public void TranslateFromR1C1Test1()
         {
             const string formulaR1C1 = "SUM(Sheet1!C[-1])";
-            var formula = ExcelCellBase.TranslateFromR1C1(formulaR1C1, 1,2);
+            var formula = ExcelCellBase.TranslateFromR1C1(formulaR1C1, 1, 2);
             Assert.AreEqual("SUM(Sheet1!A:A)", formula);
         }
 
@@ -272,7 +267,7 @@ namespace EPPlusTest.FormulaParsing
         public void TranslateFromR1C1Test2()
         {
             const string formulaR1C1 = "SUM(Sheet1!R[-1])";
-            var formula = ExcelCellBase.TranslateFromR1C1(formulaR1C1, 2,1);
+            var formula = ExcelCellBase.TranslateFromR1C1(formulaR1C1, 2, 1);
             Assert.AreEqual("SUM(Sheet1!1:1)", formula);
         }
     }

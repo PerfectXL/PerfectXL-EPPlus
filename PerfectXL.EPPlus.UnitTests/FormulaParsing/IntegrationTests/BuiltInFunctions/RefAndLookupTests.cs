@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
@@ -14,7 +11,7 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
     public class RefAndLookupTests : FormulaParserTestBase
     {
         private ExcelDataProvider _excelDataProvider;
-        const string WorksheetName = null;
+        private const string WorksheetName = null;
         private ExcelPackage _package;
         private ExcelWorksheet _worksheet;
 
@@ -26,7 +23,7 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
             _excelDataProvider = A.Fake<ExcelDataProvider>();
             A.CallTo(() => _excelDataProvider.GetDimensionEnd(A<string>.Ignored)).Returns(new ExcelCellAddress(10, 1));
             A.CallTo(() => _excelDataProvider.GetWorkbookNameValues()).Returns(new ExcelNamedRangeCollection(_package.Workbook));
-            _parser = new FormulaParser(_excelDataProvider);    
+            _parser = new FormulaParser(_excelDataProvider);
         }
 
         [TestCleanup]
@@ -38,7 +35,7 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
         [TestMethod]
         public void VLookupShouldReturnCorrespondingValue()
         {
-            using(var pck = new ExcelPackage())
+            using (var pck = new ExcelPackage())
             {
                 var ws = pck.Workbook.Worksheets.Add("test");
                 var lookupAddress = "A1:B2";
@@ -98,7 +95,7 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
                 s.Cells[2, 2].Value = 2;
                 s.Cells[5, 5].Formula = "HLOOKUP(4, " + lookupAddress + ", 2, true)";
                 s.Calculate();
-                Assert.AreEqual(1, s.Cells[5,5].Value);
+                Assert.AreEqual(1, s.Cells[5, 5].Value);
             }
         }
 
@@ -124,13 +121,13 @@ namespace EPPlusTest.FormulaParsing.IntegrationTests.BuiltInFunctions
             //var result = _parser.Parse("LOOKUP(4, " + lookupAddress + ")");
             //Assert.AreEqual(1, result);
         }
-           
+
         [TestMethod]
         public void MatchShouldReturnIndexOfMatchingValue()
         {
             var lookupAddress = "A1:A2";
-            A.CallTo(() => _excelDataProvider.GetCellValue(WorksheetName,1, 1)).Returns(3);
-            A.CallTo(() => _excelDataProvider.GetCellValue(WorksheetName,1, 2)).Returns(5);
+            A.CallTo(() => _excelDataProvider.GetCellValue(WorksheetName, 1, 1)).Returns(3);
+            A.CallTo(() => _excelDataProvider.GetCellValue(WorksheetName, 1, 2)).Returns(5);
             var result = _parser.Parse("MATCH(3, " + lookupAddress + ")");
             Assert.AreEqual(1, result);
         }

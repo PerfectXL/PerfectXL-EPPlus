@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
@@ -12,7 +9,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Math
         {
             ValidateArguments(arguments, 1);
             var angle = ArgToDecimal(arguments, 0);
-            var result = (angle*180)/System.Math.PI;
+            var result = (angle * 180) / System.Math.PI;
             return CreateResult(result, DataType.Decimal);
         }
     }

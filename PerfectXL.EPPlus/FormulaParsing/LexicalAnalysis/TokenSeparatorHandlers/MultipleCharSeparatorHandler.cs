@@ -28,17 +28,12 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2015-12-28
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.FormulaParsing.LexicalAnalysis.TokenSeparatorHandlers
 {
     public class MultipleCharSeparatorHandler : SeparatorHandler
     {
-        ITokenSeparatorProvider _tokenSeparatorProvider;
+        private readonly ITokenSeparatorProvider _tokenSeparatorProvider;
 
         public MultipleCharSeparatorHandler()
             : this(new TokenSeparatorProvider())

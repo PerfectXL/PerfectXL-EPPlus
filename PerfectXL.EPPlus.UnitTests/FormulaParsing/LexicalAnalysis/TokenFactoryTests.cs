@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.FormulaParsing;
 using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
@@ -28,7 +25,7 @@ namespace EPPlusTest.FormulaParsing.LexicalAnalysis
         [TestCleanup]
         public void Cleanup()
         {
-      
+
         }
 
         [TestMethod]
@@ -161,7 +158,7 @@ namespace EPPlusTest.FormulaParsing.LexicalAnalysis
         public void CreateShouldCreateNamedValueAsExcelAddressToken()
         {
             var input = "NamedValue";
-            A.CallTo(() => _nameValueProvider.IsNamedValue("NamedValue","")).Returns(true);
+            A.CallTo(() => _nameValueProvider.IsNamedValue("NamedValue", "")).Returns(true);
             A.CallTo(() => _nameValueProvider.IsNamedValue("NamedValue", null)).Returns(true);
             var token = _tokenFactory.Create(Enumerable.Empty<Token>(), input);
             Assert.AreEqual(TokenType.NameValue, token.TokenType);

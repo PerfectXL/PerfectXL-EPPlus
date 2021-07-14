@@ -23,9 +23,7 @@
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.Utilities;
 using OfficeOpenXml.FormulaParsing.Exceptions;
 
@@ -36,7 +34,6 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
         public override object Parse(object obj)
         {
             Require.That(obj).Named("argument").IsNotNull();
-            int result;
             if (obj is ExcelDataProvider.IRangeInfo)
             {
                 var r = ((ExcelDataProvider.IRangeInfo)obj).FirstOrDefault();
@@ -51,7 +48,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions
             {
                 return Convert.ToInt32(obj);
             }
-            if (!int.TryParse(obj.ToString(), out result))
+            if (!int.TryParse(obj.ToString(), out var result))
             {
                 throw new ExcelErrorValueException(ExcelErrorValue.Create(eErrorType.Value));
             }

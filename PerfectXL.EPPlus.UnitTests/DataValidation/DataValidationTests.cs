@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml;
 using OfficeOpenXml.DataValidation;
-using System.IO;
 
 namespace EPPlusTest.DataValidation
 {
@@ -33,7 +29,7 @@ namespace EPPlusTest.DataValidation
             var validation = new ExcelDataValidationInt(_sheet, "A1", ExcelDataValidationType.Whole, _dataValidationNode, _namespaceManager);
             // Assert
             Assert.AreEqual(ExcelDataValidationOperator.greaterThanOrEqual, validation.Operator);
-       }
+        }
 
         [TestMethod, ExpectedException(typeof(InvalidOperationException))]
         public void DataValidations_ShouldThrowIfOperatorIsEqualAndFormula1IsEmpty()

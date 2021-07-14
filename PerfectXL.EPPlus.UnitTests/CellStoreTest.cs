@@ -9,15 +9,15 @@ namespace EPPlusTest
     [TestClass]
     public class CellStoreTest : TestBase
     {
-        
+
         [TestMethod]
         public void Insert1()
         {
-            var ws=_pck.Workbook.Worksheets.Add("Insert1");
+            var ws = _pck.Workbook.Worksheets.Add("Insert1");
             LoadData(ws);
 
             ws.InsertRow(2, 1000);
-            Assert.AreEqual(ws.GetValue(1002,1),"1,0");
+            Assert.AreEqual(ws.GetValue(1002, 1), "1,0");
             ws.InsertRow(1003, 1000);
             Assert.AreEqual(ws.GetValue(2003, 1), "2,0");
             ws.InsertRow(2004, 1000);
@@ -34,7 +34,7 @@ namespace EPPlusTest
             ws.InsertRow(1, 15);
             Assert.AreEqual(ws.GetValue(4020, 1), "3,0");
             Assert.AreEqual(ws.GetValue(5016, 1), "499,0");
-   
+
         }
         [TestMethod]
         public void Insert2()
@@ -46,7 +46,7 @@ namespace EPPlusTest
             {
                 ws.InsertRow(1, 1);
             }
-            Assert.AreEqual(ws.GetValue(33,1),"0,0");
+            Assert.AreEqual(ws.GetValue(33, 1), "0,0");
 
             ws = _pck.Workbook.Worksheets.Add("Insert2-2");
             LoadData(ws);
@@ -64,9 +64,9 @@ namespace EPPlusTest
             var ws = _pck.Workbook.Worksheets.Add("Insert3");
             LoadData(ws);
 
-            for (int i = 0; i < 500; i+=4)
+            for (int i = 0; i < 500; i += 4)
             {
-                ws.InsertRow(i+1, 2);
+                ws.InsertRow(i + 1, 2);
             }
         }
 
@@ -74,10 +74,10 @@ namespace EPPlusTest
         public void InsertRandomTest()
         {
             var ws = _pck.Workbook.Worksheets.Add("Insert4-1");
-            
+
             LoadData(ws, 5000);
 
-            for (int i = 5000; i > 0; i-=2)
+            for (int i = 5000; i > 0; i -= 2)
             {
                 ws.InsertRow(i, 1);
             }
@@ -102,7 +102,7 @@ namespace EPPlusTest
             LoadData(ws, 5000);
 
             ws.DeleteRow(2, 2);
-            Assert.AreEqual("3,0",ws.GetValue(2,1));
+            Assert.AreEqual("3,0", ws.GetValue(2, 1));
             ws.DeleteRow(10, 10);
             Assert.AreEqual("21,0", ws.GetValue(10, 1));
             ws.DeleteRow(50, 40);
@@ -121,7 +121,7 @@ namespace EPPlusTest
             ws.DeleteRow(32, 30);
             for (int i = 1; i < 50; i++)
             {
-                ws.DeleteRow(1,1);
+                ws.DeleteRow(1, 1);
             }
         }
         [TestMethod]
@@ -135,23 +135,27 @@ namespace EPPlusTest
 
             for (int i = 0; i < 33; i++)
             {
-                ws.SetValue(i + 2,1, i + 2);
+                ws.SetValue(i + 2, 1, i + 2);
             }
         }
         private void LoadData(ExcelWorksheet ws)
         {
             LoadData(ws, 1000);
         }
-        private void LoadData(ExcelWorksheet ws, int rows, int cols=1, bool isNumeric = false)
+        private void LoadData(ExcelWorksheet ws, int rows, int cols = 1, bool isNumeric = false)
         {
             for (int r = 0; r < rows; r++)
             {
                 for (int c = 0; c < cols; c++)
                 {
                     if (isNumeric)
+                    {
                         ws.SetValue(r + 1, c + 1, r + c);
+                    }
                     else
-                        ws.SetValue(r+1, c+1, r.ToString()+","+c.ToString());
+                    {
+                        ws.SetValue(r + 1, c + 1, r.ToString() + "," + c.ToString());
+                    }
                 }
             }
         }
@@ -162,12 +166,12 @@ namespace EPPlusTest
 
             LoadData(ws, 500);
 
-            var r=1;
-            for(int i=1;i<=500;i++)
+            var r = 1;
+            for (int i = 1; i <= 500; i++)
             {
-                ws.InsertRow(r,i);
-                Assert.AreEqual((i-1).ToString()+",0", ws.GetValue(r+i,1).ToString());
-                r+=i+1;
+                ws.InsertRow(r, i);
+                Assert.AreEqual((i - 1).ToString() + ",0", ws.GetValue(r + i, 1).ToString());
+                r += i + 1;
             }
         }
         [TestMethod]

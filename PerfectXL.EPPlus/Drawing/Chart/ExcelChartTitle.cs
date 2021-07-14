@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.Style;
 
@@ -53,9 +51,10 @@ namespace OfficeOpenXml.Drawing.Chart
                 topNode.InnerXml = "<c:tx><c:rich><a:bodyPr /><a:lstStyle /><a:p><a:pPr><a:defRPr sz=\"1800\" b=\"0\" /></a:pPr><a:r><a:t /></a:r></a:p></c:rich></c:tx><c:layout /><c:overlay val=\"0\" />";
             }
             TopNode = topNode;
-            SchemaNodeOrder = new string[] { "tx","bodyPr", "lstStyle", "layout", "overlay" };
+            SchemaNodeOrder = new string[] { "tx", "bodyPr", "lstStyle", "layout", "overlay" };
         }
-        const string titlePath = "c:tx/c:rich/a:p/a:r/a:t";
+
+        private const string titlePath = "c:tx/c:rich/a:p/a:r/a:t";
         /// <summary>
         /// The text
         /// </summary>
@@ -72,7 +71,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 RichText.Text = value;
             }
         }
-        ExcelDrawingBorder _border = null;
+
+        private ExcelDrawingBorder _border = null;
         /// <summary>
         /// A reference to the border properties
         /// </summary>
@@ -87,7 +87,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 return _border;
             }
         }
-        ExcelDrawingFill _fill = null;
+
+        private ExcelDrawingFill _fill = null;
         /// <summary>
         /// A reference to the fill properties
         /// </summary>
@@ -115,15 +116,16 @@ namespace OfficeOpenXml.Drawing.Chart
                 //    _font = new ExcelTextFont(NameSpaceManager, TopNode, "c:tx/c:rich/a:p/a:r/a:rPr", new string[] { "rPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" });
                 //}
                 //return _font;
-                if (_richText==null || _richText.Count == 0)
+                if (_richText == null || _richText.Count == 0)
                 {
                     RichText.Add("");
                 }
                 return _richText[0];
             }
         }
-        string[] paragraphNodeOrder = new string[] { "pPr", "defRPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" };
-        ExcelParagraphCollection _richText = null;
+
+        private readonly string[] paragraphNodeOrder = new string[] { "pPr", "defRPr", "solidFill", "uFill", "latin", "cs", "r", "rPr", "t" };
+        private ExcelParagraphCollection _richText = null;
         /// <summary>
         /// Richtext
         /// </summary>
@@ -181,7 +183,8 @@ namespace OfficeOpenXml.Drawing.Chart
                 SetXmlNodeString("c:tx/c:rich/a:bodyPr/@anchorCtr", ExcelDrawing.GetTextAchoringText(value));
             }
         }
-        const string TextVerticalPath = "xdr:sp/xdr:txBody/a:bodyPr/@vert";
+
+        private const string TextVerticalPath = "xdr:sp/xdr:txBody/a:bodyPr/@vert";
         /// <summary>
         /// Vertical text
         /// </summary>
@@ -203,7 +206,7 @@ namespace OfficeOpenXml.Drawing.Chart
         {
             get
             {
-                var i=GetXmlNodeInt("c:tx/c:rich/a:bodyPr/@rot");
+                var i = GetXmlNodeInt("c:tx/c:rich/a:bodyPr/@rot");
                 if (i < 0)
                 {
                     return 360 - (i / 60000);
@@ -216,9 +219,9 @@ namespace OfficeOpenXml.Drawing.Chart
             set
             {
                 int v;
-                if(value <0 || value > 360)
+                if (value < 0 || value > 360)
                 {
-                    throw(new ArgumentOutOfRangeException("Rotation must be between 0 and 360"));
+                    throw (new ArgumentOutOfRangeException("Rotation must be between 0 and 360"));
                 }
 
                 if (value > 180)

@@ -31,8 +31,6 @@
  *******************************************************************************/
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 namespace OfficeOpenXml.Table
@@ -42,14 +40,15 @@ namespace OfficeOpenXml.Table
     /// </summary>
     public class ExcelTableCollection : IEnumerable<ExcelTable>
     {
-        List<ExcelTable> _tables = new List<ExcelTable>();
         internal Dictionary<string, int> _tableNames = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        ExcelWorksheet _ws;        
+        private readonly List<ExcelTable> _tables = new List<ExcelTable>();
+        private readonly ExcelWorksheet _ws;
+
         internal ExcelTableCollection(ExcelWorksheet ws)
         {
             var pck = ws._package.Package;
             _ws = ws;
-            foreach(XmlElement node in ws.WorksheetXml.SelectNodes("//d:tableParts/d:tablePart", ws.NameSpaceManager))
+            foreach (XmlElement node in ws.WorksheetXml.SelectNodes("//d:tableParts/d:tablePart", ws.NameSpaceManager))
             {
                 if (!ws.Part.TryGetRelationshipById(node.GetAttribute("id", ExcelPackage.schemaRelationships), out var rel))
                 {
@@ -61,6 +60,7 @@ namespace OfficeOpenXml.Table
                 _tables.Add(tbl);
             }
         }
+
         private ExcelTable Add(ExcelTable tbl)
         {
             _tables.Add(tbl);
@@ -146,7 +146,6 @@ namespace OfficeOpenXml.Table
             Delete(this[Name], ClearRange);
         }
 
-
         public void Delete(ExcelTable Table, bool ClearRange = false)
         {
             if (!this._tables.Contains(Table))
@@ -162,7 +161,10 @@ namespace OfficeOpenXml.Table
                 {
                     foreach (var table in sheet.Tables)
                     {
-                        if (table.Id > Table.Id) table.Id--;
+                        if (table.Id > Table.Id)
+                        {
+                            table.Id--;
+                        }
                     }
                     Table.WorkSheet.Workbook._nextTableID--;
                 }
@@ -171,7 +173,6 @@ namespace OfficeOpenXml.Table
                     range.Clear();
                 }
             }
-
         }
 
         internal string GetNewTableName()
@@ -184,16 +185,12 @@ namespace OfficeOpenXml.Table
             }
             return name;
         }
+
         /// <summary>
         /// Number of items in the collection
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return _tables.Count;
-            }
-        }
+        public int Count => _tables.Count;
+
         /// <summary>
         /// Get the table object from a range.
         /// </summary>
@@ -210,6 +207,7 @@ namespace OfficeOpenXml.Table
             }
             return null;
         }
+
         /// <summary>
         /// The table Index. Base 0.
         /// </summary>
@@ -226,6 +224,7 @@ namespace OfficeOpenXml.Table
                 return _tables[Index];
             }
         }
+
         /// <summary>
         /// Indexer
         /// </summary>
@@ -245,6 +244,7 @@ namespace OfficeOpenXml.Table
                 }
             }
         }
+
         public IEnumerator<ExcelTable> GetEnumerator()
         {
             return _tables.GetEnumerator();

@@ -30,11 +30,8 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
-using OfficeOpenXml.Drawing;
 using System.Drawing;
 
 namespace OfficeOpenXml.Style
@@ -46,7 +43,7 @@ namespace OfficeOpenXml.Style
     {
         Dash,
         DashHeavy,
-        DashLong, 
+        DashLong,
         DashLongHeavy,
         Double,
         DotDash,
@@ -61,7 +58,7 @@ namespace OfficeOpenXml.Style
         Wavy,
         WavyDbl,
         WavyHeavy,
-        Words
+        Words,
     }
     /// <summary>
     /// Type of font strike
@@ -70,15 +67,16 @@ namespace OfficeOpenXml.Style
     {
         Double,
         No,
-        Single
+        Single,
     }
     /// <summary>
     /// Used by Rich-text and Paragraphs.
     /// </summary>
     public class ExcelTextFont : XmlHelper
     {
-        string _path;
-        XmlNode _rootNode;
+        private readonly string _path;
+        private readonly XmlNode _rootNode;
+
         internal ExcelTextFont(XmlNamespaceManager namespaceManager, XmlNode rootNode, string path, string[] schemaNodeOrder)
             : base(namespaceManager, rootNode)
         {
@@ -94,13 +92,12 @@ namespace OfficeOpenXml.Style
             }
             _path = path;
         }
-        string _fontLatinPath = "a:latin/@typeface";
+
+        private readonly string _fontLatinPath = "a:latin/@typeface";
+
         public string LatinFont
         {
-            get
-            {
-                return GetXmlNodeString(_fontLatinPath);
-            }
+            get => GetXmlNodeString(_fontLatinPath);
             set
             {
                 CreateTopNode();
@@ -110,52 +107,51 @@ namespace OfficeOpenXml.Style
 
         protected internal void CreateTopNode()
         {
-            if (_path!="" && TopNode == _rootNode)
+            if (_path != "" && TopNode == _rootNode)
             {
                 CreateNode(_path);
                 TopNode = _rootNode.SelectSingleNode(_path, NameSpaceManager);
             }
         }
-        string _fontCsPath = "a:cs/@typeface";
+
+        private readonly string _fontCsPath = "a:cs/@typeface";
+
         public string ComplexFont
         {
-            get
-            {
-                return GetXmlNodeString(_fontCsPath);
-            }
+            get => GetXmlNodeString(_fontCsPath);
             set
             {
                 CreateTopNode();
                 SetXmlNodeString(_fontCsPath, value);
             }
         }
-        string _boldPath = "@b";
+
+        private readonly string _boldPath = "@b";
+
         public bool Bold
         {
-            get
-            {
-                return GetXmlNodeBool(_boldPath);
-            }
+            get => GetXmlNodeBool(_boldPath);
             set
             {
                 CreateTopNode();
                 SetXmlNodeString(_boldPath, value ? "1" : "0");
             }
         }
-        string _underLinePath = "@u";
+
+        private readonly string _underLinePath = "@u";
+
         public eUnderLineType UnderLine
         {
-            get
-            {
-                return TranslateUnderline(GetXmlNodeString(_underLinePath));
-            }
+            get => TranslateUnderline(GetXmlNodeString(_underLinePath));
             set
             {
                 CreateTopNode();
                 SetXmlNodeString(_underLinePath, TranslateUnderlineText(value));
             }
         }
-        string _underLineColorPath = "a:uFill/a:solidFill/a:srgbClr/@val";
+
+        private readonly string _underLineColorPath = "a:uFill/a:solidFill/a:srgbClr/@val";
+
         public Color UnderLineColor
         {
             get
@@ -176,46 +172,45 @@ namespace OfficeOpenXml.Style
                 SetXmlNodeString(_underLineColorPath, value.ToArgb().ToString("X").Substring(2, 6));
             }
         }
-        string _italicPath = "@i";
+
+        private readonly string _italicPath = "@i";
+
         public bool Italic
         {
-            get
-            {
-                return GetXmlNodeBool(_italicPath);
-            }
+            get => GetXmlNodeBool(_italicPath);
             set
             {
                 CreateTopNode();
                 SetXmlNodeString(_italicPath, value ? "1" : "0");
             }
         }
-        string _strikePath = "@strike";
+
+        private readonly string _strikePath = "@strike";
+
         public eStrikeType Strike
         {
-            get
-            {
-                return TranslateStrike(GetXmlNodeString(_strikePath));
-            }
+            get => TranslateStrike(GetXmlNodeString(_strikePath));
             set
             {
                 CreateTopNode();
                 SetXmlNodeString(_strikePath, TranslateStrikeText(value));
             }
         }
-        string _sizePath = "@sz";
+
+        private readonly string _sizePath = "@sz";
+
         public float Size
         {
-            get
-            {
-                return GetXmlNodeInt(_sizePath) / 100;
-            }
+            get => GetXmlNodeInt(_sizePath) / 100;
             set
             {
                 CreateTopNode();
                 SetXmlNodeString(_sizePath, ((int)(value * 100)).ToString());
             }
         }
-        string _colorPath = "a:solidFill/a:srgbClr/@val";
+
+        private readonly string _colorPath = "a:solidFill/a:srgbClr/@val";
+
         public Color Color
         {
             get
@@ -298,10 +293,25 @@ namespace OfficeOpenXml.Style
             LatinFont = Font.Name;
             ComplexFont = Font.Name;
             Size = Font.Size;
-            if (Font.Bold) Bold = Font.Bold;
-            if (Font.Italic) Italic = Font.Italic;
-            if (Font.Underline) UnderLine = eUnderLineType.Single;
-            if (Font.Strikeout) Strike = eStrikeType.Single;
+            if (Font.Bold)
+            {
+                Bold = Font.Bold;
+            }
+
+            if (Font.Italic)
+            {
+                Italic = Font.Italic;
+            }
+
+            if (Font.Underline)
+            {
+                UnderLine = eUnderLineType.Single;
+            }
+
+            if (Font.Strikeout)
+            {
+                Strike = eStrikeType.Single;
+            }
         }
     }
 }

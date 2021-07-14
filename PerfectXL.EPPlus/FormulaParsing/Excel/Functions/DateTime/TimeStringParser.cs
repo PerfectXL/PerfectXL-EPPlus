@@ -23,9 +23,6 @@
  * Mats Alm   		                Added		                2013-12-03
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
@@ -38,7 +35,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
         private double GetSerialNumber(int hour, int minute, int second)
         {
             var secondsInADay = 24d * 60d * 60d;
-            return ((double)hour * 60 * 60 + (double)minute * 60 + (double)second) / secondsInADay;
+            return ((double)hour * 60 * 60 + (double)minute * 60 + second) / secondsInADay;
         }
 
         private void ValidateValues(int hour, int minute, int second)
@@ -60,8 +57,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
 
         public virtual bool CanParse(string input)
         {
-            System.DateTime dt;
-            return Regex.IsMatch(input, RegEx24) || Regex.IsMatch(input, RegEx12) || System.DateTime.TryParse(input, out dt);
+            return Regex.IsMatch(input, RegEx24) || Regex.IsMatch(input, RegEx12) || System.DateTime.TryParse(input, out var dt);
         }
 
         private double InternalParse(string input)
@@ -74,8 +70,7 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
             {
                 return Parse12HourTimeString(input);
             }
-            System.DateTime dateTime;
-            if (System.DateTime.TryParse(input, out dateTime))
+            if (System.DateTime.TryParse(input, out var dateTime))
             {
                 return GetSerialNumber(dateTime.Hour, dateTime.Minute, dateTime.Second);
             }
@@ -86,21 +81,19 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime
         {
             string dayPart = string.Empty;
             dayPart = input.Substring(input.Length - 2, 2);
-            int hour;
-            int minute;
-            int second;
-            GetValuesFromString(input, out hour, out minute, out second);
-            if (dayPart == "PM") hour += 12;
+            GetValuesFromString(input, out var hour, out var minute, out var second);
+            if (dayPart == "PM")
+            {
+                hour += 12;
+            }
+
             ValidateValues(hour, minute, second);
             return GetSerialNumber(hour, minute, second);
         }
 
         private double Parse24HourTimeString(string input)
         {
-            int hour;
-            int minute;
-            int second;
-            GetValuesFromString(input, out hour, out minute, out second);
+            GetValuesFromString(input, out var hour, out var minute, out var second);
             ValidateValues(hour, minute, second);
             return GetSerialNumber(hour, minute, second);
         }

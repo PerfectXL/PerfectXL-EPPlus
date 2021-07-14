@@ -28,19 +28,16 @@
  * ******************************************************************************
  * Mats Alm   		                Added       		        2013-03-01 (Prior file history on https://github.com/swmal/ExcelFormulaParser)
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OfficeOpenXml.FormulaParsing.Excel.Operators;
 using OfficeOpenXml.FormulaParsing.Exceptions;
 using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
-using OfficeOpenXml.FormulaParsing.Excel;
-using OfficeOpenXml.FormulaParsing;
 
 namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
 {
-    public class ExpressionGraphBuilder :IExpressionGraphBuilder
+    public class ExpressionGraphBuilder : IExpressionGraphBuilder
     {
         private readonly ExpressionGraph _graph = new ExpressionGraph();
         private readonly IExpressionFactory _expressionFactory;
@@ -74,8 +71,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
             while (_tokenIndex < tokens.Length)
             {
                 var token = tokens[_tokenIndex];
-                IOperator op = null;
-                if (token.TokenType == TokenType.Operator && OperatorsDict.Instance.TryGetValue(token.Value, out op))
+                if (token.TokenType == TokenType.Operator && OperatorsDict.Instance.TryGetValue(token.Value, out var op))
                 {
                     SetOperatorOnExpression(parent, op);
                 }
@@ -101,7 +97,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
                 {
                     break;
                 }
-                else if(token.TokenType == TokenType.WorksheetQuote)
+                else if (token.TokenType == TokenType.WorksheetQuote)
                 {
                     var sb = new StringBuilder();
                     sb.Append(tokens[_tokenIndex++].Value);
@@ -115,7 +111,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
                 {
                     _negateNextExpression = true;
                 }
-                else if(token.TokenType == TokenType.Percent)
+                else if (token.TokenType == TokenType.Percent)
                 {
                     SetOperatorOnExpression(parent, Operator.Percent);
                     if (parent == null)
@@ -152,8 +148,12 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
 
         private void CreateAndAppendExpression(ref Expression parent, Token token)
         {
-            if (IsWaste(token)) return;
-            if (parent != null && 
+            if (IsWaste(token))
+            {
+                return;
+            }
+
+            if (parent != null &&
                 (token.TokenType == TokenType.Comma || token.TokenType == TokenType.SemiColon))
             {
                 parent = parent.PrepareForNextChild();
@@ -230,7 +230,7 @@ namespace OfficeOpenXml.FormulaParsing.ExpressionGraph
                     parent.AddChild(newGroupExpression);
                     BuildUp(tokens, newGroupExpression);
                 }
-                 BuildUp(tokens, parent);
+                BuildUp(tokens, parent);
             }
         }
 

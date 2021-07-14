@@ -29,9 +29,7 @@
  * Jan Källman		    Added       		        2013-01-05
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace OfficeOpenXml.Encryption
@@ -88,7 +86,7 @@ namespace OfficeOpenXml.Encryption
             bw.Write(SizeExtra);
             bw.Write((int)AlgID);
             bw.Write((int)AlgIDHash);
-            bw.Write((int)KeySize);
+            bw.Write(KeySize);
             bw.Write((int)ProviderType);
             bw.Write(Reserved1);
             bw.Write(Reserved2);

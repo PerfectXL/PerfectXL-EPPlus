@@ -37,9 +37,6 @@
  * Jan Källman		Added		10-AUG-2010
  * Jan Källman		License changed GPL-->LGPL 2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OfficeOpenXml
 {
@@ -101,12 +98,13 @@ namespace OfficeOpenXml
         internal ExcelEncryption(EncryptionAlgorithm encryptionAlgorithm)
         {
             Algorithm = encryptionAlgorithm;
-        }        
-        bool _isEncrypted = false;
+        }
+
+        private bool _isEncrypted = false;
         /// <summary>
         /// Is the package encrypted
         /// </summary>
-        public bool IsEncrypted 
+        public bool IsEncrypted
         {
             get
             {
@@ -117,7 +115,10 @@ namespace OfficeOpenXml
                 _isEncrypted = value;
                 if (_isEncrypted)
                 {
-                    if (_password == null) _password = "";
+                    if (_password == null)
+                    {
+                        _password = "";
+                    }
                 }
                 else
                 {
@@ -125,11 +126,12 @@ namespace OfficeOpenXml
                 }
             }
         }
-        string _password=null;
+
+        private string _password = null;
         /// <summary>
         /// The password used to encrypt the workbook.
         /// </summary>
-        public string Password 
+        public string Password
         {
             get
             {

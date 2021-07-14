@@ -247,8 +247,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         // negative when the window is moved backwards.
 
         internal int block_start;
-
-        Config config;
+        private Config config;
         internal int match_length;    // length of best match
         internal int prev_match;      // previous match
         internal int match_available; // set if previous match exists
@@ -387,11 +386,19 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         {
             // Initialize the trees.
             for (int i = 0; i < InternalConstants.L_CODES; i++)
+            {
                 dyn_ltree[i * 2] = 0;
+            }
+
             for (int i = 0; i < InternalConstants.D_CODES; i++)
+            {
                 dyn_dtree[i * 2] = 0;
+            }
+
             for (int i = 0; i < InternalConstants.BL_CODES; i++)
+            {
                 bl_tree[i * 2] = 0;
+            }
 
             dyn_ltree[END_BLOCK * 2] = 1;
             opt_len = static_len = 0;
@@ -415,7 +422,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 }
                 // Exit if v is smaller than both sons
                 if (_IsSmaller(tree, v, heap[j], depth))
+                {
                     break;
+                }
 
                 // Exchange v with the smallest son
                 heap[k] = heap[j]; k = j;
@@ -440,7 +449,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             int n; // iterates over all tree elements
             int prevlen = -1; // last emitted length
             int curlen; // length of current code
-            int nextlen = (int)tree[0 * 2 + 1]; // length of next code
+            int nextlen = tree[0 * 2 + 1]; // length of next code
             int count = 0; // repeat count of the current code
             int max_count = 7; // max repeat count
             int min_count = 4; // min repeat count
@@ -449,11 +458,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             {
                 max_count = 138; min_count = 3;
             }
-            tree[(max_code + 1) * 2 + 1] = (short)0x7fff; // guard //??
+            tree[(max_code + 1) * 2 + 1] = 0x7fff; // guard //??
 
             for (n = 0; n <= max_code; n++)
             {
-                curlen = nextlen; nextlen = (int)tree[(n + 1) * 2 + 1];
+                curlen = nextlen; nextlen = tree[(n + 1) * 2 + 1];
                 if (++count < max_count && curlen == nextlen)
                 {
                     continue;
@@ -465,7 +474,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 else if (curlen != 0)
                 {
                     if (curlen != prevlen)
+                    {
                         bl_tree[curlen * 2]++;
+                    }
+
                     bl_tree[InternalConstants.REP_3_6 * 2]++;
                 }
                 else if (count <= 10)
@@ -513,7 +525,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             for (max_blindex = InternalConstants.BL_CODES - 1; max_blindex >= 3; max_blindex--)
             {
                 if (bl_tree[Tree.bl_order[max_blindex] * 2 + 1] != 0)
+                {
                     break;
+                }
             }
             // Update opt_len to include the bit length tree and counts
             opt_len += 3 * (max_blindex + 1) + 5 + 5 + 4;
@@ -545,10 +559,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         internal void send_tree(short[] tree, int max_code)
         {
             int n;                           // iterates over all tree elements
-            int prevlen   = -1;              // last emitted length
+            int prevlen = -1;              // last emitted length
             int curlen;                      // length of current code
-            int nextlen   = tree[0 * 2 + 1]; // length of next code
-            int count     = 0;               // repeat count of the current code
+            int nextlen = tree[0 * 2 + 1]; // length of next code
+            int count = 0;               // repeat count of the current code
             int max_count = 7;               // max repeat count
             int min_count = 4;               // min repeat count
 
@@ -649,15 +663,15 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             int len = length;
             unchecked
             {
-                if (bi_valid > (int)Buf_size - len)
+                if (bi_valid > Buf_size - len)
                 {
                     //int val = value;
                     //      bi_buf |= (val << bi_valid);
 
                     bi_buf |= (short)((value << bi_valid) & 0xffff);
                     //put_short(bi_buf);
-                        pending[pendingCount++] = (byte)bi_buf;
-                        pending[pendingCount++] = (byte)(bi_buf >> 8);
+                    pending[pendingCount++] = (byte)bi_buf;
+                    pending[pendingCount++] = (byte)(bi_buf >> 8);
 
 
                     bi_buf = (short)((uint)value >> (Buf_size - bi_valid));
@@ -706,7 +720,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         // the current block must be flushed.
         internal bool _tr_tally(int dist, int lc)
         {
-            pending[_distanceOffset + last_lit * 2] = unchecked((byte) ( (uint)dist >> 8 ) );
+            pending[_distanceOffset + last_lit * 2] = unchecked((byte)((uint)dist >> 8));
             pending[_distanceOffset + last_lit * 2 + 1] = unchecked((byte)dist);
             pending[_lengthOffset + last_lit] = unchecked((byte)lc);
             last_lit++;
@@ -733,11 +747,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 int dcode;
                 for (dcode = 0; dcode < InternalConstants.D_CODES; dcode++)
                 {
-                    out_length = (int)(out_length + (int)dyn_dtree[dcode * 2] * (5L + Tree.ExtraDistanceBits[dcode]));
+                    out_length = (int)(out_length + dyn_dtree[dcode * 2] * (5L + Tree.ExtraDistanceBits[dcode]));
                 }
                 out_length >>= 3;
                 if ((matches < (last_lit / 2)) && out_length < in_length / 2)
+                {
                     return true;
+                }
             }
 
             return (last_lit == lit_bufsize - 1) || (last_lit == lit_bufsize);
@@ -883,6 +899,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             last_eob_len = 8; // enough lookahead for inflate
 
             if (header)
+            {
                 unchecked
                 {
                     //put_short((short)len);
@@ -892,6 +909,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                     pending[pendingCount++] = (byte)~len;
                     pending[pendingCount++] = (byte)(~len >> 8);
                 }
+            }
 
             put_bytes(window, buf, len);
         }
@@ -931,9 +949,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 {
                     _fillWindow();
                     if (lookahead == 0 && flush == FlushType.None)
+                    {
                         return BlockState.NeedMore;
+                    }
+
                     if (lookahead == 0)
+                    {
                         break; // flush the current block
+                    }
                 }
 
                 strstart += lookahead;
@@ -944,12 +967,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 if (strstart == 0 || strstart >= max_start)
                 {
                     // strstart == 0 is possible when wraparound on 16-bit machine
-                    lookahead = (int)(strstart - max_start);
-                    strstart = (int)max_start;
+                    lookahead = strstart - max_start;
+                    strstart = max_start;
 
                     flush_block_only(false);
                     if (_codec.AvailableBytesOut == 0)
+                    {
                         return BlockState.NeedMore;
+                    }
                 }
 
                 // Flush if we may have to slide, otherwise block_start may become
@@ -958,13 +983,17 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 {
                     flush_block_only(false);
                     if (_codec.AvailableBytesOut == 0)
+                    {
                         return BlockState.NeedMore;
+                    }
                 }
             }
 
             flush_block_only(flush == FlushType.Finish);
             if (_codec.AvailableBytesOut == 0)
+            {
                 return (flush == FlushType.Finish) ? BlockState.FinishStarted : BlockState.NeedMore;
+            }
 
             return flush == FlushType.Finish ? BlockState.FinishDone : BlockState.BlockDone;
         }
@@ -989,7 +1018,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             {
                 // Check if the file is ascii or binary
                 if (data_type == Z_UNKNOWN)
+                {
                     set_data_type();
+                }
 
                 // Construct the literal and distance trees
                 treeLiterals.build_tree(this);
@@ -1008,7 +1039,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 static_lenb = (static_len + 3 + 7) >> 3;
 
                 if (static_lenb <= opt_lenb)
+                {
                     opt_lenb = static_lenb;
+                }
             }
             else
             {
@@ -1116,7 +1149,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 }
 
                 if (_codec.AvailableBytesIn == 0)
+                {
                     return;
+                }
 
                 // If there was no sliding:
                 //    strstart <= WSIZE+MAX_DIST-1 && lookahead <= MIN_LOOKAHEAD - 1 &&
@@ -1169,7 +1204,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                         return BlockState.NeedMore;
                     }
                     if (lookahead == 0)
+                    {
                         break; // flush the current block
+                    }
                 }
 
                 // Insert the string window[strstart .. strstart+2] in the
@@ -1250,7 +1287,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 {
                     flush_block_only(false);
                     if (_codec.AvailableBytesOut == 0)
+                    {
                         return BlockState.NeedMore;
+                    }
                 }
             }
 
@@ -1258,9 +1297,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             if (_codec.AvailableBytesOut == 0)
             {
                 if (flush == FlushType.Finish)
+                {
                     return BlockState.FinishStarted;
+                }
                 else
+                {
                     return BlockState.NeedMore;
+                }
             }
             return flush == FlushType.Finish ? BlockState.FinishDone : BlockState.BlockDone;
         }
@@ -1286,10 +1329,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 {
                     _fillWindow();
                     if (lookahead < MIN_LOOKAHEAD && flush == FlushType.None)
+                    {
                         return BlockState.NeedMore;
+                    }
 
                     if (lookahead == 0)
+                    {
                         break; // flush the current block
+                    }
                 }
 
                 // Insert the string window[strstart .. strstart+2] in the
@@ -1369,7 +1416,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                     {
                         flush_block_only(false);
                         if (_codec.AvailableBytesOut == 0)
+                        {
                             return BlockState.NeedMore;
+                        }
                     }
                 }
                 else if (match_available != 0)
@@ -1388,7 +1437,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                     strstart++;
                     lookahead--;
                     if (_codec.AvailableBytesOut == 0)
+                    {
                         return BlockState.NeedMore;
+                    }
                 }
                 else
                 {
@@ -1411,9 +1462,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             if (_codec.AvailableBytesOut == 0)
             {
                 if (flush == FlushType.Finish)
+                {
                     return BlockState.FinishStarted;
+                }
                 else
+                {
                     return BlockState.NeedMore;
+                }
             }
 
             return flush == FlushType.Finish ? BlockState.FinishDone : BlockState.BlockDone;
@@ -1423,11 +1478,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
         internal int longest_match(int cur_match)
         {
             int chain_length = config.MaxChainLength; // max hash chain length
-            int scan         = strstart;              // current string
+            int scan = strstart;              // current string
             int match;                                // matched string
             int len;                                  // length of current match
-            int best_len     = prev_length;           // best match length so far
-            int limit        = strstart > (w_size - MIN_LOOKAHEAD) ? strstart - (w_size - MIN_LOOKAHEAD) : 0;
+            int best_len = prev_length;           // best match length so far
+            int limit = strstart > (w_size - MIN_LOOKAHEAD) ? strstart - (w_size - MIN_LOOKAHEAD) : 0;
 
             int niceLength = config.NiceLength;
 
@@ -1452,7 +1507,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             // Do not look for matches beyond the end of the input. This is necessary
             // to make deflate deterministic.
             if (niceLength > lookahead)
+            {
                 niceLength = lookahead;
+            }
 
             do
             {
@@ -1464,7 +1521,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                     window[match + best_len - 1] != scan_end1 ||
                     window[match] != window[scan] ||
                     window[++match] != window[scan + 1])
+                {
                     continue;
+                }
 
                 // The check at best_len-1 can be removed because it will be made
                 // again later. (This heuristic is not always a win.)
@@ -1487,7 +1546,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                        window[++scan] == window[++match] &&
                        window[++scan] == window[++match] && scan < strend);
 
-                len = MAX_MATCH - (int)(strend - scan);
+                len = MAX_MATCH - (strend - scan);
                 scan = strend - MAX_MATCH;
 
                 if (len > best_len)
@@ -1495,7 +1554,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                     match_start = cur_match;
                     best_len = len;
                     if (len >= niceLength)
+                    {
                         break;
+                    }
+
                     scan_end1 = window[scan + best_len - 1];
                     scan_end = window[scan + best_len];
                 }
@@ -1503,7 +1565,10 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             while ((cur_match = (prev[cur_match & wmask] & 0xffff)) > limit && --chain_length != 0);
 
             if (best_len <= lookahead)
+            {
                 return best_len;
+            }
+
             return lookahead;
         }
 
@@ -1539,10 +1604,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
 
             // validation
             if (windowBits < 9 || windowBits > 15)
+            {
                 throw new ZlibException("windowBits must be in the range 9..15.");
+            }
 
             if (memLevel < 1 || memLevel > MEM_LEVEL_MAX)
+            {
                 throw new ZlibException(String.Format("memLevel must be in the range 1.. {0}", MEM_LEVEL_MAX));
+            }
 
             _codec.dstate = this;
 
@@ -1671,12 +1740,17 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             int index = 0;
 
             if (dictionary == null || status != INIT_STATE)
+            {
                 throw new ZlibException("Stream error.");
+            }
 
             _codec._Adler32 = Adler.Adler32(_codec._Adler32, dictionary, 0, dictionary.Length);
 
             if (length < MIN_MATCH)
+            {
                 return ZlibConstants.Z_OK;
+            }
+
             if (length > w_size - MIN_LOOKAHEAD)
             {
                 length = w_size - MIN_LOOKAHEAD;
@@ -1731,10 +1805,16 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                 int level_flags = (((int)compressionLevel - 1) & 0xff) >> 1;
 
                 if (level_flags > 3)
+                {
                     level_flags = 3;
+                }
+
                 header |= (level_flags << 6);
                 if (strstart != 0)
+                {
                     header |= PRESET_DICT;
+                }
+
                 header += 31 - (header % 31);
 
                 status = BUSY_STATE;
@@ -1839,7 +1919,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
                         {
                             // clear hash (forget the history)
                             for (int i = 0; i < hash_size; i++)
+                            {
                                 head[i] = 0;
+                            }
                         }
                     }
                     _codec.flush_pending();
@@ -1852,10 +1934,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zlib
             }
 
             if (flush != FlushType.Finish)
+            {
                 return ZlibConstants.Z_OK;
+            }
 
             if (!WantRfc1950HeaderBytes || Rfc1950BytesEmitted)
+            {
                 return ZlibConstants.Z_STREAM_END;
+            }
 
             // Write the zlib trailer (adler32)
             pending[pendingCount++] = (byte)((_codec._Adler32 & 0xFF000000) >> 24);

@@ -27,7 +27,6 @@
 
 
 using System;
-using Interop = System.Runtime.InteropServices;
 
 namespace OfficeOpenXml.Packaging.Ionic.Crc
 {
@@ -42,11 +41,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
     ///   archive files.
     /// </remarks>
 
-//    [Interop.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d0000C")]
-//    [Interop.ComVisible(true)]
-//#if !NETCF
-//    [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]
-//#endif
+    //    [Interop.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d0000C")]
+    //    [Interop.ComVisible(true)]
+    //#if !NETCF
+    //    [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]
+    //#endif
     internal class CRC32
     {
         /// <summary>
@@ -91,7 +90,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         public Int32 GetCrc32AndCopy(System.IO.Stream input, System.IO.Stream output)
         {
             if (input == null)
+            {
                 throw new Exception("The input stream must not be null.");
+            }
 
             unchecked
             {
@@ -100,13 +101,21 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
 
                 _TotalBytesRead = 0;
                 int count = input.Read(buffer, 0, readSize);
-                if (output != null) output.Write(buffer, 0, count);
+                if (output != null)
+                {
+                    output.Write(buffer, 0, count);
+                }
+
                 _TotalBytesRead += count;
                 while (count > 0)
                 {
                     SlurpBlock(buffer, 0, count);
                     count = input.Read(buffer, 0, readSize);
-                    if (output != null) output.Write(buffer, 0, count);
+                    if (output != null)
+                    {
+                        output.Write(buffer, 0, count);
+                    }
+
                     _TotalBytesRead += count;
                 }
 
@@ -143,7 +152,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         public void SlurpBlock(byte[] block, int offset, int count)
         {
             if (block == null)
+            {
                 throw new Exception("The data buffer must not be null.");
+            }
 
             // bzip algorithm
             for (int i = 0; i < count; i++)
@@ -278,7 +289,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
                         crc32Table[i] = dwCrc;
                     }
                     i++;
-                } while (i!=0);
+                } while (i != 0);
             }
 
 #if VERBOSE
@@ -302,11 +313,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         private uint gf2_matrix_times(uint[] matrix, uint vec)
         {
             uint sum = 0;
-            int i=0;
+            int i = 0;
             while (vec != 0)
             {
-                if ((vec & 0x01)== 0x01)
+                if ((vec & 0x01) == 0x01)
+                {
                     sum ^= matrix[i];
+                }
+
                 vec >>= 1;
                 i++;
             }
@@ -316,7 +330,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         private void gf2_matrix_square(uint[] square, uint[] mat)
         {
             for (int i = 0; i < 32; i++)
+            {
                 square[i] = gf2_matrix_times(mat, mat[i]);
+            }
         }
 
 
@@ -338,10 +354,12 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
             uint[] odd = new uint[32];      // odd-power-of-two zeros operator
 
             if (length == 0)
+            {
                 return;
+            }
 
-            uint crc1= ~_register;
-            uint crc2= (uint) crc;
+            uint crc1 = ~_register;
+            uint crc2 = (uint)crc;
 
             // put operator for one zero bit in odd
             odd[0] = this.dwPolynomial;  // the CRC-32 polynomial
@@ -358,25 +376,34 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
             // put operator for four zero bits in odd
             gf2_matrix_square(odd, even);
 
-            uint len2 = (uint) length;
+            uint len2 = (uint)length;
 
             // apply len2 zeros to crc1 (first square will put the operator for one
             // zero byte, eight zero bits, in even)
-            do {
+            do
+            {
                 // apply zeros operator for this bit of len2
                 gf2_matrix_square(even, odd);
 
-                if ((len2 & 1)== 1)
+                if ((len2 & 1) == 1)
+                {
                     crc1 = gf2_matrix_times(even, crc1);
+                }
+
                 len2 >>= 1;
 
                 if (len2 == 0)
+                {
                     break;
+                }
 
                 // another iteration of the loop with odd and even swapped
                 gf2_matrix_square(odd, even);
-                if ((len2 & 1)==1)
+                if ((len2 & 1) == 1)
+                {
                     crc1 = gf2_matrix_times(odd, crc1);
+                }
+
                 len2 >>= 1;
 
 
@@ -384,7 +411,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
 
             crc1 ^= crc2;
 
-            _register= ~crc1;
+            _register = ~crc1;
 
             //return (int) crc1;
             return;
@@ -416,7 +443,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         ///   </para>
         /// </remarks>
         public CRC32(bool reverseBits) :
-            this( unchecked((int)0xEDB88320), reverseBits)
+            this(unchecked((int)0xEDB88320), reverseBits)
         {
         }
 
@@ -449,7 +476,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         public CRC32(int polynomial, bool reverseBits)
         {
             this.reverseBits = reverseBits;
-            this.dwPolynomial = (uint) polynomial;
+            this.dwPolynomial = (uint)polynomial;
             this.GenerateLookupTable();
         }
 
@@ -468,9 +495,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         }
 
         // private member vars
-        private UInt32 dwPolynomial;
+        private readonly UInt32 dwPolynomial;
         private Int64 _TotalBytesRead;
-        private bool reverseBits;
+        private readonly bool reverseBits;
         private UInt32[] crc32Table;
         private const int BUFFER_SIZE = 8192;
         private UInt32 _register = 0xFFFFFFFFU;
@@ -501,8 +528,8 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         private static readonly Int64 UnsetLengthLimit = -99;
 
         internal System.IO.Stream _innerStream;
-        private CRC32 _Crc32;
-        private Int64 _lengthLimit = -99;
+        private readonly CRC32 _Crc32;
+        private readonly Int64 _lengthLimit = -99;
         private bool _leaveOpen;
 
         /// <summary>
@@ -559,7 +586,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
             : this(true, length, stream, null)
         {
             if (length < 0)
+            {
                 throw new ArgumentException("length");
+            }
         }
 
         /// <summary>
@@ -581,7 +610,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
             : this(leaveOpen, length, stream, null)
         {
             if (length < 0)
+            {
                 throw new ArgumentException("length");
+            }
         }
 
         /// <summary>
@@ -605,7 +636,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
             : this(leaveOpen, length, stream, crc32)
         {
             if (length < 0)
+            {
                 throw new ArgumentException("length");
+            }
         }
 
 
@@ -689,12 +722,23 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
 
             if (_lengthLimit != CrcCalculatorStream.UnsetLengthLimit)
             {
-                if (_Crc32.TotalBytesRead >= _lengthLimit) return 0; // EOF
+                if (_Crc32.TotalBytesRead >= _lengthLimit)
+                {
+                    return 0; // EOF
+                }
+
                 Int64 bytesRemaining = _lengthLimit - _Crc32.TotalBytesRead;
-                if (bytesRemaining < count) bytesToRead = (int)bytesRemaining;
+                if (bytesRemaining < count)
+                {
+                    bytesToRead = (int)bytesRemaining;
+                }
             }
             int n = _innerStream.Read(buffer, offset, bytesToRead);
-            if (n > 0) _Crc32.SlurpBlock(buffer, offset, n);
+            if (n > 0)
+            {
+                _Crc32.SlurpBlock(buffer, offset, n);
+            }
+
             return n;
         }
 
@@ -706,7 +750,11 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         /// <param name="count">the number of bytes to write</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (count > 0) _Crc32.SlurpBlock(buffer, offset, count);
+            if (count > 0)
+            {
+                _Crc32.SlurpBlock(buffer, offset, count);
+            }
+
             _innerStream.Write(buffer, offset, count);
         }
 
@@ -755,8 +803,13 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
             get
             {
                 if (_lengthLimit == CrcCalculatorStream.UnsetLengthLimit)
+                {
                     return _innerStream.Length;
-                else return _lengthLimit;
+                }
+                else
+                {
+                    return _lengthLimit;
+                }
             }
         }
 
@@ -806,7 +859,9 @@ namespace OfficeOpenXml.Packaging.Ionic.Crc
         {
             base.Close();
             if (!_leaveOpen)
+            {
                 _innerStream.Close();
+            }
         }
 #endif
     }

@@ -55,36 +55,36 @@ namespace EPPlusTest
         [TestMethod]
         public void UpdateFormulaSheetReferences()
         {
-          var result = ExcelCellBase.UpdateFormulaSheetReferences("5+OldSheet!$G3+'Some Other Sheet'!C3+SUM(1,2,3)", "OldSheet", "NewSheet");
-          Assert.AreEqual("5+NewSheet!$G3+'Some Other Sheet'!C3+SUM(1,2,3)", result);
+            var result = ExcelCellBase.UpdateFormulaSheetReferences("5+OldSheet!$G3+'Some Other Sheet'!C3+SUM(1,2,3)", "OldSheet", "NewSheet");
+            Assert.AreEqual("5+NewSheet!$G3+'Some Other Sheet'!C3+SUM(1,2,3)", result);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void UpdateFormulaSheetReferencesNullOldSheetThrowsException()
         {
-          ExcelCellBase.UpdateFormulaSheetReferences("formula", null, "sheet2");
+            ExcelCellBase.UpdateFormulaSheetReferences("formula", null, "sheet2");
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void UpdateFormulaSheetReferencesEmptyOldSheetThrowsException()
         {
-          ExcelCellBase.UpdateFormulaSheetReferences("formula", string.Empty, "sheet2");
+            ExcelCellBase.UpdateFormulaSheetReferences("formula", string.Empty, "sheet2");
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void UpdateFormulaSheetReferencesNullNewSheetThrowsException()
         {
-          ExcelCellBase.UpdateFormulaSheetReferences("formula", "sheet1", null);
+            ExcelCellBase.UpdateFormulaSheetReferences("formula", "sheet1", null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void UpdateFormulaSheetReferencesEmptyNewSheetThrowsException()
         {
-          ExcelCellBase.UpdateFormulaSheetReferences("formula", "sheet1", string.Empty);
+            ExcelCellBase.UpdateFormulaSheetReferences("formula", "sheet1", string.Empty);
         }
 
         [TestMethod]
@@ -115,5 +115,5 @@ namespace EPPlusTest
             Assert.AreEqual("'RC'!A1", result);
         }
         #endregion
-  }
+    }
 }

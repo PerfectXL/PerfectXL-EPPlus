@@ -28,11 +28,7 @@
  * ******************************************************************************
  * Jan Källman		    Added       		        2013-01-05
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace OfficeOpenXml.Encryption
 {

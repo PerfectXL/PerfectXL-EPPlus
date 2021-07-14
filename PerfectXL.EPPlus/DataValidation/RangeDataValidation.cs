@@ -29,10 +29,6 @@
  * Mats Alm   		                Added       		        2011-03-23
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.Utils;
 using OfficeOpenXml.DataValidation.Contracts;
 
@@ -48,8 +44,8 @@ namespace OfficeOpenXml.DataValidation
             _address = address;
         }
 
-        ExcelWorksheet _worksheet;
-        string _address;
+        private readonly ExcelWorksheet _worksheet;
+        private readonly string _address;
 
         public IExcelDataValidationAny AddAnyDataValidation()
         {

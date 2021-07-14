@@ -24,8 +24,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OfficeOpenXml.Packaging.Ionic.Zip
 {
@@ -468,7 +466,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
     /// </summary>
     internal class SaveProgressEventArgs : ZipProgressEventArgs
     {
-        private int _entriesSaved;
+        private readonly int _entriesSaved;
 
         /// <summary>
         /// Constructor for the SaveProgressEventArgs.
@@ -530,7 +528,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
     /// </summary>
     internal class ExtractProgressEventArgs : ZipProgressEventArgs
     {
-        private int _entriesExtracted;
+        private readonly int _entriesExtracted;
         private string _target;
 
         /// <summary>
@@ -562,36 +560,36 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         internal static ExtractProgressEventArgs BeforeExtractEntry(string archiveName, ZipEntry entry, string extractLocation)
         {
             var x = new ExtractProgressEventArgs
-                {
-                    ArchiveName = archiveName,
-                    EventType = ZipProgressEventType.Extracting_BeforeExtractEntry,
-                    CurrentEntry = entry,
-                    _target = extractLocation,
-                };
+            {
+                ArchiveName = archiveName,
+                EventType = ZipProgressEventType.Extracting_BeforeExtractEntry,
+                CurrentEntry = entry,
+                _target = extractLocation,
+            };
             return x;
         }
 
         internal static ExtractProgressEventArgs ExtractExisting(string archiveName, ZipEntry entry, string extractLocation)
         {
             var x = new ExtractProgressEventArgs
-                {
-                    ArchiveName = archiveName,
-                    EventType = ZipProgressEventType.Extracting_ExtractEntryWouldOverwrite,
-                    CurrentEntry = entry,
-                    _target = extractLocation,
-                };
+            {
+                ArchiveName = archiveName,
+                EventType = ZipProgressEventType.Extracting_ExtractEntryWouldOverwrite,
+                CurrentEntry = entry,
+                _target = extractLocation,
+            };
             return x;
         }
 
         internal static ExtractProgressEventArgs AfterExtractEntry(string archiveName, ZipEntry entry, string extractLocation)
         {
             var x = new ExtractProgressEventArgs
-                {
-                    ArchiveName = archiveName,
-                    EventType = ZipProgressEventType.Extracting_AfterExtractEntry,
-                    CurrentEntry = entry,
-                    _target = extractLocation,
-                };
+            {
+                ArchiveName = archiveName,
+                EventType = ZipProgressEventType.Extracting_AfterExtractEntry,
+                CurrentEntry = entry,
+                _target = extractLocation,
+            };
             return x;
         }
 
@@ -654,12 +652,12 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
         internal static ZipErrorEventArgs Saving(string archiveName, ZipEntry entry, Exception exception)
         {
             var x = new ZipErrorEventArgs
-                {
-                    EventType = ZipProgressEventType.Error_Saving,
-                    ArchiveName = archiveName,
-                    CurrentEntry = entry,
-                    _exc = exception
-                };
+            {
+                EventType = ZipProgressEventType.Error_Saving,
+                ArchiveName = archiveName,
+                CurrentEntry = entry,
+                _exc = exception
+            };
             return x;
         }
 

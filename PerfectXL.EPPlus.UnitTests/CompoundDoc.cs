@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using OfficeOpenXml.Utils;
 using OfficeOpenXml;
 using OfficeOpenXml.Utils.CompundDocument;
 using OfficeOpenXml.Style;
@@ -68,19 +65,19 @@ namespace EPPlusTest
         [TestMethod, Ignore]
         public void Read()
         {
-           //var doc = File.ReadAllBytes(@"c:\temp\vbaProject.bin");
-           var doc = File.ReadAllBytes(@"c:\temp\vba.bin");
-           var cd = new CompoundDocumentFile(doc);
-           var ms = new MemoryStream();
-           cd.Write(ms);
-           printitems(cd.RootItem);
-           File.WriteAllBytes(@"c:\temp\vba.bin", ms.ToArray());
+            //var doc = File.ReadAllBytes(@"c:\temp\vbaProject.bin");
+            var doc = File.ReadAllBytes(@"c:\temp\vba.bin");
+            var cd = new CompoundDocumentFile(doc);
+            var ms = new MemoryStream();
+            cd.Write(ms);
+            printitems(cd.RootItem);
+            File.WriteAllBytes(@"c:\temp\vba.bin", ms.ToArray());
         }
 
         private void printitems(CompoundDocumentItem item)
         {
-            File.AppendAllText(@"c:\temp\items.txt", item.Name+ "\t");            
-            foreach(var c in item.Children)
+            File.AppendAllText(@"c:\temp\items.txt", item.Name + "\t");
+            foreach (var c in item.Children)
             {
                 printitems(c);
             }
@@ -88,16 +85,16 @@ namespace EPPlusTest
         [TestMethod]
         public void WriteReadCompundDoc()
         {
-            for(int i=1;i<50;i++)
+            for (int i = 1; i < 50; i++)
             {
-                var b=CreateFile(i);
-                ReadFile(b,i);
+                var b = CreateFile(i);
+                ReadFile(b, i);
                 GC.Collect();
             }
             for (int i = 5; i < 20; i++)
             {
-                var b = CreateFile(i*50);
-                ReadFile(b, i*50);
+                var b = CreateFile(i * 50);
+                ReadFile(b, i * 50);
                 GC.Collect();
             }
         }
@@ -107,7 +104,7 @@ namespace EPPlusTest
             var ms = new MemoryStream(b);
             using (var p = new ExcelPackage(ms))
             {
-                Assert.AreEqual(p.Workbook.VbaProject.Modules.Count,noSheets+2);
+                Assert.AreEqual(p.Workbook.VbaProject.Modules.Count, noSheets + 2);
                 Assert.AreEqual(noSheets, p.Workbook.Worksheets.Count);
             }
         }
@@ -119,7 +116,9 @@ namespace EPPlusTest
                 var sheets = Enumerable.Range(1, noSheets)   //460
                     .Select(x => $"Sheet{x}");
                 foreach (var sheet in sheets)
+                {
                     package.Workbook.Worksheets.Add(sheet);
+                }
 
                 package.Workbook.CreateVBAProject();
                 package.Workbook.VbaProject.Modules.AddModule("Module1").Code
@@ -132,7 +131,7 @@ namespace EPPlusTest
         [TestMethod, Ignore]
         public void ReadEncLong()
         {
-            var doc=File.ReadAllBytes(@"c:\temp\EncrDocRead.xlsx");
+            var doc = File.ReadAllBytes(@"c:\temp\EncrDocRead.xlsx");
             var cd = new CompoundDocumentFile(doc);
             var ms = new MemoryStream();
             cd.Write(ms);
@@ -146,7 +145,8 @@ namespace EPPlusTest
             var vba = p.Workbook.VbaProject;
             p.SaveAs(new FileInfo(@"c:\temp\pricecheckSaved.xlsm"));
         }
-        FileInfo TempFile(string name)
+
+        private FileInfo TempFile(string name)
         {
             var baseFolder = Path.Combine(@"c:\temp\bug\");
             return new FileInfo(Path.Combine(baseFolder, name));
@@ -155,12 +155,18 @@ namespace EPPlusTest
         public void Issue131()
         {
             var src = TempFile("report.xlsm");
-            if (src.Exists) src.Delete();
+            if (src.Exists)
+            {
+                src.Delete();
+            }
+
             var package = new ExcelPackage(src);
             var sheets = Enumerable.Range(1, 500)   //460
                 .Select(x => $"Sheet{x}");
             foreach (var sheet in sheets)
+            {
                 package.Workbook.Worksheets.Add(sheet);
+            }
 
             package.Workbook.CreateVBAProject();
             package.Workbook.VbaProject.Modules.AddModule("Module1").Code
@@ -199,8 +205,8 @@ namespace EPPlusTest
                         ws.SetValue(row, 1 + c, row);                               //The SetValue method is a little bit faster than using the Value property
                         ws.SetValue(row, 2 + c, string.Format("Row {0}", row));
                         ws.SetValue(row, 3 + c, DateTime.Today.AddDays(row));
-                        ws.SetValue(row, 4 + c, rnd.NextDouble() * 10000); 
-                     }
+                        ws.SetValue(row, 4 + c, rnd.NextDouble() * 10000);
+                    }
                 }
                 var endC = colMult * 5;
                 ws.Cells[1, endC, Rows, endC].FormulaR1C1 = "RC[-4]+RC[-1]";
@@ -276,9 +282,9 @@ namespace EPPlusTest
         {
             //var p = new ExcelPackage(new FileInfo(@"c:\temp\bug\report.xlsm"));
             //var p = new ExcelPackage(new FileInfo(@"c:\temp\bug\report411.xlsm"));
-            var p = new ExcelPackage(new FileInfo(@"c:\temp\bug\sample7.xlsx"),"");
+            var p = new ExcelPackage(new FileInfo(@"c:\temp\bug\sample7.xlsx"), "");
             var vba = p.Workbook.VbaProject;
         }
-        
+
     }
 }

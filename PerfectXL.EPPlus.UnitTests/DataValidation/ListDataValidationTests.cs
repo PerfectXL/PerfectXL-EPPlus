@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OfficeOpenXml.DataValidation.Formulas.Contracts;
-using OfficeOpenXml.DataValidation;
 using OfficeOpenXml.DataValidation.Contracts;
 
 namespace EPPlusTest.DataValidation

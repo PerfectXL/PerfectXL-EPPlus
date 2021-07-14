@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OfficeOpenXml.FormulaParsing;
+﻿using System.Collections.Generic;
 using OfficeOpenXml.FormulaParsing.Excel.Functions;
 
 namespace EPPlusTest.FormulaParsing.TestHelpers
@@ -21,7 +17,7 @@ namespace EPPlusTest.FormulaParsing.TestHelpers
 
         public static IEnumerable<FunctionArgument> Empty()
         {
-            return new List<FunctionArgument>() {new FunctionArgument(null)};
+            return new List<FunctionArgument>() { new FunctionArgument(null) };
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Xml;
 
 namespace OfficeOpenXml.Sparkline
@@ -70,11 +67,11 @@ namespace OfficeOpenXml.Sparkline
      <xsd:attribute ref="xr2:uid"/>
    </xsd:complexType>
    */
-        ExcelWorksheet _ws;
+        private readonly ExcelWorksheet _ws;
         internal ExcelSparklineGroup(XmlNamespaceManager ns, XmlElement topNode, ExcelWorksheet ws) : base(ns, topNode)
         {
-            SchemaNodeOrder = new string[]{"colorSeries","colorNegative","colorAxis","colorMarkers","colorFirst","colorLast","colorHigh","colorLow","f","sparklines"};
-            Sparklines = new ExcelSparklineCollection(this);    
+            SchemaNodeOrder = new string[] { "colorSeries", "colorNegative", "colorAxis", "colorMarkers", "colorFirst", "colorLast", "colorHigh", "colorLow", "f", "sparklines" };
+            Sparklines = new ExcelSparklineCollection(this);
             _ws = ws;
         }
         /// <summary>
@@ -86,7 +83,11 @@ namespace OfficeOpenXml.Sparkline
             get
             {
                 var f = GetXmlNodeString("xm:f");
-                if (string.IsNullOrEmpty(f)) return null;
+                if (string.IsNullOrEmpty(f))
+                {
+                    return null;
+                }
+
                 var a = new ExcelAddressBase(f);
                 if (a.WorkSheet.Equals(_ws.Name, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -100,7 +101,7 @@ namespace OfficeOpenXml.Sparkline
             }
             set
             {
-                if(value==null)
+                if (value == null)
                 {
                     RemoveDateAxis();
                     return;
@@ -130,7 +131,7 @@ namespace OfficeOpenXml.Sparkline
         {
             get
             {
-                if(Sparklines.Count==0)
+                if (Sparklines.Count == 0)
                 {
                     return null;
                 }
@@ -161,9 +162,9 @@ namespace OfficeOpenXml.Sparkline
         /// <summary>
         /// The Sparklines for the sparklinegroup
         /// </summary>
-        public ExcelSparklineCollection Sparklines { get; internal set; }        
+        public ExcelSparklineCollection Sparklines { get; internal set; }
         #region Boolean settings
-        const string _dateAxisPath = "@dateAxis";
+        private const string _dateAxisPath = "@dateAxis";
         internal bool DateAxis
         {
             get
@@ -175,7 +176,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeBool(_dateAxisPath, value);
             }
         }
-        const string _markersPath = "@markers";
+
+        private const string _markersPath = "@markers";
         /// <summary>
         /// Highlight each point in each sparkline in the sparkline group.
         /// Applies to line sparklines only
@@ -191,7 +193,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeBool(_markersPath, value);
             }
         }
-        const string _highPath = "@high";
+
+        private const string _highPath = "@high";
         /// <summary>
         /// Highlight the highest point of data in the sparkline group
         /// </summary>
@@ -206,7 +209,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeBool(_highPath, value);
             }
         }
-        const string _lowPath = "@low";
+
+        private const string _lowPath = "@low";
         /// <summary>
         /// Highlight the lowest point of data in the sparkline group
         /// </summary>
@@ -221,7 +225,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeBool(_lowPath, value);
             }
         }
-        const string _firstPath = "@first";
+
+        private const string _firstPath = "@first";
         /// <summary>
         /// Highlight the first point of data in the sparkline group
         /// </summary>
@@ -236,7 +241,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeBool(_firstPath, value);
             }
         }
-        const string _lastPath = "@last";
+
+        private const string _lastPath = "@last";
         /// <summary>
         /// Highlight the last point of data in the sparkline group
         /// </summary>
@@ -252,7 +258,7 @@ namespace OfficeOpenXml.Sparkline
             }
         }
 
-        const string _negativePath = "@negative";
+        private const string _negativePath = "@negative";
         /// <summary>
         /// Highlight negative points of data in the sparkline group with a different color or marker
         /// </summary>
@@ -265,11 +271,10 @@ namespace OfficeOpenXml.Sparkline
             set
             {
                 SetXmlNodeBool(_negativePath, value);
-            }                
+            }
         }
 
-
-        const string _displayXAxisPath = "@displayXAxis";
+        private const string _displayXAxisPath = "@displayXAxis";
         public bool DisplayXAxis
         {
             get
@@ -281,7 +286,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeBool(_displayXAxisPath, value);
             }
         }
-        const string _displayHiddenPath = "@displayHidden";
+
+        private const string _displayHiddenPath = "@displayHidden";
         public bool DisplayHidden
         {
             get
@@ -294,25 +300,26 @@ namespace OfficeOpenXml.Sparkline
             }
         }
         #endregion
-        const string lineWidthPath = "x14:sparklineGroup/@lineWidth";
+        private const string lineWidthPath = "x14:sparklineGroup/@lineWidth";
         public double LineWidth
         {
             get
             {
-                return GetXmlNodeDoubleNull(lineWidthPath)??0.75;
+                return GetXmlNodeDoubleNull(lineWidthPath) ?? 0.75;
             }
             set
             {
                 SetXmlNodeString(lineWidthPath, value.ToString(CultureInfo.InvariantCulture));
             }
         }
-        const string _dispBlanksAsPath = "@displayEmptyCellsAs";
+
+        private const string _dispBlanksAsPath = "@displayEmptyCellsAs";
         public eDispBlanksAs DisplayEmptyCellsAs
         {
             get
             {
-                var s=GetXmlNodeString(_dispBlanksAsPath);
-                if(string.IsNullOrEmpty(s))
+                var s = GetXmlNodeString(_dispBlanksAsPath);
+                if (string.IsNullOrEmpty(s))
                 {
                     return eDispBlanksAs.Zero;
                 }
@@ -326,7 +333,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeString(_dispBlanksAsPath, value.ToString().ToLower());
             }
         }
-        const string _typePath = "@type";
+
+        private const string _typePath = "@type";
         /// <summary>
         /// Type of sparkline
         /// </summary>
@@ -335,7 +343,7 @@ namespace OfficeOpenXml.Sparkline
             get
             {
                 var type = GetXmlNodeString(_typePath);
-                if(string.IsNullOrEmpty(type))
+                if (string.IsNullOrEmpty(type))
                 {
                     return eSparklineType.Line;
                 }
@@ -350,7 +358,7 @@ namespace OfficeOpenXml.Sparkline
             }
         }
         #region Colors
-        const string _colorSeriesPath= "x14:colorSeries";
+        private const string _colorSeriesPath = "x14:colorSeries";
         /// <summary>
         /// Sparkline color
         /// </summary>
@@ -362,7 +370,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorSeriesPath, NameSpaceManager));
             }
         }
-        const string _colorNegativePath = "x14:colorNegative";
+
+        private const string _colorNegativePath = "x14:colorNegative";
         /// <summary>
         /// Markercolor for the lowest negative point
         /// </summary>  
@@ -374,7 +383,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorNegativePath, NameSpaceManager));
             }
         }
-        const string _colorAxisPath = "x14:colorAxis";
+
+        private const string _colorAxisPath = "x14:colorAxis";
         /// <summary>
         /// Markercolor for the lowest negative point
         /// </summary>
@@ -386,7 +396,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorAxisPath, NameSpaceManager));
             }
         }
-        const string _colorMarkersPath = "x14:colorMarkers";
+
+        private const string _colorMarkersPath = "x14:colorMarkers";
         /// <summary>
         /// Default marker color 
         /// </summary> 
@@ -398,7 +409,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorMarkersPath, NameSpaceManager));
             }
         }
-        const string _colorFirstPath = "x14:colorFirst";
+
+        private const string _colorFirstPath = "x14:colorFirst";
         public ExcelSparklineColor ColorFirst
         {
             get
@@ -407,7 +419,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorFirstPath, NameSpaceManager));
             }
         }
-        const string _colorLastPath = "x14:colorLast"; 
+
+        private const string _colorLastPath = "x14:colorLast";
         public ExcelSparklineColor ColorLast
         {
             get
@@ -416,7 +429,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorLastPath, NameSpaceManager));
             }
         }
-        const string _colorHighPath = "x14:colorHigh";
+
+        private const string _colorHighPath = "x14:colorHigh";
         public ExcelSparklineColor ColorHigh
         {
             get
@@ -425,7 +439,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorHighPath, NameSpaceManager));
             }
         }
-        const string _colorLowPath = "x14:colorLow";
+
+        private const string _colorLowPath = "x14:colorLow";
         public ExcelSparklineColor ColorLow
         {
             get
@@ -434,7 +449,8 @@ namespace OfficeOpenXml.Sparkline
                 return new ExcelSparklineColor(NameSpaceManager, TopNode.SelectSingleNode(_colorLowPath, NameSpaceManager));
             }
         }
-        const string _manualMinPath = "@manualMin";
+
+        private const string _manualMinPath = "@manualMin";
         public double ManualMin
         {
 
@@ -448,7 +464,8 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeString(_manualMinPath, value.ToString("F", CultureInfo.InvariantCulture));
             }
         }
-        const string _manualMaxPath = "@manualMax";
+
+        private const string _manualMaxPath = "@manualMax";
         public double ManualMax
         {
 
@@ -462,14 +479,15 @@ namespace OfficeOpenXml.Sparkline
                 SetXmlNodeString(_manualMaxPath, value.ToString("F", CultureInfo.InvariantCulture));
             }
         }
-        const string _minAxisTypePath = "@minAxisType";
+
+        private const string _minAxisTypePath = "@minAxisType";
         public eSparklineAxisMinMax MinAxisType
         {
 
             get
             {
                 var s = GetXmlNodeString(_minAxisTypePath);
-                if(string.IsNullOrEmpty(s))
+                if (string.IsNullOrEmpty(s))
                 {
                     return eSparklineAxisMinMax.Individual;
                 }
@@ -491,7 +509,8 @@ namespace OfficeOpenXml.Sparkline
                 }
             }
         }
-        const string _maxAxisTypePath = "@maxAxisType";
+
+        private const string _maxAxisTypePath = "@maxAxisType";
         public eSparklineAxisMinMax MaxAxisType
         {
             get
@@ -508,7 +527,7 @@ namespace OfficeOpenXml.Sparkline
             }
             set
             {
-                if(value==eSparklineAxisMinMax.Custom)
+                if (value == eSparklineAxisMinMax.Custom)
                 {
                     ManualMax = 0;
                 }
@@ -519,13 +538,14 @@ namespace OfficeOpenXml.Sparkline
                 }
             }
         }
-        const string _rightToLeftPath = "@rightToLeft";
+
+        private const string _rightToLeftPath = "@rightToLeft";
         public bool RightToLeft
         {
 
             get
             {
-                return GetXmlNodeBool(_rightToLeftPath,false);
+                return GetXmlNodeBool(_rightToLeftPath, false);
             }
             set
             {

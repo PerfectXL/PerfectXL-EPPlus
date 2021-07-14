@@ -16,10 +16,8 @@
  *******************************************************************************
  * Mats Alm Added		                2016-12-27
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OfficeOpenXml.FormulaParsing.ExcelUtilities;
 
 namespace OfficeOpenXml.FormulaParsing
@@ -36,7 +34,7 @@ namespace OfficeOpenXml.FormulaParsing
         {
             _lifetimeEventHandler = lifetimeEventHandler;
         }
-        private Stack<ParsingScope> _scopes = new Stack<ParsingScope>();
+        private readonly Stack<ParsingScope> _scopes = new Stack<ParsingScope>();
 
         /// <summary>
         /// Creates a new <see cref="ParsingScope"/> and puts it on top of the stack.

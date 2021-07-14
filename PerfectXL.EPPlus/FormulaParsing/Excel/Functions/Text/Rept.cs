@@ -22,9 +22,7 @@
  *******************************************************************************
  * Mats Alm   		                Added		                2015-01-10
  *******************************************************************************/
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 

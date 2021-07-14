@@ -29,10 +29,6 @@
  * Mats Alm   		                Added       		        2011-01-08
  * Jan Källman		                License changed GPL-->LGPL  2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OfficeOpenXml.DataValidation.Formulas;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using System.Xml;
@@ -91,7 +87,7 @@ namespace OfficeOpenXml.DataValidation
         /// <param name="validationType"></param>
         /// <param name="itemElementNode"></param>
         /// <param name="namespaceManager">For test purposes</param>
-        internal ExcelDataValidationInt(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType, 
+        internal ExcelDataValidationInt(ExcelWorksheet worksheet, string address, ExcelDataValidationType validationType,
             XmlNode itemElementNode, XmlNamespaceManager namespaceManager, eDataValidationStorageType storageType = eDataValidationStorageType.Normal)
             : base(worksheet, address, validationType, storageType, itemElementNode, namespaceManager)
         {

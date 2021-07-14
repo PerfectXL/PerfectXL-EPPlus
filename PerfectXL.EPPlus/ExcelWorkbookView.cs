@@ -29,10 +29,7 @@
  * Jan Källman		    Initial Release		       2011-11-02
  * Jan Källman		    License changed GPL-->LGPL 2011-12-27
  *******************************************************************************/
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Xml;
 namespace OfficeOpenXml
 {
@@ -51,31 +48,32 @@ namespace OfficeOpenXml
         /// <param name="wb"></param>
         internal ExcelWorkbookView(XmlNamespaceManager ns, XmlNode node, ExcelWorkbook wb) :
             base(ns, node)
-		{
+        {
             SchemaNodeOrder = wb.SchemaNodeOrder;
-		}
-		#endregion
-        const string LEFT_PATH="d:bookViews/d:workbookView/@xWindow";
+        }
+        #endregion
+        private const string LEFT_PATH = "d:bookViews/d:workbookView/@xWindow";
         /// <summary>
         /// Position of the upper left corner of the workbook window. In twips.
         /// </summary>
         public int Left
-        { 
+        {
             get
             {
                 return GetXmlNodeInt(LEFT_PATH);
             }
             internal set
             {
-                SetXmlNodeString(LEFT_PATH,value.ToString());
+                SetXmlNodeString(LEFT_PATH, value.ToString());
             }
         }
-        const string TOP_PATH="d:bookViews/d:workbookView/@yWindow";
+
+        private const string TOP_PATH = "d:bookViews/d:workbookView/@yWindow";
         /// <summary>
         /// Position of the upper left corner of the workbook window. In twips.
         /// </summary>
         public int Top
-        { 
+        {
             get
             {
                 return GetXmlNodeInt(TOP_PATH);
@@ -85,12 +83,13 @@ namespace OfficeOpenXml
                 SetXmlNodeString(TOP_PATH, value.ToString());
             }
         }
-        const string WIDTH_PATH="d:bookViews/d:workbookView/@windowWidth";
+
+        private const string WIDTH_PATH = "d:bookViews/d:workbookView/@windowWidth";
         /// <summary>
         /// Width of the workbook window. In twips.
         /// </summary>
         public int Width
-        { 
+        {
             get
             {
                 return GetXmlNodeInt(WIDTH_PATH);
@@ -100,12 +99,13 @@ namespace OfficeOpenXml
                 SetXmlNodeString(WIDTH_PATH, value.ToString());
             }
         }
-        const string HEIGHT_PATH="d:bookViews/d:workbookView/@windowHeight";
+
+        private const string HEIGHT_PATH = "d:bookViews/d:workbookView/@windowHeight";
         /// <summary>
         /// Height of the workbook window. In twips.
         /// </summary>
         public int Height
-        { 
+        {
             get
             {
                 return GetXmlNodeInt(HEIGHT_PATH);
@@ -115,7 +115,8 @@ namespace OfficeOpenXml
                 SetXmlNodeString(HEIGHT_PATH, value.ToString());
             }
         }
-        const string MINIMIZED_PATH="d:bookViews/d:workbookView/@minimized";
+
+        private const string MINIMIZED_PATH = "d:bookViews/d:workbookView/@minimized";
         /// <summary>
         /// If true the the workbook window is minimized.
         /// </summary>
@@ -130,7 +131,8 @@ namespace OfficeOpenXml
                 SetXmlNodeString(MINIMIZED_PATH, value.ToString());
             }
         }
-        const string SHOWVERTICALSCROLL_PATH = "d:bookViews/d:workbookView/@showVerticalScroll";
+
+        private const string SHOWVERTICALSCROLL_PATH = "d:bookViews/d:workbookView/@showVerticalScroll";
         /// <summary>
         /// Show the vertical scrollbar
         /// </summary>
@@ -138,14 +140,15 @@ namespace OfficeOpenXml
         {
             get
             {
-                return GetXmlNodeBool(SHOWVERTICALSCROLL_PATH,true);
+                return GetXmlNodeBool(SHOWVERTICALSCROLL_PATH, true);
             }
             set
             {
                 SetXmlNodeBool(SHOWVERTICALSCROLL_PATH, value, true);
             }
         }
-        const string SHOWHORIZONTALSCR_PATH = "d:bookViews/d:workbookView/@showHorizontalScroll";
+
+        private const string SHOWHORIZONTALSCR_PATH = "d:bookViews/d:workbookView/@showHorizontalScroll";
         /// <summary>
         /// Show the horizontal scrollbar
         /// </summary>
@@ -160,7 +163,8 @@ namespace OfficeOpenXml
                 SetXmlNodeBool(SHOWHORIZONTALSCR_PATH, value, true);
             }
         }
-        const string SHOWSHEETTABS_PATH = "d:bookViews/d:workbookView/@showSheetTabs";
+
+        private const string SHOWSHEETTABS_PATH = "d:bookViews/d:workbookView/@showSheetTabs";
         /// <summary>
         /// Show the sheet tabs
         /// </summary>
@@ -190,17 +194,20 @@ namespace OfficeOpenXml
             Height = height;
         }
 
-        const string ACTIVETAB_PATH = "d:bookViews/d:workbookView/@activeTab";
-        public int ActiveTab 
+        private const string ACTIVETAB_PATH = "d:bookViews/d:workbookView/@activeTab";
+        public int ActiveTab
         {
             get
             {
-                var v=GetXmlNodeInt(ACTIVETAB_PATH);
+                var v = GetXmlNodeInt(ACTIVETAB_PATH);
                 if (v < 0)
+                {
                     return 0;
+                }
                 else
+                {
                     return v;
-
+                }
             }
             set
             {
@@ -209,4 +216,3 @@ namespace OfficeOpenXml
         }
     }
 }
-    

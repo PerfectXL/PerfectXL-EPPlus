@@ -30,8 +30,6 @@
  * Jan Källman		License changed GPL-->LGPL 2011-12-16
  *******************************************************************************/
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 using System.Drawing;
 
@@ -43,27 +41,44 @@ namespace OfficeOpenXml.Drawing
     public sealed class ExcelDrawingFill : XmlHelper
     {
         //ExcelShape _shp;                
-        string _fillPath;
-        XmlNode _fillNode;
-        internal ExcelDrawingFill(XmlNamespaceManager nameSpaceManager, XmlNode topNode, string fillPath) : 
+        private readonly string _fillPath;
+        private XmlNode _fillNode;
+        internal ExcelDrawingFill(XmlNamespaceManager nameSpaceManager, XmlNode topNode, string fillPath) :
             base(nameSpaceManager, topNode)
         {
-          //  _shp=shp;
+            //  _shp=shp;
             _fillPath = fillPath;
             _fillNode = topNode.SelectSingleNode(_fillPath, NameSpaceManager);
-            SchemaNodeOrder = new string[] { "tickLblPos", "spPr", "txPr","dLblPos", "crossAx", "printSettings", "showVal", "prstGeom", "noFill", "solidFill", "blipFill", "gradFill", "noFill", "pattFill", "ln", "prstDash" };
+            SchemaNodeOrder = new string[] { "tickLblPos", "spPr", "txPr", "dLblPos", "crossAx", "printSettings", "showVal", "prstGeom", "noFill", "solidFill", "blipFill", "gradFill", "noFill", "pattFill", "ln", "prstDash" };
             //Setfill node
             if (_fillNode != null)
             {
                 _fillTypeNode = topNode.SelectSingleNode("solidFill");
-                if (_fillTypeNode == null) _fillTypeNode = topNode.SelectSingleNode("noFill");
-                if (_fillTypeNode == null) _fillTypeNode = topNode.SelectSingleNode("blipFill");
-                if (_fillTypeNode == null) _fillTypeNode = topNode.SelectSingleNode("gradFill");
-                if (_fillTypeNode == null) _fillTypeNode = topNode.SelectSingleNode("pattFill");
+                if (_fillTypeNode == null)
+                {
+                    _fillTypeNode = topNode.SelectSingleNode("noFill");
+                }
+
+                if (_fillTypeNode == null)
+                {
+                    _fillTypeNode = topNode.SelectSingleNode("blipFill");
+                }
+
+                if (_fillTypeNode == null)
+                {
+                    _fillTypeNode = topNode.SelectSingleNode("gradFill");
+                }
+
+                if (_fillTypeNode == null)
+                {
+                    _fillTypeNode = topNode.SelectSingleNode("pattFill");
+                }
             }
         }
-        eFillStyle _style;
-        XmlNode _fillTypeNode = null;
+
+        private eFillStyle _style;
+        private readonly XmlNode _fillTypeNode = null;
+
         /// <summary>
         /// Fill style
         /// </summary>
@@ -77,7 +92,7 @@ namespace OfficeOpenXml.Drawing
                 }
                 else
                 {
-                    _style=GetStyleEnum(_fillTypeNode.Name);
+                    _style = GetStyleEnum(_fillTypeNode.Name);
                 }
                 return _style;
             }
@@ -102,12 +117,12 @@ namespace OfficeOpenXml.Drawing
                 TopNode.RemoveChild(_fillTypeNode);
             }
             CreateNode(_fillPath + "/a:" + GetStyleText(value), false);
-            _fillNode=TopNode.SelectSingleNode(_fillPath + "/a:" + GetStyleText(value), NameSpaceManager);
+            _fillNode = TopNode.SelectSingleNode(_fillPath + "/a:" + GetStyleText(value), NameSpaceManager);
         }
 
         private eFillStyle GetStyleEnum(string name)
         {
-            switch(name)
+            switch (name)
             {
                 case "noFill":
                     return eFillStyle.NoFill;
@@ -135,7 +150,7 @@ namespace OfficeOpenXml.Drawing
                 case eFillStyle.GroupFill:
                     return "grpFill";
                 case eFillStyle.NoFill:
-                    return "noFill";                
+                    return "noFill";
                 case eFillStyle.PatternFill:
                     return "pattFill";
                 default:
@@ -143,7 +158,8 @@ namespace OfficeOpenXml.Drawing
             }
         }
 
-        const string ColorPath = "/a:solidFill/a:srgbClr/@val";
+        private const string ColorPath = "/a:solidFill/a:srgbClr/@val";
+
         /// <summary>
         /// Fill color for solid fills
         /// </summary>
@@ -158,7 +174,7 @@ namespace OfficeOpenXml.Drawing
                 }
                 else
                 {
-                    return Color.FromArgb(int.Parse(col,System.Globalization.NumberStyles.AllowHexSpecifier));
+                    return Color.FromArgb(int.Parse(col, System.Globalization.NumberStyles.AllowHexSpecifier));
                 }
             }
             set
@@ -176,7 +192,9 @@ namespace OfficeOpenXml.Drawing
                 SetXmlNodeString(_fillPath + ColorPath, value.ToArgb().ToString("X8").Substring(2));
             }
         }
-        const string alphaPath = "/a:solidFill/a:srgbClr/a:alpha/@val";
+
+        private const string alphaPath = "/a:solidFill/a:srgbClr/a:alpha/@val";
+
         /// <summary>
         /// Transparancy in percent
         /// </summary>

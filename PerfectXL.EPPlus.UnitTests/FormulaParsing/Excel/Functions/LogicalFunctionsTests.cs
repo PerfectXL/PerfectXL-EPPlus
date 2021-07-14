@@ -1,7 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OfficeOpenXml.FormulaParsing;
@@ -14,7 +11,7 @@ namespace EPPlusTest.Excel.Functions
     [TestClass]
     public class LogicalFunctionsTests
     {
-        private ParsingContext _parsingContext = ParsingContext.Create();
+        private readonly ParsingContext _parsingContext = ParsingContext.Create();
 
         [TestMethod]
         public void IfShouldReturnCorrectResult()

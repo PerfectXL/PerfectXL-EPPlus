@@ -29,7 +29,6 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
 
 namespace OfficeOpenXml.Packaging.Ionic.Zip
 {
@@ -138,41 +137,51 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                             {
                                 isOk = false;
                                 if (writer != null)
-                                writer.WriteLine("{0}: mismatch in RelativeOffsetOfLocalHeader  (0x{1:X16} != 0x{2:X16})",
+                                {
+                                    writer.WriteLine("{0}: mismatch in RelativeOffsetOfLocalHeader  (0x{1:X16} != 0x{2:X16})",
                                                         e1.FileName, e1._RelativeOffsetOfLocalHeader,
                                                         e2._RelativeOffsetOfLocalHeader);
+                                }
                             }
                             if (e1._CompressedSize != e2._CompressedSize)
                             {
                                 isOk = false;
                                 if (writer != null)
-                                writer.WriteLine("{0}: mismatch in CompressedSize  (0x{1:X16} != 0x{2:X16})",
+                                {
+                                    writer.WriteLine("{0}: mismatch in CompressedSize  (0x{1:X16} != 0x{2:X16})",
                                                         e1.FileName, e1._CompressedSize,
                                                         e2._CompressedSize);
+                                }
                             }
                             if (e1._UncompressedSize != e2._UncompressedSize)
                             {
                                 isOk = false;
                                 if (writer != null)
-                                writer.WriteLine("{0}: mismatch in UncompressedSize  (0x{1:X16} != 0x{2:X16})",
+                                {
+                                    writer.WriteLine("{0}: mismatch in UncompressedSize  (0x{1:X16} != 0x{2:X16})",
                                                         e1.FileName, e1._UncompressedSize,
                                                         e2._UncompressedSize);
+                                }
                             }
                             if (e1.CompressionMethod != e2.CompressionMethod)
                             {
                                 isOk = false;
                                 if (writer != null)
-                                writer.WriteLine("{0}: mismatch in CompressionMethod  (0x{1:X4} != 0x{2:X4})",
+                                {
+                                    writer.WriteLine("{0}: mismatch in CompressionMethod  (0x{1:X4} != 0x{2:X4})",
                                                         e1.FileName, e1.CompressionMethod,
                                                         e2.CompressionMethod);
+                                }
                             }
                             if (e1.Crc != e2.Crc)
                             {
                                 isOk = false;
                                 if (writer != null)
-                                writer.WriteLine("{0}: mismatch in Crc32  (0x{1:X4} != 0x{2:X4})",
+                                {
+                                    writer.WriteLine("{0}: mismatch in Crc32  (0x{1:X4} != 0x{2:X4})",
                                                         e1.FileName, e1.Crc,
                                                         e2.Crc);
+                                }
                             }
 
                             // found a match, so stop the inside loop
@@ -193,8 +202,15 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
             }
             finally
             {
-                if (zip1 != null) zip1.Dispose();
-                if (zip2 != null) zip2.Dispose();
+                if (zip1 != null)
+                {
+                    zip1.Dispose();
+                }
+
+                if (zip2 != null)
+                {
+                    zip2.Dispose();
+                }
             }
             return isOk;
         }
@@ -290,7 +306,7 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
                 }
                 success = true;
             }
-            catch(Ionic.Zip.BadPasswordException) { }
+            catch (Ionic.Zip.BadPasswordException) { }
             return success;
         }
 
@@ -334,9 +350,14 @@ namespace OfficeOpenXml.Packaging.Ionic.Zip
 
                 builder.Append(string.Format("     disk with CD: {0}\n", this._diskNumberWithCd));
                 if (this._OffsetOfCentralDirectory == 0xFFFFFFFF)
+                {
                     builder.Append(string.Format("      CD64 offset: 0x{0:X16}\n", this._OffsetOfCentralDirectory64));
+                }
                 else
+                {
                     builder.Append(string.Format("        CD offset: 0x{0:X8}\n", this._OffsetOfCentralDirectory));
+                }
+
                 builder.Append("\n");
                 foreach (ZipEntry entry in this._entries.Values)
                 {
